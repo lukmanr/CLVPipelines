@@ -31,3 +31,10 @@ kubectl create -f https://storage.googleapis.com/ml-pipeline/release/$PIPELINE_V
 jobname=$(kubectl get job | tail -1 | awk '{print $1}')
 kubectl wait --for=condition=complete --timeout=5m $jobname
 ```
+
+## Connect to ML Pipelines GUI
+```
+export NAMESPACE=kubeflow
+kubectl port-forward -n ${NAMESPACE} $(kubectl get pods -n ${NAMESPACE} --selector=service=ambassador -o jsonpath='{.items[0].metadata.name}') 8085:80
+```
+
