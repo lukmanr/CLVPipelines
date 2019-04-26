@@ -1,0 +1,15 @@
+implementation:
+  container:
+    args:
+    - inputValue: dataset_name
+    - inputValue: bucket
+    - outputPath: output
+    image: gcr.io/sandbox-235500/component-column-specs:latest
+inputs:
+- name: dataset_name
+  type: str
+- name: bucket
+  type: str
+name: Column specs
+outputs:
+- name: output

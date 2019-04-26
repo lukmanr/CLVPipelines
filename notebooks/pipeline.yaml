@@ -1,0 +1,125 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: bigquery-query-pipeline-
+spec:
+  arguments:
+    parameters:
+    - name: query
+      value: SELECT * FROM `bigquery-public-data.stackoverflow.posts_questions` LIMIT
+        10
+    - name: project-id
+      value: sandbox-235500
+    - name: dataset-id
+      value: ''
+    - name: table-id
+      value: ''
+    - name: output-gcs-path
+      value: gs://jksandbox/sink/bigquery/query/questions.csv
+    - name: dataset-location
+      value: US
+    - name: job-config
+      value: ''
+  entrypoint: bigquery-query-pipeline
+  serviceAccountName: pipeline-runner
+  templates:
+  - container:
+      args:
+      - kfp_component.google.bigquery
+      - query
+      - --query
+      - '{{inputs.parameters.query}}'
+      - --project_id
+      - '{{inputs.parameters.project-id}}'
+      - --dataset_id
+      - '{{inputs.parameters.dataset-id}}'
+      - --table_id
+      - '{{inputs.parameters.table-id}}'
+      - --output_gcs_path
+      - '{{inputs.parameters.output-gcs-path}}'
+      - --job_config
+      - '{{inputs.parameters.job-config}}'
+      command: []
+      env:
+      - name: KFP_POD_NAME
+        value: '{{pod.name}}'
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /secret/gcp-credentials/user-gcp-sa.json
+      - name: CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE
+        value: /secret/gcp-credentials/user-gcp-sa.json
+      image: gcr.io/ml-pipeline/ml-pipeline-gcp:b0147bdbed9f25212408e0468a475289e80e0406
+      volumeMounts:
+      - mountPath: /secret/gcp-credentials
+        name: gcp-credentials
+    inputs:
+      parameters:
+      - name: dataset-id
+      - name: job-config
+      - name: output-gcs-path
+      - name: project-id
+      - name: query
+      - name: table-id
+    name: bigquery-query
+    outputs:
+      artifacts:
+      - name: mlpipeline-ui-metadata
+        path: /mlpipeline-ui-metadata.json
+        s3:
+          accessKeySecret:
+            key: accesskey
+            name: mlpipeline-minio-artifact
+          bucket: mlpipeline
+          endpoint: minio-service.kubeflow:9000
+          insecure: true
+          key: runs/{{workflow.uid}}/{{pod.name}}/mlpipeline-ui-metadata.tgz
+          secretKeySecret:
+            key: secretkey
+            name: mlpipeline-minio-artifact
+      - name: mlpipeline-metrics
+        path: /mlpipeline-metrics.json
+        s3:
+          accessKeySecret:
+            key: accesskey
+            name: mlpipeline-minio-artifact
+          bucket: mlpipeline
+          endpoint: minio-service.kubeflow:9000
+          insecure: true
+          key: runs/{{workflow.uid}}/{{pod.name}}/mlpipeline-metrics.tgz
+          secretKeySecret:
+            key: secretkey
+            name: mlpipeline-minio-artifact
+      parameters:
+      - name: bigquery-query-output-gcs-path
+        valueFrom:
+          path: /tmp/kfp/output/bigquery/query-output-path.txt
+  - dag:
+      tasks:
+      - arguments:
+          parameters:
+          - name: dataset-id
+            value: '{{inputs.parameters.dataset-id}}'
+          - name: job-config
+            value: '{{inputs.parameters.job-config}}'
+          - name: output-gcs-path
+            value: '{{inputs.parameters.output-gcs-path}}'
+          - name: project-id
+            value: '{{inputs.parameters.project-id}}'
+          - name: query
+            value: '{{inputs.parameters.query}}'
+          - name: table-id
+            value: '{{inputs.parameters.table-id}}'
+        name: bigquery-query
+        template: bigquery-query
+    inputs:
+      parameters:
+      - name: dataset-id
+      - name: job-config
+      - name: output-gcs-path
+      - name: project-id
+      - name: query
+      - name: table-id
+    name: bigquery-query-pipeline
+  volumes:
+  - name: gcp-credentials
+    secret:
+      secretName: user-gcp-sa

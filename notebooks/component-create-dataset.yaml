@@ -1,0 +1,18 @@
+implementation:
+  container:
+    args:
+    - inputValue: project_id
+    - inputValue: location
+    - inputValue: display_name
+    - outputPath: output
+    image: gcr.io/sandbox-235500/component-create-dataset:latest
+inputs:
+- name: project_id
+  type: str
+- name: location
+  type: str
+- name: display_name
+  type: str
+name: Create dataset
+outputs:
+- name: output

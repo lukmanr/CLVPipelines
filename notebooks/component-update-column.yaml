@@ -1,0 +1,21 @@
+implementation:
+  container:
+    args:
+    - inputValue: bucket
+    - inputValue: column_specs_file
+    - inputValue: column_name
+    - inputValue: column_type
+    - outputPath: output
+    image: gcr.io/sandbox-235500/component-update-column:latest
+inputs:
+- name: bucket
+  type: str
+- name: column_specs_file
+  type: str
+- name: column_name
+  type: str
+- name: column_type
+  type: str
+name: Update column
+outputs:
+- name: output

@@ -1,0 +1,18 @@
+implementation:
+  container:
+    args:
+    - inputValue: dataset_name
+    - inputValue: source
+    - inputValue: input_uri
+    - outputPath: output
+    image: gcr.io/sandbox-235500/component-import-data:latest
+inputs:
+- name: dataset_name
+  type: str
+- name: source
+  type: str
+- name: input_uri
+  type: str
+name: Import data
+outputs:
+- name: output

@@ -1,0 +1,15 @@
+implementation:
+  container:
+    args:
+    - inputValue: model_name
+    - inputValue: bucket
+    - outputPath: output
+    image: gcr.io/sandbox-235500/component-evaluate-model:latest
+inputs:
+- name: model_name
+  type: str
+- name: bucket
+  type: str
+name: Evaluate model
+outputs:
+- name: output
