@@ -38,3 +38,7 @@ export NAMESPACE=kubeflow
 kubectl port-forward -n ${NAMESPACE} $(kubectl get pods -n ${NAMESPACE} --selector=service=ambassador -o jsonpath='{.items[0].metadata.name}') 8085:80
 ```
 
+## Install Kubeflow pipelines SDK
+```
+pip install https://storage.googleapis.com/ml-pipeline/release/$PIPELINE_VERSION/kfp.tar.gz --upgrade
+```
