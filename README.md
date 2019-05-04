@@ -15,7 +15,7 @@ gcloud beta container clusters create $CLUSTERNAME \
   --enable-cloud-logging \
   --enable-cloud-monitoring \
   --machine-type n1-standard-2 \
-  --num-nodes 4
+  --num-nodes 3
 kubectl create clusterrolebinding ml-pipeline-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
 ```
 
