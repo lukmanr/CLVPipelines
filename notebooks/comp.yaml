@@ -1,0 +1,45 @@
+description: |
+  AutoML create dataset
+implementation:
+  container:
+    args:
+    - inputValue: project_id
+    - inputValue: dataset_id
+    - inputValue: table_id
+    - outputPath: name
+    - outputPath: total_rows
+    - outputPath: total_columns
+    command:
+    - python3
+    - -c
+    - "from typing import NamedTuple\n\nname='automml_create_dataset',\ndescription='AutoML\
+      \ create dataset',\nbase_image=BASE_IMAGE\nautoml_create_dataset(\nproject_id:\
+      \ str,\ndataset_id: str,\ntable_id: str) -> NamedTuple('DatasetInfo', \n   \
+      \                        [('name', str), \n                            ('total_rows',\
+      \ int),\n                            ('total_columns', int)]):\n\nprint(\"Project\
+      \ ID:\", project_id)\nprint(\"Dataset ID:\", dataset_id)\nprint(\"Table ID:\"\
+      , table_id)\n\nfrom collections import namedtuple\nresult = namedtuple('DatasetInfo',\
+      \ ['name', 'total_rows', 'total_colums'])\nreturn result('test', 1000, 10)\n\
+      \nimport sys\n_args = {\n    'project_id': str(sys.argv[1]),\n    'dataset_id':\
+      \ str(sys.argv[2]),\n    'table_id': str(sys.argv[3]),\n}\n_output_files = [\n\
+      \    sys.argv[4],\n    sys.argv[5],\n    sys.argv[6],\n]\n\n_outputs = automl_create_dataset(**_args)\n\
+      \nif not hasattr(_outputs, '__getitem__') or isinstance(_outputs, str):\n  \
+      \  _outputs = [_outputs]\n\nfrom pathlib import Path\nfor idx, filename in enumerate(_output_files):\n\
+      \    _output_path = Path(filename)\n    _output_path.parent.mkdir(parents=True,\
+      \ exist_ok=True)\n    _output_path.write_text(str(_outputs[idx]))\n"
+    image: gcr.io/sandbox-235500/automltablesbase:dev
+inputs:
+- name: project_id
+  type: str
+- name: dataset_id
+  type: str
+- name: table_id
+  type: str
+name: automml_create_dataset
+outputs:
+- name: name
+  type: str
+- name: total_rows
+  type: int
+- name: total_columns
+  type: int

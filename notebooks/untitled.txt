@@ -1,0 +1,5 @@
+job_config = {'destination': 'somewhere'}
+
+job_config.destination = 'spain'
+
+print(job_config)
