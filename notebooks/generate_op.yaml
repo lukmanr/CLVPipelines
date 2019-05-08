@@ -1,0 +1,50 @@
+description: |
+  Parametrizes engineer features queries
+implementation:
+  container:
+    args:
+    - inputValue: query_template
+    - inputValue: project_id
+    - inputValue: dataset_id
+    - inputValue: order_summaries_table_id
+    - inputValue: threshold_date
+    - inputValue: max_monetary
+    - outputPath: Output
+    command:
+    - python3
+    - -c
+    - "def features_query(\n    query_template: str,\n    project_id: str,\n    dataset_id:\
+      \ str,\n    order_summaries_table_id: str,\n    threshold_date: str,\n    max_monetary:\
+      \ int) -> str:\n    \"\"\"Parametrizes engineer features queries\"\"\"\n   \
+      \ \n    features_query_sql = str(query_template)\n    features_query_sql = features_query_sql.replace(\"\
+      <<threshold_date>>\", str(threshold_date))\n    features_query_sql = features_query_sql.replace(\"\
+      <<predict_end>>\", str(predict_end))\n    features_query_sql = features_query_sql.replace(\"\
+      <<dataset_id>>\", str(dataset_id))\n    features_query_sql = features_query_sql.replace(\"\
+      <<max_monetary>>\", str(max_monetary))\n    features_query_sql = features_query_sql.replace(\"\
+      <<order_summaries_table_id>>\", str(order_summaries_table_id))\n    \n    return\
+      \ features_query_sql\n\nimport sys\n_args = {\n    'query_template': str(sys.argv[1]),\n\
+      \    'project_id': str(sys.argv[2]),\n    'dataset_id': str(sys.argv[3]),\n\
+      \    'order_summaries_table_id': str(sys.argv[4]),\n    'threshold_date': str(sys.argv[5]),\n\
+      \    'max_monetary': int(sys.argv[6]),\n}\n_output_files = [\n    sys.argv[7],\n\
+      ]\n\n_outputs = features_query(**_args)\n\nif not hasattr(_outputs, '__getitem__')\
+      \ or isinstance(_outputs, str):\n    _outputs = [_outputs]\n\nfrom pathlib import\
+      \ Path\nfor idx, filename in enumerate(_output_files):\n    _output_path = Path(filename)\n\
+      \    _output_path.parent.mkdir(parents=True, exist_ok=True)\n    _output_path.write_text(str(_outputs[idx]))\n"
+    image: gcr.io/sandbox-235500/automltablesbase:dev
+inputs:
+- name: query_template
+  type: str
+- name: project_id
+  type: str
+- name: dataset_id
+  type: str
+- name: order_summaries_table_id
+  type: str
+- name: threshold_date
+  type: str
+- name: max_monetary
+  type: int
+name: Features query
+outputs:
+- name: Output
+  type: str

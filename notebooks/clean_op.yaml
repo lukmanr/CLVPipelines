@@ -1,0 +1,50 @@
+description: |
+  Parametrizes clean data query
+implementation:
+  container:
+    args:
+    - inputValue: query_template
+    - inputValue: project_id
+    - inputValue: dataset_id
+    - inputValue: transactions_table_id
+    - inputValue: threshold_date
+    - inputValue: predict_end
+    - outputPath: Output
+    command:
+    - python3
+    - -c
+    - "def generate_data_preprocessing_query(\n    query_template: str,\n    project_id:\
+      \ str,\n    dataset_id: str,\n    transactions_table_id: str,\n    threshold_date:\
+      \ str,\n    predict_end: str) -> str:\n    \"\"\"Parametrizes clean data query\"\
+      \"\"\n    \n    query = str(query_template)\n    query = query.replace(\"<<project_id>>\"\
+      , str(project_id))\n    query = query.replace(\"<<dataset_id>>\", str(dataset_id))\n\
+      \    query = query.replace(\"<<threshold_date>>\", str(threshold_date))\n  \
+      \  query = query.replace(\"<<predict_end>>\", str(predict_end))\n    query =\
+      \ query.replace(\"<<transactions_table_id>>\", str(transactions_table_id))\n\
+      \    \n    return query\n\nimport sys\n_args = {\n    'query_template': str(sys.argv[1]),\n\
+      \    'project_id': str(sys.argv[2]),\n    'dataset_id': str(sys.argv[3]),\n\
+      \    'transactions_table_id': str(sys.argv[4]),\n    'threshold_date': str(sys.argv[5]),\n\
+      \    'predict_end': str(sys.argv[6]),\n}\n_output_files = [\n    sys.argv[7],\n\
+      ]\n\n_outputs = generate_data_preprocessing_query(**_args)\n\nif not hasattr(_outputs,\
+      \ '__getitem__') or isinstance(_outputs, str):\n    _outputs = [_outputs]\n\n\
+      from pathlib import Path\nfor idx, filename in enumerate(_output_files):\n \
+      \   _output_path = Path(filename)\n    _output_path.parent.mkdir(parents=True,\
+      \ exist_ok=True)\n    _output_path.write_text(str(_outputs[idx]))\n"
+    image: gcr.io/sandbox-235500/automltablesbase:dev
+inputs:
+- name: query_template
+  type: str
+- name: project_id
+  type: str
+- name: dataset_id
+  type: str
+- name: transactions_table_id
+  type: str
+- name: threshold_date
+  type: str
+- name: predict_end
+  type: str
+name: Preprocessing query
+outputs:
+- name: Output
+  type: str
