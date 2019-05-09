@@ -12,59 +12,59 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Bigquery - Query
+name: CLV - Data Preprocessing
 description: |
-  A Kubeflow Pipeline component to submit a query to Google Cloud Bigquery 
-  service and dump outputs to a Google Cloud Storage blob. 
+  A Kubeflow Pipeline component to prepare transaction data for CLV model training. 
 inputs:
-  - name: query
-    description: 'The query used by Bigquery service to fetch the results.'
-    type: String
   - name: project_id
-    description: 'The project to execute the query job.'
+    description: 'The project_id for BQ processing'
     type: GCPProjectID
-  - name: dataset_id
-    description: 'The ID of the persistent dataset to keep the results of the query.'
-    default: ''
+  - name: input_dataset_id
+    description: 'The ID of the input dataset.'
     type: String
-  - name: table_id
+  - name: input_table_id
+    description: 'The ID of the input (transactions table.)'
+    type: String
+  - name: output_dataset_id
+    description: 'The ID of the output dataset.'
+    type: String
+  - name: output_table_id
+    description: 'The ID of the output (features) table'
+    type: String
+  - name: threshold_date
     description: >-
-      The ID of the table to keep the results of the query. If absent, the operation
-      will generate a random id for the table.
-    default: '' 
+      The transactions before the threshold data are used to compute features.
+      Format: DD-MM-YY
     type: String
-  - name: output_gcs_path
-    description: 'The path to the Cloud Storage bucket to store the query output.'
-    default: ''
-    type: GCSPath
-  - name: dataset_location
-    description: 'The location to create the dataset. Defaults to `US`.'
-    default: 'US'
-    type: String
-  - name: job_config
+  - name: predict_end
     description: >-
-      The full config spec for the query job.See 
-      [QueryJobConfig](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.QueryJobConfig.html#google.cloud.bigquery.job.QueryJobConfig) 
-      for details.
-    default: ''
-    type: Dict
+      The transactions after the predict-end are not used in feature computations.
+      The period between threshold-date and predict-end is a forecast interval
+      Format: DD-MM-YY
+    type: String
+  - name: max_monetary
+    description: >-
+      Customers whose monetary value is higher than max_monetary are treated as outliers 
+      and excluded from calculations.
+    default: '15000'
+    type: Integer
 outputs:
-  - name: output_gcs_path
-    description: 'The path to the Cloud Storage bucket containing the query output in CSV format.'
+  - name: output_location
+    description: 'The file to write the ID of orders summary table.'
     type: GCSPath
 implementation:
   container:
     image: gcr.io/ml-pipeline/ml-pipeline-gcp:727c48c690c081b505c1f0979d11930bf1ef07c0
+    command: ['python']
     args: [
-      kfp_component.google.bigquery, query,
-      --query, {inputValue: query},
-      --project_id, {inputValue: project_id},
-      --dataset_id, {inputValue: dataset_id},
-      --table_id, {inputValue: table_id},
-      --output_gcs_path, {inputValue: output_gcs_path},
-      --job_config, {inputValue: job_config}
+      prep.py,
+      --project-id, {inputValue: project_id},
+      --input-dataset-id, {inputValue: input_dataset_id},
+      --input-table-id, {inputValue: input_table_id},
+      --output-dataset-id, {inputValue: output_dataset_id},
+      --output-table-id, {inputValue: output_table_id},
+      --threshold-date, {inputValue: threshold_date},
+      --predict-end, {inputValue: predict_end},
+      --max-monetary, {inputValue: max_monetary},
+      --output-location, {outputPath: output_location}
     ]
-    env:
-      KFP_POD_NAME: "{{pod.name}}"
-    fileOutputs:
-      output_gcs_path: /tmp/kfp/output/bigquery/query-output-path.txt

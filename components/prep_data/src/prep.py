@@ -100,12 +100,12 @@ def _parse_arguments():
         '--project-id',
         type=str,
         required=True,
-        help='The GCP project to run BQ processing')
+        help='The GCP project to run BQ processing.')
     parser.add_argument(
         '--input-dataset-id',
         type=str,
         required=True,
-        help='BQ dataset of the input (transactions)table')
+        help='BQ dataset of the input (transactions)table.')
     parser.add_argument(
         '--input-table-id',
         type=str,
@@ -115,27 +115,32 @@ def _parse_arguments():
         '--output-dataset-id',
         type=str,
         required=True,
-        help='BQ dataset of the output (features) table')
+        help='BQ dataset of the output (features) table.')
     parser.add_argument(
         '--output-table-id',
         type=str,
         required=True,
-        help='The output table - features ')
+        help='The output table - features.')
     parser.add_argument(
         '--threshold-date',
         type=str,
         required=True,
-        help='Begining date for target value calculations ')
+        help='Begining date for target value calculations.')
     parser.add_argument(
         '--predict-end',
         type=str,
         required=True,
-        help='End date for target value calculations ')
+        help='End date for target value calculations.')
     parser.add_argument(
         '--max-monetary',
         type=str,
         required=True,
-        help='Maximum monetary value. ')
+        help='Maximum monetary value.')
+    parser.add_argument(
+        '--output-location',
+        type=str,
+        required=False,
+        help='The file to write the ID of the order summaries table. Provided by KFP.')
  
   
     return parser.parse_args()
