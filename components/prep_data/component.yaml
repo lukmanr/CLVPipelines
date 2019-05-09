@@ -22,13 +22,13 @@ inputs:
   - name: input_dataset_id
     description: 'The ID of the input dataset.'
     type: String
-  - name: input_table_id
+  - name: transactions_table_id
     description: 'The ID of the input (transactions table.)'
     type: String
   - name: output_dataset_id
     description: 'The ID of the output dataset.'
     type: String
-  - name: output_table_id
+  - name: features_table_id
     description: 'The ID of the output (features) table'
     type: String
   - name: threshold_date
