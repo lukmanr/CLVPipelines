@@ -19,17 +19,17 @@ inputs:
   - name: project_id
     description: 'The project_id for BQ processing'
     type: GCPProjectID
-  - name: input_dataset_id
-    description: 'The ID of the input dataset.'
+  - name: dataset_id
+    description: 'BQ dataset of the output tables.'
     type: String
-  - name: transactions_table_id
-    description: 'The ID of the input (transactions table.)'
+  - name: transactions_table_fqn
+    description: 'The FQN of the input (transactions table.)'
     type: String
-  - name: output_dataset_id
-    description: 'The ID of the output dataset.'
+  - name: features_table_name
+    description: 'The name of the features table'
     type: String
-  - name: features_table_id
-    description: 'The ID of the output (features) table'
+  - name: summaries_table_name
+    description: 'The name of the summaries table'
     type: String
   - name: threshold_date
     description: >-
@@ -49,22 +49,25 @@ inputs:
     default: '15000'
     type: Integer
 outputs:
-  - name: output_location
-    description: 'The file to write the ID of orders summary table.'
+  - name: output_features_table_fqn
+    description: 'The file to write the FQN of the summaries table.'
+    type: GCSPath
+  - name: output_summaries_table_fqn
+    description: 'The file to write the FQN of the transactions table.'
     type: GCSPath
 implementation:
   container:
-    image: gcr.io/ml-pipeline/ml-pipeline-gcp:727c48c690c081b505c1f0979d11930bf1ef07c0
-    command: ['python']
+    image: gcr.io/sandbox-235500/clv-components:latest
+    command: ["python", "prep.py"]
     args: [
-      prep.py,
       --project-id, {inputValue: project_id},
-      --input-dataset-id, {inputValue: input_dataset_id},
-      --input-table-id, {inputValue: input_table_id},
-      --output-dataset-id, {inputValue: output_dataset_id},
-      --output-table-id, {inputValue: output_table_id},
+      --dataset-id, {inputValue: dataset_id},
+      --transactions-table-fqn, {inputValue: transactions_table_fqn},
+      --features-table-name, {inputValue: features_table_name},
+      --summaries-table-name, {inputValue: summaries_table_name},
       --threshold-date, {inputValue: threshold_date},
       --predict-end, {inputValue: predict_end},
       --max-monetary, {inputValue: max_monetary},
-      --output-location, {outputPath: output_location}
+      --output-features-table-fqn, {outputPath: output_features_table_fqn},
+      --output-summaries-table-fqn, {outputPath: output_summaries_table_fqn},
     ]

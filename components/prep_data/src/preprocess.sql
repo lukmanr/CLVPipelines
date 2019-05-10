@@ -14,12 +14,12 @@ FROM
       SELECT
         MAX(order_date)
       FROM
-        `<<project_id>>.<<dataset_id>>.<<transactions_table_id>>` tl
+        `{{transactions_table_fqn}}` tl
       WHERE
         tl.customer_id = t.customer_id
     ) latest_order
   FROM
-    `<<project_id>>.<<dataset_id>>.<<transactions_table_id>>` t
+    `{{transactions_table_fqn}}` t
   GROUP BY
       customer_id,
       order_date
@@ -44,9 +44,9 @@ INNER JOIN (
             ELSE 0
           END ) positive_value
       FROM
-        `<<project_id>>.<<dataset_id>>.<<transactions_table_id>>`
+        `{{transactions_table_fqn}}`
       WHERE
-        order_date < DATE("<<threshold_date>>")
+        order_date < DATE("{{threshold_date}}")
       GROUP BY
         customer_id,
         order_date)
@@ -60,7 +60,7 @@ ON
 --[START common_clean]
 WHERE
   -- Bought in the past 3 months
-  DATE_DIFF(DATE("<<predict_end>>"), latest_order, DAY) <= 90
+  DATE_DIFF(DATE("{{predict_end}}"), latest_order, DAY) <= 90
   -- Make sure returns are consistent.
   AND (
     (order_qty_articles > 0 and order_Value > 0) OR

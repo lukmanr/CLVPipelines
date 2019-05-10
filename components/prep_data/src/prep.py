@@ -4,82 +4,42 @@ import json
 import logging
 import uuid
 from google.cloud import bigquery
+from pathlib import Path
 
 
 PREPROCESS_QUERY_TEMPLATE = 'preprocess.sql'
 CREATE_FEATURES_QUERY_TEMPLATE = 'create_features.sql'
-MAX_MONETARY=15000
-
-def run_summarize_query(
-    project_id, 
-    input_dataset_id, 
-    transactions_table_id, 
-    threshold_date, 
-    output_dataset_id,
-    predict_end):
-    """Clean input transactions and creat daily summaries"""
-    
-    # Replace the placeholders in the query template
-    with open(PREPROCESS_QUERY_TEMPLATE, 'r') as f:
-        query = f.read() 
-    query = query.replace("<<project_id>>", project_id)
-    query = query.replace("<<dataset_id>>", input_dataset_id)
-    query = query.replace("<<threshold_date>>", threshold_date)
-    query = query.replace("<<predict_end>>", predict_end)
-    query = query.replace("<<transactions_table_id>>", transactions_table_id)
-    
-    table_id = _run_query(query, project_id, output_dataset_id)
-    
-    return table_id
-
-def run_create_features_query(
-    project_id, 
-    input_dataset_id, 
-    summaries_table_id, 
-    output_dataset_id,
-    features_table_id, 
-    threshold_date, 
-    max_monetary):
-    """Create features from daily summaries"""
-    
-    # Replace the placeholders in the query template
-    with open(CREATE_FEATURES_QUERY_TEMPLATE, 'r') as f:
-        query = f.read() 
-   
-    query = query.replace("<<project_id>>", str(project_id))
-    query = query.replace("<<dataset_id>>", str(input_dataset_id))
-    query = query.replace("<<threshold_date>>", str(threshold_date))
-    query = query.replace("<<max_monetary>>", str(max_monetary))
-    query = query.replace("<<order_summaries_table_id>>", str(summaries_table_id))
-     
-    table_id = _run_query(query, project_id, output_dataset_id, features_table_id)
-    
-    return table_id
-    
  
-def _run_query(query, project_id, dataset_id, table_id=None):
+def run_query(query_template, project_id, dataset_id, table_id=None, **kwargs):
     """Runs a query and dumps output to BQ table"""
     
+    # Generate a query from a query template
+    for key, value in kwargs.items():
+        query_template = query_template.replace('{{{{{}}}}}'.format(key), str(value))
+            
     client = bigquery.Client(project=project_id)
     
     # If table_id not passed create a unique table name
     if not table_id:
         guid = uuid.uuid4()
-        table_id = 'clean' + guid.hex
+        table_id = 'output_{}'.format(guid.hex)
         
+    # Configure BQ to write output to a table
     dataset_ref = client.dataset(dataset_id)
     table_ref = dataset_ref.table(table_id)
- 
     job_config = bigquery.QueryJobConfig(
         destination=table_ref,
         create_disposition=bigquery.job.CreateDisposition.CREATE_IF_NEEDED,
         write_disposition=bigquery.job.WriteDisposition.WRITE_TRUNCATE)
         
     # Execute the query
-    query_job = client.query(query, job_config)
+    query_job = client.query(query_template, job_config)
     query_job.result() # Wait for the query to finish
     
-    return table_id
+    return "{}.{}.{}".format(
+        project_id, 
+        dataset_id, 
+        table_id)
 
 
 def _parse_arguments():
@@ -92,25 +52,25 @@ def _parse_arguments():
         required=True,
         help='The GCP project to run BQ processing.')
     parser.add_argument(
-        '--input-dataset-id',
+        '--dataset-id',
         type=str,
         required=True,
-        help='BQ dataset of the input (transactions)table.')
+        help='BQ dataset of the output tables.')
     parser.add_argument(
-        '--transactions-table-id',
+        '--transactions-table-fqn',
         type=str,
         required=True,
         help='The input table - transactions.')
     parser.add_argument(
-        '--output-dataset-id',
+        '--features-table-name',
         type=str,
-        required=True,
-        help='BQ dataset of the output (features) table.')
-    parser.add_argument(
-        '--features-table-id',
-        type=str,
-        required=True,
+        required=False,
         help='The output table - features.')
+    parser.add_argument(
+        '--summaries-table-name',
+        required=False,
+        type=str,
+        help='The output table - summaries.')
     parser.add_argument(
         '--threshold-date',
         type=str,
@@ -124,13 +84,18 @@ def _parse_arguments():
     parser.add_argument(
         '--max-monetary',
         type=str,
-        required=True,
+        default=15000,
         help='Maximum monetary value.')
     parser.add_argument(
-        '--output-location',
+        '--output-features-table-fqn',
         type=str,
         required=False,
-        help='The file to write the ID of the order summaries table. Provided by KFP.')
+        help='The file to write the FQN of the order summaries table. Provided by KFP.')
+    parser.add_argument(
+        '--output-summaries-table-fqn',
+        type=str,
+        required=False,
+        help='The file to write the FQN of the features table. Provided by KFP.')
  
   
     return parser.parse_args()
@@ -138,27 +103,39 @@ def _parse_arguments():
 def main():
     logging.getLogger().setLevel(logging.INFO)
     args = _parse_arguments()
-    
-    summaries_table_id = run_summarize_query(
+
+    with open(PREPROCESS_QUERY_TEMPLATE, 'r') as f:
+        query = f.read() 
+
+    summaries_table_fqn = run_query(
+        query,
         project_id=args.project_id,
-        input_dataset_id=args.input_dataset_id,
-        transactions_table_id=args.transactions_table_id,
-        output_dataset_id=args.output_dataset_id,
+        dataset_id=args.dataset_id,
+        table_id=args.summaries_table_name,
+        transactions_table_fqn=args.transactions_table_fqn,
         threshold_date=args.threshold_date,
         predict_end=args.predict_end)
     
-    run_create_features_query(
+    with open(CREATE_FEATURES_QUERY_TEMPLATE, 'r') as f:
+        query = f.read()
+        
+    features_table_fqn = run_query(
+        query,
         project_id=args.project_id,
-        input_dataset_id=args.output_dataset_id,
-        summaries_table_id=summaries_table_id,
-        output_dataset_id=args.output_dataset_id,
-        features_table_id=args.features_table_id,
+        dataset_id=args.dataset_id,
+        table_id=args.features_table_name,
+        summaries_table_fqn=summaries_table_fqn,
         threshold_date=args.threshold_date,
-        max_monetary=MAX_MONETARY)
+        max_monetary=args.max_monetary)
     
-   
- 
-    
+    # Save output table FQNs to output
+    Path(args.output_summaries_table_fqn).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_summaries_table_fqn).write_text(summaries_table_fqn)
+    Path(args.output_features_table_fqn).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_features_table_fqn).write_text(features_table_fqn)
+
+
+
 if __name__ == '__main__':
     main()
     

@@ -22,7 +22,7 @@ FROM
       customer_id,
       SUM(order_value) AS monetary,
       DATE_DIFF(MAX(order_date), MIN(order_date), DAY) AS recency,
-      DATE_DIFF(DATE('<<threshold_date>>'), MIN(order_date), DAY) AS T,
+      DATE_DIFF(DATE('{{threshold_date}}'), MIN(order_date), DAY) AS T,
       COUNT(DISTINCT order_date) AS cnt_orders,
       AVG(order_qty_articles) avg_basket_size,
       AVG(order_value) avg_basket_value,
@@ -38,20 +38,20 @@ FROM
               WHEN a.order_date = c.order_date_min THEN 0
               ELSE a.order_value END) AS order_value_btyd
         FROM
-          `<<project_id>>.<<dataset_id>>.<<order_summaries_table_id>>` a
+          `{{summaries_table_fqn}}` a
         INNER JOIN (
           SELECT
             customer_id,
             MIN(order_date) AS order_date_min
           FROM
-            `<<project_id>>.<<dataset_id>>.<<order_summaries_table_id>>`
+            `{{summaries_table_fqn}}`
           GROUP BY
             customer_id) c
         ON
           c.customer_id = a.customer_id
       )
     WHERE
-      order_date <= DATE('<<threshold_date>>')
+      order_date <= DATE('{{threshold_date}}')
     GROUP BY
       customer_id) tf,
 
@@ -61,11 +61,11 @@ FROM
       customer_id,
       SUM(order_value) target_monetary
     FROM
-      `<<project_id>>.<<dataset_id>>.<<order_summaries_table_id>>`
-      --WHERE order_date > DATE('<<threshold_date>>')
+      `{{summaries_table_fqn}}`
+      --WHERE order_date > DATE('{{threshold_date}}')
     GROUP BY
       customer_id) tt
 WHERE
   tf.customer_id = tt.customer_id
   AND tf.monetary > 0
-  AND tf.monetary <= <<max_monetary>>
+  AND tf.monetary <= {{max_monetary}}
