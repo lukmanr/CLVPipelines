@@ -1,0 +1,66 @@
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: CLV - Data Preprocessing
+description: |
+  A Kubeflow Pipeline component to prepare transaction data for CLV model training. 
+inputs:
+  - name: project_id
+    description: 'The project_id for BQ processing'
+    type: GCPProjectID
+  - name: dataset_id
+    description: 'BQ dataset of the output tables.'
+    type: String
+  - name: transactions_table_id
+    description: 'The ID of the input (transactions table.)'
+    type: String
+  - name: features_table_name
+    description: 'The name of the features table'
+    type: String
+  - name: threshold_date
+    description: >-
+      The transactions before the threshold data are used to compute features.
+      Format: DD-MM-YY
+    type: String
+  - name: predict_end
+    description: >-
+      The transactions after the predict-end are not used in feature computations.
+      The period between threshold-date and predict-end is a forecast interval
+      Format: DD-MM-YY
+    type: String
+  - name: max_monetary
+    description: >-
+      Customers whose monetary value is higher than max_monetary are treated as outliers 
+      and excluded from calculations.
+    default: '15000'
+    type: Integer
+outputs:
+  - name: output_table_id
+    description: 'The file to write the ID of the features table.'
+    type: String
+
+implementation:
+  container:
+    image: gcr.io/sandbox-235500/clv-components:latest
+    command: ["python", "prep.py"]
+    args: [
+      --project-id, {inputValue: project_id},
+      --dataset-id, {inputValue: dataset_id},
+      --transactions-table-id, {inputValue: transactions_table_id},
+      --features-table-name, {inputValue: features_table_name},
+      --threshold-date, {inputValue: threshold_date},
+      --predict-end, {inputValue: predict_end},
+      --max-monetary, {inputValue: max_monetary},
+      --output-table-id, {outputPath: output_table_id}
+    ]
