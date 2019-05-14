@@ -1,18 +1,19 @@
 #%%
 import sys
 
-sys.path
+sys.path.append('/home/jupyter/CLVPipelines/components/src')
+print(sys.path)
 
 #%%
 import kfp
-import clv_components as clv
+import kfp_components as clv
 
 
 #%%
 project_id = 'sandbox-235500'
 data_source_id = 'sandbox-235500.CLVDataset.transactions'
 dest_dataset_id = 'CLVDataset'
-dest_table_id = 'test'
+dest_table_id = 'clv_features'
 threshold_date = '2011-08-08'
 predict_end = '2011-12-12'
 max_monetary = '15000'

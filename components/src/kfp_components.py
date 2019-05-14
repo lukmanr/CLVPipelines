@@ -121,11 +121,35 @@ def import_dataset(
 
     return dataset_ref.name
 
+from typing import List
+from kfp.dsl.types import Integer, GCRPath, String
+
+@kfp.dsl.python_component(name='Train model', base_image=BASE_IMAGE)
+def train_model(
+    project_id: str,
+    compute_region: str,
+    dataset_id: str,
+    model_name: String,
+    train_budget_milli_node_hours: Integer,
+    feature_column_names: list) -> str:
+    """Train a model"""
+
+    import logging
+    from google.cloud import automl_v1beta1 as automl
+
+    logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+
+    client = automl.AutoMlClient()
+    location_path = client.location_path(project_id, compute_region)
+
+    return location_path
+
 
 def main():
     """Build KFP components"""
 
     args = _parse_arguments()
+    """
     # Build prepare_features components
     kfp.compiler.build_python_component(
         component_func=prepare_features,
@@ -138,6 +162,13 @@ def main():
         staging_gcs_path=args.gcs_staging_path,
         target_component_file='clv-import-dataset.yaml',
         target_image='gcr.io/{}/clv-import-dataset:latest'.format(PROJECT_NAME))
+    """
+
+    kfp.compiler.build_python_component(
+        component_func=train_model,
+        staging_gcs_path=args.gcs_staging_path,
+        target_component_file='clv-train-model.yaml',
+        target_image='gcr.io/{}/clv-train-model:latest'.format(PROJECT_NAME))
 
 def _parse_arguments():
     """Parse command line arguments"""

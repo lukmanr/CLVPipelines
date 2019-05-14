@@ -1,0 +1,28 @@
+description: Train a model
+implementation:
+  container:
+    args:
+    - inputValue: project_id
+    - inputValue: compute_region
+    - inputValue: dataset_id
+    - inputValue: model_name
+    - inputValue: train_budget_milli_node_hours
+    - inputValue: feature_column_names
+    - outputPath: output
+    image: gcr.io/sandbox-235500/clv-train-model:latest
+inputs:
+- name: project_id
+  type: str
+- name: compute_region
+  type: str
+- name: dataset_id
+  type: str
+- name: model_name
+  type: str
+- name: train_budget_milli_node_hours
+  type: str
+- name: feature_column_names
+  type: str
+name: Train model
+outputs:
+- name: output
