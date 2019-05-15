@@ -1,0 +1,54 @@
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: AutoML Tables Dataset Import
+description: |
+  Imports data from either BigQuery or GCS to AutoML Dataset
+inputs:
+  - name: project_id
+    description: 'The project_id for AutoML processing'
+    type: GCPProjectID
+  - name: location
+    description: 'AutoML dataset location.'
+    type: String
+  - name: dataset_name
+    description: 'AutoML dataset name.'
+    type: String
+  - name: source-data
+    description: 'Source data URI'
+    type: String
+Outputs:
+  - name: output_project_id
+    description: 'Project ID.'
+    type: String
+  - name: output_dataset_id
+    description: 'AutoML dataset ID.'
+    type: String
+  - name: output_location
+    description: 'AutoML dataset location.'
+    type: String
+
+implementation:
+  container:
+    image: gcr.io/sandbox-235500/automl-tables-component:latest
+    command: ["python", "import_dataset.py"]
+    args: [
+      --project-id, {inputValue: project_id},
+      --location, {inputValue: location},
+      --dataset-name, {inputValue: dataset_name},
+      --source-data, {inputValue: source_data},
+      --output-project-id, {outputPath: output_table_id}
+      --output-dataset-id, {outputPath: dataset_id}
+      --output-location, {outputPath: location}
+    ]
