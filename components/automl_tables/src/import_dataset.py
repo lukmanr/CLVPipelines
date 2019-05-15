@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import kfp
 import argparse
 import logging
 from pathlib import Path
@@ -37,16 +36,14 @@ def import_dataset(
             "tables_dataset_metadata": {}})
 
     # Import data
-    if source_data.startswith('bq'):
-        input_config = {"bigquery_source": {"input_uri": source_data}}
+    if source_data_uri.startswith('bq'):
+        input_config = {"bigquery_source": {"input_uri": source_data_uri}}
     else:
-        input_uris = source_data.path.split(",")
+        input_uris = source_data_uri.split(",")
         input_config = {"gcs_source": {"input_uris": input_uris}}
     response = client.import_data(dataset_ref.name, input_config)
     # Wait for import to complete
-    logging.info("Starting import from {} to {}".format(source_data, dataset_ref.name))
     response.result()    
-    logging.info("Import completed.")
 
     return dataset_ref.name.split('/')[-1]
  
@@ -66,29 +63,29 @@ def _parse_arguments():
         required=True,
         help='A region for the AutoML Tables dataset')
     parser.add_argument(
-        '--dataset_name',
+        '--dataset-name',
         type=str,
         required=True,
         help='AutoML dataset name.')
     parser.add_argument(
-        '--source_data',
+        '--source-data-uri',
         type=str,
-        required=False,
+        required=True,
         help='Source data URI. BigQuery or GCS')
     parser.add_argument(
         '--output-project-id',
         type=str,
-        required=False,
+        required=True,
         help='The file to write the ID of the AutoML project. Provided by KFP.')
     parser.add_argument(
         '--output-dataset-id',
         type=str,
-        required=False,
+        required=True,
         help='The file to write the ID of the AutoML dataset. Provided by KFP.')
     parser.add_argument(
         '--output-location',
         type=str,
-        required=False,
+        required=True,
         help='The file to write the location the AutoML dataset. Provided by KFP.')
   
     return parser.parse_args()
@@ -103,7 +100,8 @@ def main():
         location=args.location,
         dataset_name=args.dataset_name,
         source_data_uri=args.source_data_uri)
-        
+    logging.info("Import completed. AutoML dataset{}".format(dataset_id))
+
     # Save project ID, dataset ID, and dataset location to output
     Path(args.output_project_id).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output_project_id).write_text(args.project_id)

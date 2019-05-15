@@ -7,7 +7,12 @@ import kfp.gcp as gcp
 
 
 #%%
+BASE_IMAGE = 'gcr.io/sandbox-235500/automltablesbase:dev'
 QUERY_TEMPLATE_URI = 'gs://sandbox-235500/sql-templates/create_features.sql'
+BIGQUERY_COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/bigquery/query/component.yaml'
+AML_IMPORT_DATASET_SPEC_URI = '/home/jupyter/projects/clv_kfp/components/automl_tables/aml-import-dataset.yaml'
+AML_TRAIN_MODEL_SPEC_URI = '/home/jupyter/projects/clv_kfp/components/automl_tables/aml-train-model.yaml'
+
 
 @dsl.pipeline(
     name='CLVTrainingPipeline',
@@ -15,7 +20,7 @@ QUERY_TEMPLATE_URI = 'gs://sandbox-235500/sql-templates/create_features.sql'
 )
 def clv_pipeline(
     project_id='', 
-    data_source_id='',
+    source_data_uri='',
     dest_dataset_id='', 
     dest_table_id='',
     threshold_date='',
@@ -24,15 +29,10 @@ def clv_pipeline(
     automl_compute_region='us-central1',
     automl_dataset_name='clv_features'
 ):
-    # Create component factories
-    prepare_features_op = kfp.components.load_component(
-        '/home/jupyter/projects/clv_kfp/components/clv-prepare-features.yaml')
-    import_dataset_op = kfp.components.load_component(
-        '/home/jupyter/projects/clv_kfp/components/clv-import-dataset.yaml')
-    train_model_op = kfp.components.load_component(
-        '/home/jupyter/projects/clv_kfp/components/clv-train-model.yaml')#
-    
-    """
+    import_dataset_op = kfp.components.load_component(AML_IMPORT_DATASET_SPEC_URI)
+    train_model_op = kfp.components.load_component(AML_TRAIN_MODEL_SPEC_URI)
+
+    """    
     prepare_features_task = prepare_features_op(
         project_id=project_id,
         data_source_id=data_source_id,
@@ -43,19 +43,20 @@ def clv_pipeline(
         dest_table_id=dest_table_id,
         query_template_uri=QUERY_TEMPLATE_URI
         )
-    
+
+    """
     import_dataset_task = import_dataset_op(
         project_id=project_id,
-        compute_region=automl_compute_region,
+        location=automl_compute_region,
         dataset_name=automl_dataset_name,
-        source_data=prepare_features_task.output
+        source_data_uri=source_data_uri
         )
-    """
+
   
     train_model_task = train_model_op(
         project_id=project_id,
         location=automl_compute_region,
-        dataset_id='TBL4760946920921235456',
+        dataset_id=import_dataset_task.outputs['output_dataset_id'],
         model_name='test_model',
         train_budget=1000,
         optimization_objective='MINIMIZE_MAE',
@@ -73,7 +74,7 @@ kfp.compiler.Compiler().compile(pipeline_func, pipeline_filename)
 #Specify pipeline argument values
 arguments = {
     'project_id': 'sandbox-235500',
-    'data_source_id': 'sandbox-235500.CLVDataset.transactions',
+    'source_data_uri': 'bq://sandbox-235500.CLVDataset.transactions',
     'dest_dataset_id': 'CLVDataset',
     'dest_table_id': 'features',
     'threshold_date': '2011-08-08',

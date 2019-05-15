@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,10 +25,10 @@ inputs:
   - name: dataset_name
     description: 'AutoML dataset name.'
     type: String
-  - name: source-data
+  - name: source_data_uri
     description: 'Source data URI'
     type: String
-Outputs:
+outputs:
   - name: output_project_id
     description: 'Project ID.'
     type: String
@@ -47,8 +47,8 @@ implementation:
       --project-id, {inputValue: project_id},
       --location, {inputValue: location},
       --dataset-name, {inputValue: dataset_name},
-      --source-data, {inputValue: source_data},
-      --output-project-id, {outputPath: output_table_id}
-      --output-dataset-id, {outputPath: dataset_id}
-      --output-location, {outputPath: location}
+      --source-data-uri, {inputValue: source_data_uri},
+      --output-project-id, {outputPath: output_project_id},
+      --output-dataset-id, {outputPath: output_dataset_id},
+      --output-location, {outputPath: output_location}
     ]

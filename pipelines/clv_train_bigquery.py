@@ -7,9 +7,8 @@ import kfp.gcp as gcp
 BASE_IMAGE = 'gcr.io/sandbox-235500/automltablesbase:dev'
 QUERY_TEMPLATE_URI = 'gs://sandbox-235500/sql-templates/create_features.sql'
 BIGQUERY_COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/bigquery/query/component.yaml'
-AML_IMPORT_DATASET_SPEC_URI = '/home/jupyter/projects/clv_kfp/components/clv-import-dataset.yaml'
-AML_TRAIN_MODEL_SPEC_URI = '/home/jupyter/projects/clv_kfp/components/clv-train-model.yaml'
-
+AML_IMPORT_DATASET_SPEC_URI = '/home/jupyter/projects/clv_kfp/components/automl_tables/aml-import-dataset.yaml'
+AML_TRAIN_MODEL_SPEC_URI = '/home/jupyter/projects/clv_kfp/components/automl_tables/aml-train-model.yaml'
 #%%
 @kfp.dsl.python_component(name='Prepare feature engineering query', base_image=BASE_IMAGE,target_component_file='clean_op.yaml')
 def prepare_feature_engineering_query(
@@ -77,7 +76,7 @@ def clv_pipeline(
         predict_end=predict_end,
         max_monetary=max_monetary,
         query_template_uri=QUERY_TEMPLATE_URI
-    )
+    ).apply(gcp.use_gcp_secret('user-gcp-sa'))
 
     engineer_features_task = engineer_features_op(
         query=prepare_feature_engineering_query_task.output,
@@ -93,21 +92,20 @@ def clv_pipeline(
         project_id=project_id,
         location=automl_compute_region,
         dataset_name=automl_dataset_name,
-        source_data='bq://{}.{}.{}'.format(project_id, features_dataset_id, features_table_id)
-    )
-
+        source_data_uri='bq://{}.{}.{}'.format(project_id, features_dataset_id, features_table_id)
+    ).apply(gcp.use_gcp_secret('user-gcp-sa'))
     import_dataset_task.after(engineer_features_task)
 
     train_model_task = train_model_op(
         project_id=project_id,
         location=automl_compute_region,
-        dataset_id=import_dataset_task.output,
-        model_name=model_name,
-        train_budget=train_budget,
+        dataset_id=import_dataset_task.outputs['output_dataset_id'],
+        model_name='test_model',
+        train_budget=1000,
         optimization_objective='MINIMIZE_MAE',
         target_name='target_monetary',
         features_to_exclude='customer_id'
-    ) 
+        )   
 
 pipeline_func = clv_pipeline
 pipeline_filename = pipeline_func.__name__ + '.tar.gz'
@@ -120,7 +118,7 @@ kfp.compiler.Compiler().compile(pipeline_func, pipeline_filename)
 
 arguments = {
     'project_id': 'sandbox-235500',
-    'source_table_id': 'sandbox-235500.CLVDataset.transactions',
+    'source_data_uri': 'sandbox-235500.CLVDataset.transactions',
     'features_dataset_id': 'CLVDataset',
     'features_table_id': 'clv_features',
     'threshold_date': '2011-08-08',
