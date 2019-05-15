@@ -133,7 +133,7 @@ FROM
       SUM(order_value) target_monetary
     FROM
       order_summaries
-      --WHERE order_date > DATE('{threshold_date}')
+      WHERE order_date > DATE('{threshold_date}')
     GROUP BY
       customer_id) tt
 WHERE

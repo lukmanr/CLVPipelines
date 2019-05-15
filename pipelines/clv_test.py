@@ -1,11 +1,3 @@
-#%% Change working directory from the workspace root to the ipynb file location. Turn this addition off with the DataScience.changeDirOnImportExport setting
-import os
-try:
-	os.chdir(os.path.join(os.getcwd(), 'CLVPipelines/notebooks'))
-	print(os.getcwd())
-except:
-	pass
-
 #%%
 import kfp
 from kfp import compiler
@@ -34,10 +26,13 @@ def clv_pipeline(
 ):
     # Create component factories
     prepare_features_op = kfp.components.load_component(
-        '/home/jupyter/CLVPipelines/components/clv-prepare-features.yaml')
+        '/home/jupyter/projects/clv_kfp/components/clv-prepare-features.yaml')
     import_dataset_op = kfp.components.load_component(
-        '/home/jupyter/CLVPipelines/components/clv-import-dataset.yaml')
-
+        '/home/jupyter/projects/clv_kfp/components/clv-import-dataset.yaml')
+    train_model_op = kfp.components.load_component(
+        '/home/jupyter/projects/clv_kfp/components/clv-train-model.yaml')#
+    
+    """
     prepare_features_task = prepare_features_op(
         project_id=project_id,
         data_source_id=data_source_id,
@@ -55,7 +50,19 @@ def clv_pipeline(
         dataset_name=automl_dataset_name,
         source_data=prepare_features_task.output
         )
-   
+    """
+  
+    train_model_task = train_model_op(
+        project_id=project_id,
+        location=automl_compute_region,
+        dataset_id='TBL4760946920921235456',
+        model_name='test_model',
+        train_budget=1000,
+        optimization_objective='MINIMIZE_MAE',
+        target_name='target_monetary',
+        features_to_exclude='customer_id'
+        )   
+
 pipeline_func = clv_pipeline
 pipeline_filename = pipeline_func.__name__ + '.tar.gz'
 
@@ -64,19 +71,18 @@ kfp.compiler.Compiler().compile(pipeline_func, pipeline_filename)
 
 #%%
 #Specify pipeline argument values
-
 arguments = {
     'project_id': 'sandbox-235500',
     'data_source_id': 'sandbox-235500.CLVDataset.transactions',
     'dest_dataset_id': 'CLVDataset',
-    'dest_table_id': 'test',
+    'dest_table_id': 'features',
     'threshold_date': '2011-08-08',
-    'predict_end': '2011-12-12',
-    'max_monetary': '15000'
+    'predict_end': '2011-12-12'
 }
 
+
 HOST = 'http://localhost:8082/api/v1/namespaces/kubeflow/services/ml-pipeline:8888/proxy'
-EXPERIMENT_NAME = 'TEST_EXP'
+EXPERIMENT_NAME = 'TEST'
 
 client = kfp.Client(HOST)
 experiment = client.create_experiment(EXPERIMENT_NAME)
@@ -85,9 +91,3 @@ experiment = client.create_experiment(EXPERIMENT_NAME)
 run_name = pipeline_func.__name__ + ' run'
 run_result = client.run_pipeline(experiment.id, run_name, pipeline_filename, arguments)
 print(run_result)
-
-
-#%%
-
-
-
