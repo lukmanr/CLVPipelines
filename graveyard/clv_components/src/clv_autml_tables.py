@@ -131,7 +131,7 @@ def train_model(
     # Wait for completion
     result = response.result()
     logging.info("Training completed")
-    return result
+    return result.name
 
 
 def main():

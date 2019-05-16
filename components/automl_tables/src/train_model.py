@@ -83,7 +83,7 @@ def train_model(
         }
     )
     # Wait for completion
-    return response.result()
+    return response.result().name
 
 def _parse_arguments():
     """Parse command line arguments"""

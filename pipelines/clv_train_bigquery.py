@@ -118,7 +118,7 @@ kfp.compiler.Compiler().compile(pipeline_func, pipeline_filename)
 
 arguments = {
     'project_id': 'sandbox-235500',
-    'source_data_uri': 'sandbox-235500.CLVDataset.transactions',
+    'source_table_id': 'sandbox-235500.CLVDataset.transactions',
     'features_dataset_id': 'CLVDataset',
     'features_table_id': 'clv_features',
     'threshold_date': '2011-08-08',
