@@ -16,7 +16,8 @@ Before you begin the environment setup [enable the corresponding APIs](https://c
 Create a new notebook instance with default options following the [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new). Use a **Python** instance type.
 
 ## Installing Google Kubernetes Engine (GKE)
-Create a single-zone **Standard** cluster using [Cloud Shell](https://cloud.google.com/shell/) Replace the placeholders with your zone and cluster name.
+Create a single-zone **Standard** cluster using [Cloud Shell](https://cloud.google.com/shell/).
+Make sure to replace the placeholders with your zone and cluster name.
 ```
 CLUSTERNAME=[your cluster name]
 ZONE=[your zone]
