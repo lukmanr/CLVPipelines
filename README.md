@@ -1,12 +1,25 @@
-# CLVPipelines
+This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value model training and deployment with Kubeflow pipelines**. The tutorial is the fifth part of a series that discusses how you can develop and deploy customer lifetime value (CLV) prediction models by using AI Platform on Google Cloud Platform (GCP).
 
-## Install GKE
 
+## Setting up the tutorial's environment
+This tutorial uses the following components of Google Cloud Platform:
+- Google Kubernets Engine (GKE)
+- AI Platform Notebooks
+- BigQuery
+- Dataproc
+- Cloud Storage
+
+## Installing AI Platform Notebook
+Create a new notebook instance following the [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new).
+
+## Installing Google Kubernetes Engine (GKE)
+1. Enable GKE API.
+2. Replace the placeholders with your zone and cluster name.
 ```
 #!/bin/bash
   
-CLUSTERNAME=mykfp
-ZONE=us-central1-b
+CLUSTERNAME=<your cluster name>
+ZONE=<your zone>
 gcloud config set compute/zone $ZONE
 gcloud beta container clusters create $CLUSTERNAME \
   --cluster-version 1.11.8-gke.6 --enable-autoupgrade \
