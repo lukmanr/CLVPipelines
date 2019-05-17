@@ -18,16 +18,15 @@ CREATE_FEATURES_FILE_URI = 'gs://sandbox-235500/pyspark-scripts/create_features.
 SOURCE_GCS_PATH = 'gs://sandbox-235500/clv_sales_transactions'
 OUTPUT_GCS_PATH = 'gs://sandbox-235500/clv_training_dataset'
 
-
 @dsl.pipeline(
     name='CLVTrainingPipelineDataproc',
     description='CLV Training Pipeline using Dataproc/Spark for data preparation'
 )
 def clv_dataproc_pipeline(
-    project_id=PROJECT_ID, 
-    region=REGION,
-    source_gcs_path=SOURCE_GCS_PATH,
-    output_gcs_path=OUTPUT_GCS_PATH,
+    project_id='', 
+    region='',
+    source_gcs_path='',
+    output_gcs_path='',
     threshold_date='2011-08-08',
     predict_end='2011-12-12',
     max_monetary=15000,
@@ -92,18 +91,13 @@ kfp.compiler.Compiler().compile(pipeline_func, pipeline_filename)
 
 #Specify pipeline argument values
 
-"""
 arguments = {
-    'project_id': 'sandbox-235500',
-    'source_table_id': 'sandbox-235500.CLVDataset.transactions',
-    'features_dataset_id': 'CLVDataset',
-    'features_table_id': 'clv_features',
-    'threshold_date': '2011-08-08',
-    'predict_end': '2011-12-12',
-    'max_monetary': '15000'
+    'project_id': PROJECT_ID,
+    'region': REGION,
+    'source_gcs_path': SOURCE_GCS_PATH,
+    'output_gcs_path': OUTPUT_GCS_PATH,
+    'threshold_date': '2011-08-08'
 }
-"""
-arguments = {}
 
 HOST = 'http://localhost:8082/api/v1/namespaces/kubeflow/services/ml-pipeline:8888/proxy'
 
