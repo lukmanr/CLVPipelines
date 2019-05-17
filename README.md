@@ -1,21 +1,35 @@
-# CLVPipelines
+This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value model training and deployment with Kubeflow pipelines**. The tutorial is the fifth part of a series that discusses how you can develop and deploy customer lifetime value (CLV) prediction models by using AI Platform on Google Cloud Platform (GCP).
 
-## Install GKE
 
+## Setting up the tutorial's environment
+This tutorial uses the following services of Google Cloud Platform:
+- Google Kubernets Engine (GKE)
+- AI Platform Notebooks
+- BigQuery
+- Dataproc
+- Cloud Storage
+- AutoML Tables (beta)
+
+Before you begin the environment setup [enable the corresponding APIs](https://cloud.google.com/apis/docs/enable-disable-apis) for your GCP project.
+
+## Installing AI Platform Notebook
+Create a new notebook instance with default options following the [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new). Use a **Python** instance type.
+
+## Installing Google Kubernetes Engine (GKE)
+Create a single-zone **Standard** cluster using [Cloud Shell](https://cloud.google.com/shell/) Replace the placeholders with your zone and cluster name.
 ```
-#!/bin/bash
-  
-CLUSTERNAME=mykfp
-ZONE=us-central1-b
+CLUSTERNAME=[your cluster name]
+ZONE=[your zone]
 gcloud config set compute/zone $ZONE
 gcloud beta container clusters create $CLUSTERNAME \
   --cluster-version 1.11.8-gke.6 --enable-autoupgrade \
   --zone $ZONE \
   --scopes cloud-platform \
   --enable-cloud-logging \
-  --enable-cloud-monitoring \
-  --machine-type n1-standard-2 \
-  --num-nodes 3
+  --enable-cloud-monitoring 
+```
+
+```
 kubectl create clusterrolebinding ml-pipeline-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
 ```
 
