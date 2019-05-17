@@ -2,15 +2,17 @@ This repository maintains code samples for the tutorial **Operationalizing Custo
 
 
 ## Setting up the tutorial's environment
-This tutorial uses the following components of Google Cloud Platform:
+This tutorial uses the following services of Google Cloud Platform:
 - Google Kubernets Engine (GKE)
 - AI Platform Notebooks
 - BigQuery
 - Dataproc
 - Cloud Storage
 
+Before you begin the environment setup [enable the corresponding APIs](https://cloud.google.com/apis/docs/enable-disable-apis).
+
 ## Installing AI Platform Notebook
-Create a new notebook instance following the [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new).
+Create a new notebook instance with default options following the [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new). Use a **Standard** instance.
 
 ## Installing Google Kubernetes Engine (GKE)
 1. Enable GKE API.
