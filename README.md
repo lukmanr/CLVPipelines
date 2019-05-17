@@ -8,20 +8,20 @@ This tutorial uses the following services of Google Cloud Platform:
 - BigQuery
 - Dataproc
 - Cloud Storage
+- AutoML Tables (beta)
 
-Before you begin the environment setup [enable the corresponding APIs](https://cloud.google.com/apis/docs/enable-disable-apis).
+Before you begin the environment setup [enable the corresponding APIs](https://cloud.google.com/apis/docs/enable-disable-apis) for your GCP project.
 
 ## Installing AI Platform Notebook
 Create a new notebook instance with default options following the [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new). Use a **Standard** instance.
 
 ## Installing Google Kubernetes Engine (GKE)
-1. Enable GKE API.
-2. Replace the placeholders with your zone and cluster name.
+Create a single-zone **Standard** cluster using [Cloud Shell](https://cloud.google.com/shell/) Replace the placeholders with your zone and cluster name.
 ```
 #!/bin/bash
   
-CLUSTERNAME=<your cluster name>
-ZONE=<your zone>
+CLUSTERNAME=[your cluster name]
+ZONE=[your zone]
 gcloud config set compute/zone $ZONE
 gcloud beta container clusters create $CLUSTERNAME \
   --cluster-version 1.11.8-gke.6 --enable-autoupgrade \
