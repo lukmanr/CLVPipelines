@@ -18,8 +18,6 @@ Create a new notebook instance with default options following the [how-to-guide]
 ## Installing Google Kubernetes Engine (GKE)
 Create a single-zone **Standard** cluster using [Cloud Shell](https://cloud.google.com/shell/) Replace the placeholders with your zone and cluster name.
 ```
-#!/bin/bash
-  
 CLUSTERNAME=[your cluster name]
 ZONE=[your zone]
 gcloud config set compute/zone $ZONE
@@ -28,9 +26,10 @@ gcloud beta container clusters create $CLUSTERNAME \
   --zone $ZONE \
   --scopes cloud-platform \
   --enable-cloud-logging \
-  --enable-cloud-monitoring \
-  --machine-type n1-standard-2 \
-  --num-nodes 3
+  --enable-cloud-monitoring 
+```
+
+```
 kubectl create clusterrolebinding ml-pipeline-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
 ```
 
