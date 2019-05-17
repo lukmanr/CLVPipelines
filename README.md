@@ -20,39 +20,35 @@ Create a single-zone **Standard** cluster using [Cloud Shell](https://cloud.goog
 ```
 CLUSTERNAME=[your cluster name]
 ZONE=[your zone]
-gcloud config set compute/zone $ZONE
 gcloud beta container clusters create $CLUSTERNAME \
-  --cluster-version 1.11.8-gke.6 --enable-autoupgrade \
+  --cluster-version '1.12.7-gke.10' --enable-autoupgrade \
   --zone $ZONE \
   --scopes cloud-platform \
   --enable-cloud-logging \
   --enable-cloud-monitoring 
 ```
+## Get cluster's credentials
+```
+gcloud container clusters get-credentials $CLUSTERNAME --zone $ZONE
+```
 
+## Bind your account as a cluster admin.
 ```
 kubectl create clusterrolebinding ml-pipeline-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
 ```
 
+
 ## Install Kubeflow pipelines
+
 ```
-#!/bin/bash
-PIPELINE_VERSION=0.1.7
-kubectl create -f https://storage.googleapis.com/ml-pipeline/release/$PIPELINE_VERSION/bootstrapper.yaml
+PIPELINE_VERSION=4eeeb6e22432ece32c7d0efbd8307c15bfa9b6d3
+kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$PIPELINE_VERSION/manifests/namespaced-install.yaml
 ```
+
 ## Monitor installation
 ```
-#!/bin/bash
 jobname=$(kubectl get job | tail -1 | awk '{print $1}')
 kubectl wait --for=condition=complete --timeout=5m $jobname
 ```
 
-## Connect to ambassador proxy
-```
-export NAMESPACE=kubeflow
-kubectl port-forward -n ${NAMESPACE} $(kubectl get pods -n ${NAMESPACE} --selector=service=ambassador -o jsonpath='{.items[0].metadata.name}') 8085:80
-```
 
-## Install Kubeflow pipelines SDK
-```
-pip install https://storage.googleapis.com/ml-pipeline/release/$PIPELINE_VERSION/kfp.tar.gz --upgrade
-```
