@@ -33,7 +33,7 @@ gcloud compute ssh $INSTANCE_NAME --zone $ZONE -- -L 8080:localhost:8080
 ```
 
 ## Installing Google Kubernetes Engine (GKE)
-Create a single-zone **Standard** cluster using [Cloud Shell](https://cloud.google.com/shell/).
+using [Cloud Shell](https://cloud.google.com/shell/), create a single-zone **Standard** cluster .
 Make sure to replace the placeholders with your zone and cluster name.
 ```
 CLUSTERNAME=[your cluster name]
