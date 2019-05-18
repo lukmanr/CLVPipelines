@@ -3,7 +3,7 @@ This repository maintains code samples for the tutorial **Operationalizing Custo
 
 ## Setting up the tutorial's environment
 This tutorial uses the following services of Google Cloud Platform:
-- Google Kubernets Engine (GKE)
+- Kubeflow Pipelines (KFP) on Google Kubernets Engine (GKE)
 - AI Platform Notebooks
 - BigQuery
 - Dataproc
@@ -32,9 +32,11 @@ gcloud compute instances create $INSTANCE_NAME \
 gcloud compute ssh $INSTANCE_NAME --zone $ZONE -- -L 8080:localhost:8080
 ```
 
-## Installing Google Kubernetes Engine (GKE)
-Using [Cloud Shell](https://cloud.google.com/shell/), create a single-zone **Standard** cluster .
-Make sure to replace the placeholders with your zone and cluster name.
+## Installing Kubeflow Pipelines
+Use [Cloud Shell](https://cloud.google.com/shell/) to install and configure Kubeflow Pipelines on GKE.
+
+### Install Google Kubernetes Engine (GKE)
+Create a single-zone **Standard** cluster. Make sure to replace the placeholders with your zone and cluster name.
 ```
 CLUSTERNAME=[your cluster name]
 ZONE=[your zone]
@@ -46,15 +48,14 @@ gcloud beta container clusters create $CLUSTERNAME \
   --enable-cloud-monitoring 
 ```
 
-
 Bind your account as a cluster admin.
 ```
 kubectl create clusterrolebinding ml-pipeline-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
 ```
 
 
-## Install Kubeflow pipelines
-
+### Install Kubeflow pipelines
+Install version 1.20 of KFP.
 ```
 PIPELINE_VERSION=4eeeb6e22432ece32c7d0efbd8307c15bfa9b6d3
 kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$PIPELINE_VERSION/manifests/namespaced-install.yaml
