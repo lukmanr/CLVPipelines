@@ -45,10 +45,7 @@ gcloud beta container clusters create $CLUSTERNAME \
   --enable-cloud-logging \
   --enable-cloud-monitoring 
 ```
-## Get cluster's credentials
-```
-gcloud container clusters get-credentials $CLUSTERNAME --zone $ZONE
-```
+
 
 ## Bind your account as a cluster admin.
 ```
