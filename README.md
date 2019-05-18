@@ -29,7 +29,7 @@ gcloud compute instances create $INSTANCE_NAME \
 
 ## Connecting to Jupyter Lab
 ```
-gcloud compute ssh $INSTANCE_NAME -- -L 8080:localhost:8080
+gcloud compute ssh $INSTANCE_NAME --zone $ZONE -- -L 8080:localhost:8080
 ```
 
 ## Installing Google Kubernetes Engine (GKE)
