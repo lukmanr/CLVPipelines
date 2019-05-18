@@ -47,7 +47,7 @@ gcloud beta container clusters create $CLUSTERNAME \
 ```
 
 
-## Bind your account as a cluster admin.
+Bind your account as a cluster admin.
 ```
 kubectl create clusterrolebinding ml-pipeline-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
 ```
