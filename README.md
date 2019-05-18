@@ -12,8 +12,20 @@ This tutorial uses the following services of Google Cloud Platform:
 
 Before you begin the environment setup [enable the corresponding APIs](https://cloud.google.com/apis/docs/enable-disable-apis) for your GCP project.
 
-## Installing AI Platform Notebook
+## Creating AI Platform Notebook
 Create a new notebook instance with default options following the [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new). Use a **Python** instance type.
+
+## Creating Compute Engine Instance
+```
+export IMAGE_FAMILY="common-cpu"
+export ZONE="[your region]"
+export INSTANCE_NAME="[your workstation name]"
+
+gcloud compute instances create $INSTANCE_NAME \
+  --zone=$ZONE \
+  --image-family=$IMAGE_FAMILY \
+  --image-project=deeplearning-platform-release
+```
 
 ## Installing Google Kubernetes Engine (GKE)
 Create a single-zone **Standard** cluster using [Cloud Shell](https://cloud.google.com/shell/).
