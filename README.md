@@ -19,12 +19,17 @@ Create a new notebook instance with default options following the [how-to-guide]
 ```
 export IMAGE_FAMILY="common-cpu"
 export ZONE="[your region]"
-export INSTANCE_NAME="[your workstation name]"
+export INSTANCE_NAME="[your instance name]"
 
 gcloud compute instances create $INSTANCE_NAME \
   --zone=$ZONE \
   --image-family=$IMAGE_FAMILY \
   --image-project=deeplearning-platform-release
+```
+
+## Connecting to Jupyter Lab
+```
+gcloud compute ssh $INSTANCE_NAME -- -L 8080:localhost:8080
 ```
 
 ## Installing Google Kubernetes Engine (GKE)
