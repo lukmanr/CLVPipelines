@@ -62,7 +62,12 @@ kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$PIPELINE_
 ```
 
 ## Installing the tutorial's sample code on AI Platform Notebook instance
-Follow the instructions in [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new) to connect your notebook instance.
+1. Follow the instructions in [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new) to connect to **JupyterLab** on your notebook instance.
+2. Create a new terminal from the **Launcher** tab of **JupyterLab** interface.
+3. In the terminal, use **git** to clone the tutorial's github repository.
+```
+git clone https://github.com/jarokaz/CLVPipelines
+```
 
 
 
