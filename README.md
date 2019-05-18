@@ -17,9 +17,9 @@ Create a new notebook instance with default options following the [how-to-guide]
 
 ## Creating Compute Engine Instance
 ```
-export IMAGE_FAMILY="common-cpu"
-export ZONE="[your region]"
-export INSTANCE_NAME="[your instance name]"
+export IMAGE_FAMILY=common-cpu
+export ZONE=[your region]
+export INSTANCE_NAME=[your instance name]
 
 gcloud compute instances create $INSTANCE_NAME \
   --zone=$ZONE \
