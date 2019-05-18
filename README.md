@@ -61,4 +61,9 @@ PIPELINE_VERSION=4eeeb6e22432ece32c7d0efbd8307c15bfa9b6d3
 kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$PIPELINE_VERSION/manifests/namespaced-install.yaml
 ```
 
+## Installing the tutorial's sample code on AI Platform Notebook instance
+Follow the instructions in [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new) to connect your notebook instance.
+
+
+
 
