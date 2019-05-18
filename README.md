@@ -60,10 +60,4 @@ PIPELINE_VERSION=4eeeb6e22432ece32c7d0efbd8307c15bfa9b6d3
 kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$PIPELINE_VERSION/manifests/namespaced-install.yaml
 ```
 
-## Monitor installation
-```
-jobname=$(kubectl get job | tail -1 | awk '{print $1}')
-kubectl wait --for=condition=complete --timeout=5m $jobname
-```
-
 
