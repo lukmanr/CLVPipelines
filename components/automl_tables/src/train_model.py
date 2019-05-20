@@ -32,19 +32,17 @@ def train_model(
 
     client = automl.AutoMlClient()
 
-    # Retrieve a table spec for the primary table
+    # Retrieve column specs for the primary table
     dataset_path = client.dataset_path(project_id, location, dataset_id)
     dataset_ref = client.get_dataset(dataset_path)
-    primary_table_spec_id = dataset_ref.tables_dataset_metadata.primary_table_spec_id
-    # Filtering does not seem to work so scan through all table_specs
-    table_specs = client.list_table_specs(parent=dataset_path)
-    primary_table_spec = [table_spec for table_spec in table_specs if 
-        re.fullmatch('.*%s' % primary_table_spec_id, table_spec.name)][0]
-
-    # Retrieve column specs for the primary table
-    column_specs = client.list_column_specs(primary_table_spec.name)
+    primary_table_path = client.table_spec_path(
+            project_id,
+            location,
+            dataset_id,
+            dataset_ref.tables_dataset_metadata.primary_table_spec_id)
+    column_specs = client.list_column_specs(primary_table_path)
     column_specs_dict = {spec.display_name: spec for spec in column_specs}
-
+ 
     # Set model metadata
     tables_model_metadata = {}
     # Set maximum training time

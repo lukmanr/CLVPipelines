@@ -25,8 +25,20 @@ inputs:
   - name: dataset_name
     description: 'AutoML dataset name.'
     type: String
+  - name: description
+    description: 'AutoML dataset description.'
+    type: String
   - name: source_data_uri
     description: 'Source data URI'
+    type: String
+  - name: target-column-name
+    description: 'Target column name'
+    type: String
+  - name: weight-column-name
+    description: 'Weight column name'
+    type: String
+  - name: ml-use-column-name
+    description: 'ML use column name'
     type: String
 outputs:
   - name: output_project_id
@@ -47,7 +59,9 @@ implementation:
       --project-id, {inputValue: project_id},
       --location, {inputValue: location},
       --dataset-name, {inputValue: dataset_name},
-      --source-data-uri, {inputValue: source_data_uri},
+      --target-column-name, {inputValue: target_column_name},
+      --weight-column-name, {inputValue: weight_column_name},
+      --ml-use-column-name, {inputValue: ml_use_column_name},
       --output-project-id, {outputPath: output_project_id},
       --output-dataset-id, {outputPath: output_dataset_id},
       --output-location, {outputPath: output_location}

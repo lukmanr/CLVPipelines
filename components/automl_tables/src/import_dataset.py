@@ -37,9 +37,11 @@ def import_dataset(
         location_path,
         {
             "display_name": dataset_name,
-            "description": description)
-        }        
-   
+            "description": description,
+            'tables_dataset_metadata': {}
+        })        
+    dataset_id = dataset_ref.name.split('/')[-1] 
+
     # Import data
     if source_data_uri.startswith('bq'):
         input_config = {"bigquery_source": {"input_uri": source_data_uri}}
@@ -50,31 +52,39 @@ def import_dataset(
     response = client.import_data(dataset_ref.name, input_config)
     # Wait for import to complete
     response.result()    
-        
-    # Map column display names to column spec IDs
-    column_specs = client.list_column_specs(
-        dataset_ref.tables_dataset_metadata.primary_table_spec_id)
-    column_specs_dict = {spec.display_name: spec.name for spec in column_specs}
-        
-    # Set the dataset's metadata
-    if target_column_name:
-        dataset_ref.tables_dataset_metadata.target_column_spec_id = \
-            column_specs_dict[target_column_name]
-    if weight_column_name:
-        dataset_ref.tables_dataset_metadata.weight_column_spec_id = \
-            column_specs_dict[target_column_name]
-    if ml_use_column_name:
-        dataset_ref.tables_dataset_metadata.ml_use_column_spec_id = \
-            column_specs_dict[target_column_name]
-    
-    dataset_ref = client.updated_dataset(dataset_ref)
-        
-    # Set the dataset's metadata
-    primary_table_spec_id = dataset_ref.tables.dataset_metadata.primary_table_spec_id
-    primarty_table_spec = client.get_table_spec(primary_table_spec))   
-           
 
-    return dataset_ref.name.split('/')[-1]
+    if target_column_name or weight_column_name or ml_use_column_name:
+        # Map column display names to column spec ID
+        dataset_ref = client.get_dataset(dataset_ref.name)
+        primary_table_path = client.table_spec_path(
+            project_id,
+            location,
+            dataset_id,
+            dataset_ref.tables_dataset_metadata.primary_table_spec_id)
+        column_specs = client.list_column_specs(primary_table_path)
+        column_specs_dict = {spec.display_name: spec.name for spec in column_specs}
+        
+        # Set the dataset's metadata
+        tables_dataset_metadata = {}
+        if target_column_name:
+            target_column_id = column_specs_dict[target_column_name].split('/')[-1]
+            tables_dataset_metadata.update(
+                {'target_column_spec_id': target_column_id})
+        if weight_column_name:
+            weight_column_id = column_specs_dict[weight_column_name].split('/')[-1]
+            tables_dataset_metadata.update(
+                {'weight_column_spec_id':  weight_column_id})
+        if ml_use_column_name:
+            ml_use_column_id = column_specs_dict[ml_use_column_name].split('/')[-1]
+            tables_dataset_metadata.update(
+                {'ml_use_column_spec_id':  ml_use_column_id})
+        update_dataset_dict = {
+            'name': dataset_ref.name,
+            'tables_dataset_metadata': tables_dataset_metadata
+        } 
+        client.update_dataset(update_dataset_dict)
+        
+    return dataset_id
  
 
 def main():
