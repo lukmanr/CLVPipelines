@@ -22,32 +22,86 @@ def import_dataset(
     project_id,
     location,
     dataset_name,
-    source_data_uri):
+    description,
+    source_data_uri,
+    target_column_name,
+    weight_column_name,
+    ml_use_column_name):
     """Imports clv features into an AutoML dataset"""
 
     client = automl.AutoMlClient()
     location_path = client.location_path(project_id, location)
-
+    
     # Create a dataset
     dataset_ref = client.create_dataset(
         location_path,
         {
             "display_name": dataset_name,
-            "tables_dataset_metadata": {}})
-
+            "description": description)
+        }        
+   
     # Import data
     if source_data_uri.startswith('bq'):
         input_config = {"bigquery_source": {"input_uri": source_data_uri}}
     else:
         input_uris = source_data_uri.split(",")
         input_config = {"gcs_source": {"input_uris": input_uris}}
+            
     response = client.import_data(dataset_ref.name, input_config)
     # Wait for import to complete
     response.result()    
+        
+    # Map column display names to column spec IDs
+    column_specs = client.list_column_specs(
+        dataset_ref.tables_dataset_metadata.primary_table_spec_id)
+    column_specs_dict = {spec.display_name: spec.name for spec in column_specs}
+        
+    # Set the dataset's metadata
+    if target_column_name:
+        dataset_ref.tables_dataset_metadata.target_column_spec_id = \
+            column_specs_dict[target_column_name]
+    if weight_column_name:
+        dataset_ref.tables_dataset_metadata.weight_column_spec_id = \
+            column_specs_dict[target_column_name]
+    if ml_use_column_name:
+        dataset_ref.tables_dataset_metadata.ml_use_column_spec_id = \
+            column_specs_dict[target_column_name]
+    
+    dataset_ref = client.updated_dataset(dataset_ref)
+        
+    # Set the dataset's metadata
+    primary_table_spec_id = dataset_ref.tables.dataset_metadata.primary_table_spec_id
+    primarty_table_spec = client.get_table_spec(primary_table_spec))   
+           
 
     return dataset_ref.name.split('/')[-1]
  
 
+def main():
+    args = _parse_arguments()
+
+    # Import dataset to AutoML tables
+    logging.info("Starting import from: {}".format(args.source_data_uri))
+    dataset_id = import_dataset(
+        project_id=args.project_id,
+        location=args.location,
+        dataset_name=args.dataset_name,
+        description=args.description,
+        source_data_uri=args.source_data_uri,
+        target_column_name=args.target_column_name,
+        weight_column_name=args.weight_column_name,
+        ml_use_column_name=args.ml_use_column_name)
+    logging.info("Import completed. AutoML dataset{}".format(dataset_id))
+
+    # Save project ID, dataset ID, and dataset location to output
+    Path(args.output_project_id).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_project_id).write_text(args.project_id)
+    Path(args.output_dataset_id).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_dataset_id).write_text(dataset_id)
+    Path(args.output_location).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_location).write_text(args.location)
+
+    
 def _parse_arguments():
     """Parse command line arguments"""
     
@@ -68,10 +122,29 @@ def _parse_arguments():
         required=True,
         help='AutoML dataset name.')
     parser.add_argument(
+        '--description',
+        type=str,
+        help='AutoML dataset name.')
+    parser.add_argument(
         '--source-data-uri',
         type=str,
         required=True,
         help='Source data URI. BigQuery or GCS')
+    parser.add_argument(
+        '--target-column-name',
+        type=str,
+        required=True,
+        help='Target column name')
+    parser.add_argument(
+        '--weight-column-name',
+        type=str,
+        required=True,
+        help='Wieght column name')
+    parser.add_argument(
+        '--ml-use-column-name',
+        type=str,
+        required=True,
+        help='ML use columns name')
     parser.add_argument(
         '--output-project-id',
         type=str,
@@ -90,29 +163,10 @@ def _parse_arguments():
   
     return parser.parse_args()
 
-def main():
-    args = _parse_arguments()
-
-    # Import dataset to AutoML tables
-    logging.info("Starting import from: {}".format(args.source_data_uri))
-    dataset_id = import_dataset(
-        project_id=args.project_id,
-        location=args.location,
-        dataset_name=args.dataset_name,
-        source_data_uri=args.source_data_uri)
-    logging.info("Import completed. AutoML dataset{}".format(dataset_id))
-
-    # Save project ID, dataset ID, and dataset location to output
-    Path(args.output_project_id).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.output_project_id).write_text(args.project_id)
-    Path(args.output_dataset_id).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.output_dataset_id).write_text(dataset_id)
-    Path(args.output_location).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.output_location).write_text(args.location)
-
-
+    
 if __name__ == '__main__':
-    logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+    #logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+    logging.basicConfig(level=logging.INFO)
     main()
     
     
