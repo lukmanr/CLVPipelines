@@ -37,8 +37,8 @@ Bind your account as a cluster admin.
 kubectl create clusterrolebinding ml-pipeline-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
 ```
 
-### Install Kubeflow pipelines
-Install version 1.20 of KFP.
+### Install Kubeflow Pipelines
+The code samples have been developed for version 1.20 of KFP.
 ```
 PIPELINE_VERSION=4eeeb6e22432ece32c7d0efbd8307c15bfa9b6d3
 kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$PIPELINE_VERSION/manifests/namespaced-install.yaml
