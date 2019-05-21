@@ -31,13 +31,13 @@ inputs:
   - name: source_data_uri
     description: 'Source data URI'
     type: String
-  - name: target-column-name
+  - name: target_column_name
     description: 'Target column name'
     type: String
-  - name: weight-column-name
+  - name: weight_column_name
     description: 'Weight column name'
     type: String
-  - name: ml-use-column-name
+  - name: ml_use_column_name
     description: 'ML use column name'
     type: String
 outputs:
