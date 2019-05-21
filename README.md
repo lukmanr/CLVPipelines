@@ -75,25 +75,20 @@ SDK_VERSION=0.1.20
 python3 -m pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
 ```
 
-### Configure port forwarding to the Pipeline service 
-Get the credentials to your GKE cluster.
-```
-ZONE=[your zone]
-CLUSTERNAME=[your cluster name]
-gcloud container clusters get-credentials $CLUSTERNAME --zone $ZONE
-```
-Configure port forwarding.
+### Configure port forwarding to Kubeflow Pipelines service 
+If you want to submit Kubeflow Pipelines runs programmatically (rather than through GUI) you need access to `ml-pipeline` service that is running on your GKE cluster. By default the service is not exposed on a public IP intefaces. For the purpose of this tutorial you access the service using port forwarding. Ulternatively, you can expose the service through the external IP.
+
+To configure port forwarding execute the following command in a new Cloud Shell terminal.
+
 ```
 kubectl port-forward -n kubeflow svc/ml-pipeline 8082:8888
 ```
 
-Make sure that the terminal window stays open and the command is running while you walk through the tutorial's notebooks.
+Make sure that the terminal window stays open and the command is running when you submit the jobs using KFP SDK client API.
 
 
-
-
-## Starting the tutorial
-The tutorial's notebooks are located in the `pipelines` folder. Follow the instructions in the notebooks to walk through the tutorial's scenarios.
+## Rebuilding the components and recompiling the pipelines
+Follow the instructions in the README files in `pipelines` and `components` subfolders if you want to rebuild the components and recompile the pipelines.
 
 
 
