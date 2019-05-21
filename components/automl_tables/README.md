@@ -14,5 +14,7 @@ The folder structure:
 - `./specs` - Component specifications
 - `./tests` - TBD. Currently some helper scripts.
 
+To build the image run `./build_image.sh`. The script builds an image and deploys it to `gcr.io/clv-pipelines/kfp-automl-tables:latest`. 
 
+To use a different registry pass the full image name as a command line parameter to the script.
 
