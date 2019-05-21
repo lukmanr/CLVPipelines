@@ -86,6 +86,8 @@ To configure port forwarding execute the following command in a new Cloud Shell 
 kubectl port-forward -n kubeflow svc/ml-pipeline 8082:8888
 ```
 
+The command forwards the local (Cloud Shell) port 8082 to port 8888 (ml-pipeline service port) on the cluster.
+
 Make sure that the terminal window stays open and the command is running when you submit the jobs using KFP SDK client API.
 
 
