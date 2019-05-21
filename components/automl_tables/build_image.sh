@@ -1,8 +1,10 @@
 #!/bin/bash
 
-image_name=gcr.io/clv-pipelines/automl-tables-component
-image_tag=latest
-full_image_name=${image_name}:${image_tag}
+if [ "$1" == "" ]; then
+    full_image_name="gcr.io/clv-pipelines/automl-tables-components:latest"
+else
+    full_image_name="$1"
+fi
 
 docker build -t "${full_image_name}" .
 docker push "${full_image_name}" 

@@ -103,6 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 *.zip
-*.gz
 dev.env
+.vscode
 

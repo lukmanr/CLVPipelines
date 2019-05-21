@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: AutoML Tables Dataset Import
+name: Dataset Import
 description: |
   Imports data from either BigQuery or GCS to AutoML Dataset
 inputs:
