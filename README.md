@@ -49,7 +49,7 @@ After port forwarding has been established, use Cloud Shell web preview to open 
 
 
 ## Configuring AI Platform Notebook
-During the tutorial, you use an AI Platform Notebook as primary interface. 
+During the tutorial, you use an AI Platform Notebook instance as primary interface. 
 
 ### Provision an AI Platform Notebook instance
 1. Create a new notebook instance with default options following the [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new). Use a **Python** instance type.
