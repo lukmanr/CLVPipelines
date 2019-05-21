@@ -60,7 +60,8 @@ To provision an AI Platform Notebook and configure the tutorial's sample code fo
 git clone https://github.com/jarokaz/CLVPipelines
 ```
 
-
+## Starting the tutorial
+Open the `getting_started.ipynb` notebook from the `CLVPipelines` folder. Follow the instructions in the notebook to walk through the tutorial.
 
 
 
