@@ -72,8 +72,8 @@ python3 -m pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_V
 ### Configure port forwarding to the Pipeline service 
 Get the credentials to your GKE cluster.
 ```
-ZONE = [your zone]
-CLUSTERNAME = [your cluster name]
+ZONE=[your zone]
+CLUSTERNAME=[your cluster name]
 gcloud container clusters get-credentials $CLUSTERNAME --zone $ZONE
 ```
 Configure port forwarding.
