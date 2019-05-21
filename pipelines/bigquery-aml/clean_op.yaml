@@ -32,7 +32,7 @@ implementation:
       from pathlib import Path\nfor idx, filename in enumerate(_output_files):\n \
       \   _output_path = Path(filename)\n    _output_path.parent.mkdir(parents=True,\
       \ exist_ok=True)\n    _output_path.write_text(str(_outputs[idx]))\n"
-    image: marketplace.gcr.io/google/python:latest
+    image: gcr.io/clv-pipelines/base-image:latest
 inputs:
 - name: project_id
   type: str

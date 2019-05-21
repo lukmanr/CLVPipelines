@@ -53,7 +53,7 @@ outputs:
 
 implementation:
   container:
-    image: gcr.io/sandbox-235500/automl-tables-component:latest
+    image: gcr.io/clv-pipelines/automl-tables-component:latest
     command: ["python", "import_dataset.py"]
     args: [
       --project-id, {inputValue: project_id},
