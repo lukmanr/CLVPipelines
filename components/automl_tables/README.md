@@ -9,6 +9,10 @@ There are four components:
 All components are packaged into a single Docker image. 
 
 The folder structure:
-- `./` - Component specifications, Dockerfile, and build script
+- `./` - Dockerfile, and build script
 - `./src` - Source code for the components
+- `./specs` - Component specifications
+- `./tests` - TBD. Currently some helper scripts.
+
+
 
