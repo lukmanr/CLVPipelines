@@ -5,7 +5,8 @@ The repository includes two subfolders: `pipelines` and `components`.
 
 The `pipelines` folder contains the example pipelines that demonstrate how to utilize pre-built and custom **Kubeflow Pipelines Components** to orchestrate data preparation, model training, model deployment and inference. Refer to README files associated with each pipeline for more details.
 
-The `components` folder contains an example implementation of a custom Kubeflow Pipeline Component. This component is a wrapper around **AutoML Tables API**. The folder also contains a Docker file for the base image used by Lightweight Python components used in some pipelines.
+The `components` folder contains:
+- An example implementation of a custom Kubeflow Pipeline Component. This component is a wrapper around **AutoML Tables API**. - The definition of the base image used by Lightweight Python components used in some pipelines.
 
 To run the code samples you need to set up a Google Cloud Platform (GCP) project with the following GCP services enabled:
 - Google Kubernetes Engine (GKE)
