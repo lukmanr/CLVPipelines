@@ -78,7 +78,7 @@ gcloud container clusters get-credentials $CLUSTERNAME --zone $ZONE
 ```
 Configure port forwarding.
 ```
-kubectl port-forward -n kubeflow svc/ml-pipeline 8081:8888
+kubectl port-forward -n kubeflow svc/ml-pipeline 8082:8888
 ```
 
 Make sure that the terminal window stays open and the command is running while you walk through the tutorial's notebooks.
