@@ -7,17 +7,14 @@ The `pipelines` folder contains the example pipelines that demonstrate how to ut
 
 The `component` folder contains an example implementation of a custom Kubeflow Pipeline Component. This component is a wrapper around **AutoML Tables API**.
 
-
-## Setting up the tutorial's environment
-This tutorial uses the following services of Google Cloud Platform:
-- Kubeflow Pipelines (KFP) on Google Kubernets Engine (GKE)
-- AI Platform Notebooks
+To run the code samples you need to set up a Google Cloud Platform (GCP)  with the following GCP services enabled:
+- Google Kubernetes Engine (GKE)
 - BigQuery
 - Dataproc
 - Cloud Storage
 - AutoML Tables (beta)
 
-Before you begin the environment setup, [enable the corresponding APIs](https://cloud.google.com/apis/docs/enable-disable-apis) for your GCP project.
+Refer to this [how-to-guide](https://cloud.google.com/apis/docs/enable-disable-apis) to enable the required services.
 
 ## Configuring Kubeflow Pipelines
 Use [Cloud Shell](https://cloud.google.com/shell/) to install and configure Kubeflow Pipelines on GKE.
