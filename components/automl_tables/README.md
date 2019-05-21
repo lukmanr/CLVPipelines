@@ -16,5 +16,9 @@ The folder structure:
 
 To build the image run `./build_image.sh`. The script builds an image and deploys it to `gcr.io/clv-pipelines/kfp-automl-tables:latest`. 
 
-To use a different registry pass the full image name as a command line parameter to the script.
+To use a different registry, pass the full image name as a command line parameter to the script.
+
+To employ a component in a pipeline use `kfp.components.load_component_from_url` referencing a `.yaml` file from the specs folder.
+
+
 
