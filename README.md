@@ -20,7 +20,7 @@ Refer to this [how-to-guide](https://cloud.google.com/apis/docs/enable-disable-a
 You are going to use [Cloud Shell](https://cloud.google.com/shell/) to install and configure Kubeflow Pipelines on Google Kubernetes Engine.
 
 ### Install Google Kubernetes Engine (GKE)
-Create a single-zone **Standard** cluster. Make sure to replace the placeholders with your zone and cluster name.
+Open a Cloud Shell session and create a single-zone **Standard** cluster. Make sure to replace the placeholders with your zone and cluster name.
 ```
 CLUSTERNAME=[your cluster name]
 ZONE=[your zone]
@@ -51,23 +51,21 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8080:80
 ```
 After port forwarding has been established, use Cloud Shell web preview to open KFP UI on port 8080. Note that it may take a couple of minutes before the UI is fully functional.
 
+You are now ready to execute the sample pipelines using Kubeflow Pipelines UI. Refer to the **Tutorial (TBD)** for the walk-through instructions.
 
-## Configuring AI Platform Notebook
-During the tutorial, you use an AI Platform Notebook instance as primary interface. 
+To re-build the KFP components, recompile the pipelines, or use a programmatic inteface to Kubeflow Pipelines, you need a development environment with the following configuration:
+- Python 3.5+
+- Docker
+- Kubeflow Pipelines SDK v 1.20
 
-### Provision an AI Platform Notebook instance
-1. Create a new notebook instance with default options following the [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new). Use a **Python** instance type.
-2. Follow the instructions in [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new) to connect to **JupyterLab** on your notebook instance.
-3. Create a new terminal from the **Launcher** tab of **JupyterLab** interface.
-4. In the terminal, use **git** to clone the tutorial's github repository.
-```
-git clone https://github.com/jarokaz/CLVPipelines
-```
+The following instructions show how to configure Cloud Shell as the development environment. 
 
-### Install and configure Kubeflow Pipelines SDK
-Before running the tutorial's Jupyter notebooks you need to install Kubeflow Pipelines SDK into the Python 3 kernel of you AI Platform notebook instance and configure access to the Pipelines service on your GKE cluster.
 
-Open a new terminal in **JupyterLab**. Run the following command to install SDK version 0.1.20.
+### Install and configure Kubeflow Pipelines SDK on Cloud Shell
+Docker and Python 3.5.3 are pre-installed in Cloud Shell. The only missing component is KFP SDK.
+
+
+To install KFP SDK v0.1.20 open a new Cloud Shell session and run the following command:
 ```
 SDK_VERSION=0.1.20
 python3 -m pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
