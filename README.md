@@ -55,7 +55,7 @@ You are now ready to execute the sample pipelines using Kubeflow Pipelines UI. R
 
 ## Configuring a development environment
 
-To re-build the KFP components, recompile the pipelines, or use a programmatic inteface to Kubeflow Pipelines, you need a development environment with the following configuration:
+To re-build the tutorial's KFP components, recompile the pipelines, or use a programmatic inteface to Kubeflow Pipelines, you need a development environment with the following configuration:
 - Python 3.5+
 - Docker
 - Kubeflow Pipelines SDK v 1.20
