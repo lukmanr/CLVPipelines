@@ -1,6 +1,6 @@
 #!/bin/bash
 
-image_name=gcr.io/clv-pipelines/automl-tables-components
+image_name=gcr.io/clv-pipelines/automl-tables-component
 image_tag=latest
 full_image_name=${image_name}:${image_tag}
 

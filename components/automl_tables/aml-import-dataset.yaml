@@ -59,6 +59,8 @@ implementation:
       --project-id, {inputValue: project_id},
       --location, {inputValue: location},
       --dataset-name, {inputValue: dataset_name},
+      --description, {inputValue: description},
+      --source-data-uri, {inputValue: source_data_uri},
       --target-column-name, {inputValue: target_column_name},
       --weight-column-name, {inputValue: weight_column_name},
       --ml-use-column-name, {inputValue: ml_use_column_name},
