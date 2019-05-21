@@ -59,8 +59,10 @@ To re-build the tutorial's KFP components, recompile the pipelines, or use a pro
 - Python 3.5+
 - Docker
 - Kubeflow Pipelines SDK v 1.20
+- gcloud SDK
+- Access to your GCP project
 
-The following instructions show how to configure Cloud Shell as the development environment. 
+The following instructions show how to configure Cloud Shell as the development environment. Note that you can use an environment of your choice as long as it meets the above requirements.
 
 
 ### Install and configure Kubeflow Pipelines SDK on Cloud Shell
