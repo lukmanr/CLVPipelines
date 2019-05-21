@@ -7,7 +7,7 @@ The `pipelines` folder contains the example pipelines that demonstrate how to ut
 
 The `component` folder contains an example implementation of a custom Kubeflow Pipeline Component. This component is a wrapper around **AutoML Tables API**.
 
-To run the code samples you need to set up a Google Cloud Platform (GCP)  with the following GCP services enabled:
+To run the code samples you need to set up a Google Cloud Platform (GCP) project with the following GCP services enabled:
 - Google Kubernetes Engine (GKE)
 - BigQuery
 - Dataproc
