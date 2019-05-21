@@ -49,7 +49,7 @@ To connect to KFP UI use Cloud Shell to forward a port to KFP UI service.
 ```
 kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8080:80
 ```
-After port forwarding has been established, use Cloud Shell web preview to open KFP UI on port 8080.
+After port forwarding has been established, use Cloud Shell web preview to open KFP UI on port 8080. Note that it may take a couple of minutes before the UI is fully functional.
 
 
 ## Configuring AI Platform Notebook
