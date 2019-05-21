@@ -3,6 +3,9 @@ The fifth part focuses on demonstrating how to operationalize model training, de
 
 The repository includes two subfolders: `pipelines` and `components`.
 
+The `pipelines` folder contains the example pipelines that demonstrate how to utilize pre-built and custom **Kubeflow Pipelines Components** to orchestrate data preparation, model training, model deployment and inference. Refer to README files in associated with each pipeline for more details.
+
+The 'component' folder contains an example implementation of a custom Kubeflow Pipeline Component. This component is a wrapper around **AutoML Tables API**.
 
 
 ## Setting up the tutorial's environment
