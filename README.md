@@ -66,7 +66,7 @@ The following instructions show how to configure Cloud Shell as the development 
 
 
 ### Install and configure Kubeflow Pipelines SDK on Cloud Shell
-Docker and Python 3.5.3 are pre-installed in Cloud Shell. The only missing component is KFP SDK.
+Docker, gcloud SDK and Python 3.5.3 are pre-installed on Cloud Shell. The only missing component is KFP SDK.
 
 
 To install KFP SDK v0.1.20 open a new Cloud Shell session and run the following command:
