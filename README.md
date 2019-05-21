@@ -1,4 +1,4 @@
-This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value model training and deployment with Kubeflow pipelines**. The tutorial is the fifth part of a series that discusses how you can develop and deploy customer lifetime value (CLV) prediction models by using AI Platform on Google Cloud Platform (GCP).
+This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value model training and deployment with Kubeflow pipelines**. The tutorial is the fifth part of a series that discusses how you can develop and deploy customer lifetime value (CLV) prediction models by using Cloud AI on Google Cloud Platform (GCP).
 
 
 ## Setting up the tutorial's environment
@@ -49,9 +49,9 @@ After port forwarding has been established, use Cloud Shell web preview to open 
 
 
 ## Configuring AI Platform Notebook
-During the tutorial, you use an AI Platform Notebook and Kubeflow Pipelines UI as primary interfaces.
-To provision an AI Platform Notebook and configure the tutorial's sample code follow the below steps:
+During the tutorial, you use an AI Platform Notebook as primary interface. 
 
+### Provision an AI Platform Notebook instance
 1. Create a new notebook instance with default options following the [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new). Use a **Python** instance type.
 2. Follow the instructions in [how-to-guide](https://cloud.google.com/ml-engine/docs/notebooks/create-new) to connect to **JupyterLab** on your notebook instance.
 3. Create a new terminal from the **Launcher** tab of **JupyterLab** interface.
@@ -60,8 +60,34 @@ To provision an AI Platform Notebook and configure the tutorial's sample code fo
 git clone https://github.com/jarokaz/CLVPipelines
 ```
 
+### Install and configure Kubeflow Pipelines SDK
+Before running the tutorial's Jupyter notebooks you need to install Kubeflow Pipelines SDK into the Python 3 kernel of you AI Platform notebook instance and configure access to the Pipelines service on your GKE cluster.
+
+Open a new terminal in **JupyterLab**. Run the following command to install SDK version 0.1.20.
+```
+SDK_VERSION=0.1.20
+python3 -m pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
+```
+
+### Configure port forwarding to the Pipeline service 
+Get the credentials to your GKE cluster.
+```
+ZONE = [your zone]
+CLUSTERNAME = [your cluster name]
+gcloud container clusters get-credentials $CLUSTERNAME --zone $ZONE
+```
+Configure port forwarding.
+```
+kubectl port-forward -n kubeflow svc/ml-pipeline 8081:8888
+```
+
+Make sure that the terminal window stays open and the command is running while you walk through the tutorial's notebooks.
+
+
+
+
 ## Starting the tutorial
-Open the `getting_started.ipynb` notebook from the `CLVPipelines` folder. Follow the instructions in the notebook to walk through the tutorial.
+The tutorial's notebooks are located in the `pipelines` folder. Follow the instructions in the notebooks to walk through the tutorial's scenarios.
 
 
 
