@@ -53,6 +53,8 @@ After port forwarding has been established, use Cloud Shell web preview to open 
 
 You are now ready to execute the sample pipelines using Kubeflow Pipelines UI. Refer to the **Tutorial (TBD)** for the walk-through instructions.
 
+## Configuring a development environment
+
 To re-build the KFP components, recompile the pipelines, or use a programmatic inteface to Kubeflow Pipelines, you need a development environment with the following configuration:
 - Python 3.5+
 - Docker
