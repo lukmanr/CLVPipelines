@@ -17,7 +17,7 @@ To run the code samples you need to set up a Google Cloud Platform (GCP)  with t
 Refer to this [how-to-guide](https://cloud.google.com/apis/docs/enable-disable-apis) to enable the required services.
 
 ## Configuring Kubeflow Pipelines
-Use [Cloud Shell](https://cloud.google.com/shell/) to install and configure Kubeflow Pipelines on GKE.
+You are going to use [Cloud Shell](https://cloud.google.com/shell/) to install and configure Kubeflow Pipelines on GKE.
 
 ### Install Google Kubernetes Engine (GKE)
 Create a single-zone **Standard** cluster. Make sure to replace the placeholders with your zone and cluster name.
