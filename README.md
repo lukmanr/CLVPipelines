@@ -10,7 +10,7 @@ This tutorial uses the following services of Google Cloud Platform:
 - Cloud Storage
 - AutoML Tables (beta)
 
-Before you begin the environment setup [enable the corresponding APIs](https://cloud.google.com/apis/docs/enable-disable-apis) for your GCP project.
+Before you begin the environment setup, [enable the corresponding APIs](https://cloud.google.com/apis/docs/enable-disable-apis) for your GCP project.
 
 ## Configuring Kubeflow Pipelines
 Use [Cloud Shell](https://cloud.google.com/shell/) to install and configure Kubeflow Pipelines on GKE.
