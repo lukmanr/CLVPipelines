@@ -1,6 +1,8 @@
-This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value model training and deployment with Kubeflow pipelines**. The tutorial is the fifth part of a series [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
+This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value model training and deployment with Kubeflow Pipelines**. The tutorial is the fifth part of the series [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
+The fifth part focuses on demonstrating how to operationalize model training, deployment, and inference using Kubeflow Pipelines on Google Kubernetes Engine.
 
-that discusses how you can develop and deploy customer lifetime value (CLV) prediction models by using Cloud AI on Google Cloud Platform (GCP).
+The repository includes two subfolders: `pipelines` and `components`.
+
 
 
 ## Setting up the tutorial's environment
