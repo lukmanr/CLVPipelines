@@ -76,7 +76,7 @@ def clv_pipeline(
         predict_end=predict_end,
         max_monetary=max_monetary,
         query_template_uri=QUERY_TEMPLATE_URI
-    ).apply(gcp.use_gcp_secret('user-gcp-sa'))
+    )
 
     engineer_features_task = engineer_features_op(
         query=prepare_feature_engineering_query_task.output,
@@ -86,14 +86,14 @@ def clv_pipeline(
         output_gcs_path='',
         dataset_location=features_dataset_location,
         job_config=''
-    ).apply(gcp.use_gcp_secret('user-gcp-sa'))
+    )
 
     import_dataset_task = import_dataset_op(
         project_id=project_id,
         location=automl_compute_region,
         dataset_name=automl_dataset_name,
         source_data_uri='bq://{}.{}.{}'.format(project_id, features_dataset_id, features_table_id)
-    ).apply(gcp.use_gcp_secret('user-gcp-sa'))
+    )
     import_dataset_task.after(engineer_features_task)
 
     train_model_task = train_model_op(
