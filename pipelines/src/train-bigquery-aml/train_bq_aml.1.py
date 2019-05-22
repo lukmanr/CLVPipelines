@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import kfp
-from kfp import dsl
 import os
 import argparse
 
@@ -62,21 +61,21 @@ AML_TRAIN_MODEL_SPEC_URI = 'gs://clv-pipelines-scripts/aml-train-model.yaml'
 QUERY_TEMPLATE_URI = 'gs://clv-pipelines-scripts/create_features_template.sql'
 
 @kfp.dsl.pipeline(
-    name='CLV Training BigQuery AutoML',
+    name='CLV Training Pipeline - BigQuery',
     description='CLV Training Pipeline using BigQuery for feature engineering and Automl Tables for model training'
 )
-def clv_train_bq_automl(
-    project_id, 
-    source_bq_table_id,
-    threshold_date,
-    predict_end,
-    features_bq_dataset_id='clv_features_dataset',
-    features_bq_table_id='clv_features',
-    features_bq_dataset_location='US',
+def clv_train_pipeline_bq_automl(
+    project_id='', 
+    source_table_id='',
+    features_dataset_id='', 
+    features_table_id='',
+    features_dataset_location='US',
+    threshold_date='',
+    predict_end='',
     max_monetary=15000,
     compute_region='us-central1',
     automl_dataset_name='clv_features',
-    automl_model_name='clv_regression',
+    model_name='clv_regression',
     train_budget='1000',
     target_column_name='target_monetary',
     features_to_exclude='customer_id'
@@ -92,7 +91,7 @@ def clv_train_bq_automl(
     # Generate the feature engineering query
     prepare_feature_engineering_query_task = prepare_feature_engineering_query_op(
         project_id=project_id,
-        source_table_id=source_bq_table_id,
+        source_table_id=source_table_id,
         threshold_date=threshold_date,
         predict_end=predict_end,
         max_monetary=max_monetary,
@@ -103,10 +102,10 @@ def clv_train_bq_automl(
     engineer_features_task = engineer_features_op(
         query=prepare_feature_engineering_query_task.output,
         project_id=project_id,
-        dataset_id=features_bq_dataset_id,
-        table_id=features_bq_table_id,
+        dataset_id=features_dataset_id,
+        table_id=features_table_id,
         output_gcs_path='',
-        dataset_location=features_bq_dataset_location,
+        dataset_location=features_dataset_location,
         job_config=''
     )
      
@@ -116,7 +115,7 @@ def clv_train_bq_automl(
         location=compute_region,
         dataset_name=automl_dataset_name,
         description='',
-        source_data_uri='bq://{}.{}.{}'.format(project_id, features_bq_dataset_id, features_bq_table_id),
+        source_data_uri='bq://{}.{}.{}'.format(project_id, features_dataset_id, features_table_id),
         target_column_name=target_column_name,
         weight_column_name='',
         ml_use_column_name=''       
@@ -129,7 +128,7 @@ def clv_train_bq_automl(
         project_id=project_id,
         location=compute_region,
         dataset_id=import_dataset_task.outputs['output_dataset_id'],
-        model_name=automl_model_name,
+        model_name=model_name,
         train_budget=train_budget,
         optimization_objective='MINIMIZE_MAE',
         target_name=target_column_name,
@@ -137,3 +136,26 @@ def clv_train_bq_automl(
         )
    """ 
 
+def _parse_arguments():
+    """Parse command line arguments"""
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--out-folder',
+        type=str,
+        required=True,
+        help='The output folder for a compiled pipeline')
+    
+    return parser.parse_args()
+        
+
+if __name__ == '__main__':
+    args = _parse_arguments()
+    # Compile the pipeline
+    pipeline_func = clv_train_pipeline_bq_automl
+    pipeline_filename = pipeline_func.__name__ + '.tar.gz'
+    pipeline_path = os.path.join(args.out_folder, pipeline_filename)
+
+    kfp.compiler.Compiler().compile(pipeline_func, pipeline_path) 
+
+    
