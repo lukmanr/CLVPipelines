@@ -9,16 +9,18 @@ There are four components:
 All components are packaged into a single Docker image. 
 
 The folder structure:
-- `./` - Dockerfile, and build script
-- `./src` - Source code for the components
-- `./specs` - Component specifications
-- `./tests` - TBD. Currently some helper scripts.
+- `container` - Dockerfile, and build script
+- `src` - Source code for the components
+- `tests` - TBD. Currently some helper scripts.
+- `import_dataset` - *Import Dataset* component definition file
+- `train_model` - *Train Model* component definition file
+- `deploy_model` - *Deploy Model* component definition file
+- 'batch_predict` - *Batch Predict* component definition file
 
-To build the image run `./build_image.sh`. The script builds an image and deploys it to `gcr.io/clv-pipelines/kfp-automl-tables:latest`. 
+To build the image run `./container/build_image.sh`. The script builds an image and deploys it to `gcr.io/clv-pipelines/kfp-automl-tables:latest`. 
 
 To use a different registry, pass the full image name as a command line parameter to the script.
 
-To employ a component in a pipeline use `kfp.components.load_component_from_url` referencing a `.yaml` file from the specs folder.
-
+To employ a component in a pipeline use `kfp.components.load_component_from_url` referencing a `.yaml` file from a component definition folder. 
 
 
