@@ -20,10 +20,10 @@ import argparse
 CREATE_DATAPROC_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/d2f5cc92a46012b9927209e2aaccab70961582dc/components/gcp/dataproc/create_cluster/component.yaml'
 DELETE_DATAPROC_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/d2f5cc92a46012b9927209e2aaccab70961582dc/components/gcp/dataproc/delete_cluster/component.yaml' 
 SUBMIT_PYSPARK_JOB_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/d2f5cc92a46012b9927209e2aaccab70961582dc/components/gcp/dataproc/submit_pyspark_job/component.yaml'
-AML_IMPORT_DATASET_SPEC_URI = 'gs://clv-pipelines-scripts/aml-import-dataset.yaml'
-AML_TRAIN_MODEL_SPEC_URI = 'gs://clv-pipelines-scripts/aml-train-model.yaml'
+AML_IMPORT_DATASET_SPEC_URI = 'gs://clv-pipelines/aml-import-dataset.yaml'
+AML_TRAIN_MODEL_SPEC_URI = 'gs://clv-pipelines/aml-train-model.yaml'
 # Set the URI to the location of the feature engineering PySpark script
-CREATE_FEATURES_FILE_URI = 'gs://clv-pipelines-scripts/create_features.py'
+CREATE_FEATURES_FILE_URI = 'gs://clv-pipelines/create_features.py'
 
 
 @kfp.dsl.pipeline(
@@ -112,28 +112,3 @@ def clv_train_pipeline_dataproc_automl(
         source_data_uri='bq://{}.{}.{}'.format(project_id, features_dataset_id, features_table_id)
     )
     """
-
- 
-
-def _parse_arguments():
-    """Parse command line arguments"""
-    
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--out-folder',
-        type=str,
-        required=True,
-        help='The output folder for a compiled pipeline')
-    
-    return parser.parse_args()
-        
-
-if __name__ == '__main__':
-    args = _parse_arguments()
-    # Compile the pipeline
-    pipeline_func = clv_train_pipeline_dataproc_automl
-    pipeline_filename = pipeline_func.__name__ + '.tar.gz'
-    pipeline_path = os.path.join(args.out_folder, pipeline_filename)
-
-    kfp.compiler.Compiler().compile(pipeline_func, pipeline_path) 
-

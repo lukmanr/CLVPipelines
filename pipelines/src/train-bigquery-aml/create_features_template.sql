@@ -107,7 +107,7 @@ FROM
     GROUP BY
       customer_id) tf,
 
-  -- This SELECT uses all records to calculate the target (could also use data after threshold )
+  -- This SELECT uses data after threshold to calculate the target )
   (
     SELECT
       customer_id,

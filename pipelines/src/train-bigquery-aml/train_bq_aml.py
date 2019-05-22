@@ -56,10 +56,10 @@ def prepare_feature_engineering_query(
 
 # Set the URIs to the specifications of the components used in the pipeline
 BIGQUERY_COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/bigquery/query/component.yaml'
-AML_IMPORT_DATASET_SPEC_URI = 'gs://clv-pipelines-scripts/aml-import-dataset.yaml'
-AML_TRAIN_MODEL_SPEC_URI = 'gs://clv-pipelines-scripts/aml-train-model.yaml'
+AML_IMPORT_DATASET_SPEC_URI = 'gs://clv-pipelines/aml-import-dataset.yaml'
+AML_TRAIN_MODEL_SPEC_URI = 'gs://clv-pipelines/aml-train-model.yaml'
 # Set the URI to the location of the feature engineering query template
-QUERY_TEMPLATE_URI = 'gs://clv-pipelines-scripts/create_features_template.sql'
+QUERY_TEMPLATE_URI = 'gs://clv-pipelines/create_features_template.sql'
 
 @kfp.dsl.pipeline(
     name='CLV Training BigQuery AutoML',
