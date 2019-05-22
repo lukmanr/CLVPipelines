@@ -15,4 +15,9 @@ else
     bucket="$2"
 fi
 
-gsutil cp specs/*.yaml "${bucket}"
+
+gsutil cp ../batch_predict/aml-batch-predict.yaml "${bucket}"
+gsutil cp ../deploy_model/aml-deploy-model.yaml "${bucket}"
+gsutil cp ../import_dataset/aml-import-dataset.yaml "${bucket}"
+gsutil cp ../log_metrics/aml-log-metrics.yaml "${bucket}"
+

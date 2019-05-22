@@ -1,0 +1,1 @@
+{"metrics": [{"numberValue": 1837.4, "format": "RAW", "name": "RMSE"}, {"numberValue": 752.41, "format": "RAW", "name": "MAE"}, {"numberValue": 0.79, "format": "RAW", "name": "R-squared"}]}

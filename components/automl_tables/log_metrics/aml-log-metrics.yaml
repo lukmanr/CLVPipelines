@@ -12,22 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Deploy Model
+name: Log Regresssion Metrics
 description: |
-  Deploy AutoML model
+  Logs regression metrics for a given model
 inputs:
   - name: model_full_id
-    description: 'The full id of a model'
+    description: 'The full id of the model'
     type: String
 outputs:
-  - name: output_deployment
-    description: 'Deployment status'
+  - name: output_rmse
+    description: 'RMSE metric'
     type: String
+  - name: output_mae
+    description: 'MAE metric'
+    type: String
+  - name: output_rsquared
+    description: 'R-squared metric'
+    type: String
+
 implementation:
   container:
     image: gcr.io/clv-pipelines/automl-tables-component:latest
-    command: ["python", "deploy_model.py"]
+    command: ["python", "log_metrics.py"]
     args: [
-      --model-full-id, {inputValue: model_full_id},
-      --output-deployment, {outputPath: output_deployment}
+      --model_full-id, {inputValue: model_full_id},
+      --output-rmse, {outputPath: output_rmse},
+      --output-mae, {outputPath: output_mae},
+      --output-rsquared, {outputPath: output_rsquared}
     ]

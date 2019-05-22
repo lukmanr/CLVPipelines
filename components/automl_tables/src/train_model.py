@@ -151,6 +151,7 @@ def main():
 
     # Import dataset to AutoML tables
     logging.info( "Starting training model: {}".format(args.model_name))
+    """
     model_id = train_model(
         project_id=args.project_id,
         location=args.location,
@@ -161,6 +162,8 @@ def main():
         target_name=args.target_name,
         features_to_exclude=args.features_to_exclude
     )
+    """
+    model_id = "projects/165540728514/locations/us-central1/models/TBL5243746874724188160"
 
     logging.info("Training completed")
 
