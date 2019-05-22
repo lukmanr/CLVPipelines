@@ -20,10 +20,10 @@ import argparse
 CREATE_DATAPROC_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/d2f5cc92a46012b9927209e2aaccab70961582dc/components/gcp/dataproc/create_cluster/component.yaml'
 DELETE_DATAPROC_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/d2f5cc92a46012b9927209e2aaccab70961582dc/components/gcp/dataproc/delete_cluster/component.yaml' 
 SUBMIT_PYSPARK_JOB_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/d2f5cc92a46012b9927209e2aaccab70961582dc/components/gcp/dataproc/submit_pyspark_job/component.yaml'
-AML_IMPORT_DATASET_SPEC_URI = 'gs://clv-pipelines/aml-import-dataset.yaml'
-AML_TRAIN_MODEL_SPEC_URI = 'gs://clv-pipelines/aml-train-model.yaml'
+AML_IMPORT_DATASET_SPEC_URI = 'gs://clv-pipelines/specs/aml-import-dataset.yaml'
+AML_TRAIN_MODEL_SPEC_URI = 'gs://clv-pipelines/specs/aml-train-model.yaml'
 # Set the URI to the location of the feature engineering PySpark script
-CREATE_FEATURES_FILE_URI = 'gs://clv-pipelines/create_features.py'
+CREATE_FEATURES_FILE_URI = 'gs://clv-pipelines/scripts/create_features.py'
 
 
 @kfp.dsl.pipeline(
