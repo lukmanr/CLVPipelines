@@ -1,4 +1,3 @@
-
 # Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -119,6 +118,7 @@ def clv_train_pipeline_bq_automl(
     )
     import_dataset_task.after(engineer_features_task)
 
+    """
     train_model_task = train_model_op(
         project_id=project_id,
         location=compute_region,
@@ -129,7 +129,7 @@ def clv_train_pipeline_bq_automl(
         target_name=target_column_name,
         features_to_exclude=features_to_exclude
         )
-    
+   """ 
 
 def _parse_arguments():
     """Parse command line arguments"""
