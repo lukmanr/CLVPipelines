@@ -27,22 +27,7 @@ def _parse_arguments():
         type=str,
         default='sandbox-235500',
         help='The GCP project to run processing.')
-    parser.add_argument(
-        '--source_table_id',
-        type=str,
-        default='sandbox-235500.CLVDataset.transactions',
-        help='Source table id')
-    parser.add_argument(
-        '--threshold_date',
-        type=str,
-        default='2011-08-08',
-        help='Threshold date')
-    parser.add_argument(
-        '--predict_end',
-        type=str,
-        default='2011-12-12',
-        help='Predict end.')
- 
+    
     return parser.parse_args()
 
 
@@ -56,15 +41,12 @@ run_name = 'CLV train with BQ'
 
 # Prepare pipeline arguments
 arguments = {
-    'project_id': args.project_id,
-    'source_bq_table_id': args.source_table_id,
-    'threshold_date': args.threshold_date,
-    'predict_end': args.predict_end
+    'project_id': args.project_id
 }
 # Submit the pipeline
 run = client.run_pipeline(experiment.id, run_name, args.pipeline_file, arguments)
 print(run.id)
 
-# result = client.wait_for_run_completion(run.id, timeout=600)
+result = client.wait_for_run_completion(run.id, timeout=600)
     
     

@@ -18,7 +18,56 @@ import os
 import argparse
 
 
+# Define helper lightweight Python components
+
 BASE_IMAGE = 'gcr.io/clv-pipelines/base-image:latest'
+
+@kfp.dsl.python_component(name='Load transactions', base_image=BASE_IMAGE)
+def load_sales_transactions(
+    project_id: str,
+    source_gcs_path: str,
+    location: str,
+    dataset_id: str,
+    table_id: str) -> str:
+    """Loads sales transactions from CSV file on GCS to BigQuery table"""
+
+    from google.cloud import bigquery
+    import uuid
+    import logging
+
+    client = bigquery.Client(project=project_id)
+
+    # Create or get a dataset reference
+    dataset = bigquery.Dataset("{}.{}".format(project_id, dataset_id))
+    dataset.location = location
+    dataset_ref = client.create_dataset(dataset, exists_ok=True) 
+
+    # Configure Load job settings
+    job_config = bigquery.LoadJobConfig()
+    job_config.schema = [
+        bigquery.SchemaField("customer_id", "STRING"),
+        bigquery.SchemaField("order_date", "DATE"),
+        bigquery.SchemaField("quantity", "INTEGER"),
+        bigquery.SchemaField("unit_price", "FLOAT")
+    ]
+    job_config.source_format = bigquery.SourceFormat.CSV
+    job_config.create_disposition = bigquery.job.CreateDisposition.CREATE_IF_NEEDED
+    job_config.write_disposition = bigquery.job.WriteDisposition.WRITE_TRUNCATE
+    job_config.skip_leading_rows = 1
+
+    # Start the load job
+    load_job = client.load_table_from_uri(
+        source_gcs_path,
+        dataset_ref.table(table_id),
+        job_config=job_config
+    )  
+
+    # Wait for table load to complete
+    load_job.result()
+
+    return "{}.{}.{}".format(project_id, dataset_id, table_id)
+
+
 @kfp.dsl.python_component(name='Prepare query', base_image=BASE_IMAGE)
 def prepare_feature_engineering_query(
     project_id: str,
@@ -67,21 +116,24 @@ QUERY_TEMPLATE_URI = 'gs://clv-pipelines/scripts/create_features_template.sql'
 )
 def clv_train_bq_automl(
     project_id, 
-    source_bq_table_id,
-    threshold_date,
-    predict_end,
-    features_bq_dataset_id='clv_features_dataset',
-    features_bq_table_id='clv_features',
-    features_bq_dataset_location='US',
+    source_gcs_path='gs://clv-pipelines/transactions/transactions.csv',
+    bq_location='US',
+    transactions_dataset_id='clv_dataset',
+    transactions_table_id='transactions',
+    threshold_date='2011-08-08',
+    predict_end='2011-12-12',
+    features_dataset_id='clv_dataset',
+    features_table_id='features',
     max_monetary=15000,
     compute_region='us-central1',
-    automl_dataset_name='clv_features',
-    automl_model_name='clv_regression',
+    dataset_name='clv_features',
+    model_name='clv_regression',
     train_budget='1000',
     target_column_name='target_monetary',
     features_to_exclude='customer_id'
 ):
     # Create component factories
+    load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
     prepare_feature_engineering_query_op = kfp.components.func_to_container_op(prepare_feature_engineering_query)
     engineer_features_op = kfp.components.load_component_from_url(BIGQUERY_COMPONENT_SPEC_URI)
     import_dataset_op = kfp.components.load_component_from_url(AML_IMPORT_DATASET_SPEC_URI)
@@ -89,10 +141,19 @@ def clv_train_bq_automl(
 
     # Define workflow
 
+    # Load sales transactions from GCS to Big Query
+    load_sales_transactions_task = load_sales_transactions_op(
+        project_id=project_id,
+        source_gcs_path=source_gcs_path,
+        location=bq_location,
+        dataset_id=transactions_dataset_id,
+        table_id=transactions_table_id 
+    ) 
+
     # Generate the feature engineering query
     prepare_feature_engineering_query_task = prepare_feature_engineering_query_op(
         project_id=project_id,
-        source_table_id=source_bq_table_id,
+        source_table_id=load_sales_transactions_task.output,
         threshold_date=threshold_date,
         predict_end=predict_end,
         max_monetary=max_monetary,
@@ -103,10 +164,10 @@ def clv_train_bq_automl(
     engineer_features_task = engineer_features_op(
         query=prepare_feature_engineering_query_task.output,
         project_id=project_id,
-        dataset_id=features_bq_dataset_id,
-        table_id=features_bq_table_id,
+        dataset_id=features_dataset_id,
+        table_id=features_table_id,
         output_gcs_path='',
-        dataset_location=features_bq_dataset_location,
+        dataset_location=bq_location,
         job_config=''
     )
      
@@ -114,9 +175,9 @@ def clv_train_bq_automl(
     import_dataset_task = import_dataset_op(
         project_id=project_id,
         location=compute_region,
-        dataset_name=automl_dataset_name,
+        dataset_name=dataset_name,
         description='',
-        source_data_uri='bq://{}.{}.{}'.format(project_id, features_bq_dataset_id, features_bq_table_id),
+        source_data_uri='bq://{}.{}.{}'.format(project_id, features_dataset_id, features_table_id),
         target_column_name=target_column_name,
         weight_column_name='',
         ml_use_column_name=''       
@@ -124,16 +185,14 @@ def clv_train_bq_automl(
     import_dataset_task.after(engineer_features_task)
 
     # Train the model
-    """
     train_model_task = train_model_op(
         project_id=project_id,
         location=compute_region,
         dataset_id=import_dataset_task.outputs['output_dataset_id'],
-        model_name=automl_model_name,
+        model_name=model_name,
         train_budget=train_budget,
         optimization_objective='MINIMIZE_MAE',
         target_name=target_column_name,
         features_to_exclude=features_to_exclude
         )
-   """ 
 
