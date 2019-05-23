@@ -73,7 +73,7 @@ You are now ready to run the tutorial's pipelines using KFP UI.
 ## Running the pipelines using Kubeflow Pipelines UI
 
 ### Downloading the sample dataset
-The pipelines expect source training and scoring data represent customer transactions with the below schema. Refer to previous articles in CLV series to understand in more detail feature engineering and modelling techniques used in developing Customer Lifetime Value models.
+The input to the pipelines are customer transactions assembled in a CSV file(s) with the below schema. Refer to previous articles in CLV series to understand in more detail feature engineering and modeling techniques used in developing Customer Lifetime Value models.
 
 | Field | Type |
 |-------|------|
