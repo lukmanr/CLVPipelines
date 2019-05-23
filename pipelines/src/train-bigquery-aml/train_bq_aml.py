@@ -132,7 +132,7 @@ def clv_train_bq_automl(
     train_budget='1000',
     target_column_name='target_monetary',
     features_to_exclude='customer_id',
-    mae_threshold='700'
+    mae_threshold='990'
 ):
     # Create component factories
     load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
@@ -206,5 +206,5 @@ def clv_train_bq_automl(
        model_full_id=train_model_task.output) 
 
     # If MAE is above the threshold deploy the model
-    with dsl.Condition(retrieve_metrics_task.outputs['output_mae'] > mae_threshold):
+    with dsl.Condition(retrieve_metrics_task.outputs['output_mae'] < mae_threshold):
         deploy_model_tast = deploy_model_op(train_model_task.output)

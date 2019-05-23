@@ -74,7 +74,7 @@ def clv_train_pipeline_dataproc_automl(
     train_budget='1000',
     target_column_name='target_monetary',
     features_to_exclude='customer_id',
-    mae_threshold='700',
+    mae_threshold='990',
     cluster_name='clv-spark-cluster'
 ):
     # Create component factories
@@ -171,5 +171,5 @@ def clv_train_pipeline_dataproc_automl(
         model_full_id=train_model_task.output) 
 
         # If MAE is above the threshold deploy the model
-        with dsl.Condition(retrieve_metrics_task.outputs['output_mae'] > mae_threshold):
+        with dsl.Condition(retrieve_metrics_task.outputs['output_mae'] < mae_threshold):
             deploy_model_tast = deploy_model_op(train_model_task.output)
