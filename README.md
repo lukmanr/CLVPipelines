@@ -9,7 +9,7 @@ The `components` folder contains:
 - An example custom Kubeflow Pipeline Component. The component is a wrapper around **AutoML Tables API**.
 - The definition of the base image used by Lightweight Python components used in some pipelines.
 
-To run the code samples you need to set up a Google Cloud Platform (GCP) project with the following GCP services enabled:
+To run the pipelines you need to set up a Google Cloud Platform (GCP) project with the following GCP services enabled:
 - Google Kubernetes Engine (GKE)
 - BigQuery
 - Dataproc
@@ -49,20 +49,22 @@ kubectl create clusterrolebinding ml-pipeline-admin-binding --clusterrole=cluste
 ```
 
 ### Install Kubeflow Pipelines
-The code samples have been developed for version 1.20 of KFP.
+The code samples in the tutorial have been developed for version 1.20 of KFP.
 ```
 PIPELINE_VERSION=4eeeb6e22432ece32c7d0efbd8307c15bfa9b6d3
 kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$PIPELINE_VERSION/manifests/namespaced-install.yaml
 ```
 ### Connect to Kubeflow Pipelines UI
 
-To connect to KFP UI use Cloud Shell to forward a port to KFP UI service. 
+To connect to KFP UI use Cloud Shell to forward a local port to KFP UI service. 
 ```
 kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8080:80
 ```
 After port forwarding has been established, use Cloud Shell web preview to open KFP UI on port 8080. Note that it may take a couple of minutes before the UI is fully functional.
 
-You are now ready to execute the sample pipelines using Kubeflow Pipelines UI. Refer to the **Tutorial (TBD)** for the walk-through instructions.
+
+## Running pipelines using Kubeflow Pipelines UI
+
 
 ## Configuring a development environment
 
