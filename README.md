@@ -66,7 +66,7 @@ After port forwarding has been established, use Cloud Shell web preview to open 
 ## Running the pipelines using Kubeflow Pipelines UI
 
 ### Downloading the sample dataset
-The pipelines expect source training and scoring data with the below schema. Refer to previous articles of CLV series to understand in more detail feature engineering and modelling techniques used in developing Customer Lifetime Value models.
+The pipelines expect source training and scoring data with the below schema. Refer to previous articles in CLV series to understand in more detail feature engineering and modelling techniques used in developing Customer Lifetime Value models.
 
 | Field | Type |
 |-------|------|
@@ -75,7 +75,9 @@ The pipelines expect source training and scoring data with the below schema. Ref
 | quantity | integer |
 | unit_price | float |
 
-The dataset used in the tutorial is based onf the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. The preprocessed version of 
+The dataset used in the tutorial is based onf the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`.
+
+
 
 
 
