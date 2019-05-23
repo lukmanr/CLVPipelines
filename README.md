@@ -63,10 +63,19 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8080:80
 After port forwarding has been established, use Cloud Shell web preview to open KFP UI on port 8080. Note that it may take a couple of minutes before the UI is fully functional.
 
 
-## Running pipelines using Kubeflow Pipelines UI
+## Running the pipelines using Kubeflow Pipelines UI
 
 ### Downloading the sample dataset
-The dataset used in the tutorial is based onf the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository.
+The pipelines expect source training and scoring data with the below schema. Refer to previous articles of CLV series to understand in more detail feature engineering and modelling techniques used in developing Customer Lifetime Value models.
+
+| Field | Type |
+|-------|------|
+| customer_id | string |
+| order_date | date (yyyy-MM-dd) |
+| quantity | integer |
+| unit_price | float |
+
+The dataset used in the tutorial is based onf the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. The preprocessed version of 
 
 
 
