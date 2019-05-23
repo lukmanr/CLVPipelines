@@ -21,7 +21,7 @@ Refer to this [how-to-guide](https://cloud.google.com/apis/docs/enable-disable-a
 You are going to use [Cloud Shell](https://cloud.google.com/shell/) to configure the services used in the tutorial.
 
 ## Setting the default Project 
-Connect to Cloud Shell and set the default **Project**  to the project you are going to use for the tutorial. To create a new projec follow the [instructions](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+Connect to Cloud Shell and set the default **Project**  to the project you are going to use for the tutorial. To create a new project follow the [instructions](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
 
 
 ```
