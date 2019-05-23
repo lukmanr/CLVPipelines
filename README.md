@@ -147,29 +147,34 @@ Depending on the value of the *train_budget* pipeline parameter, the training st
 
 ## Configuring a development environment
 
-To re-build the tutorial's KFP components, recompile the pipelines, or use a programmatic inteface to Kubeflow Pipelines, you need a development environment with the following configuration:
+To re-build the tutorial's KFP components, customize and recompile the pipelines, or use a programmatic inteface to Kubeflow Pipelines, you need a development environment with the following configuration:
 - Python 3.5+
 - Docker
 - Kubeflow Pipelines SDK v 1.20
 - gcloud SDK
+- kubectl
 - Access to your GCP project
 
-The following instructions show how to configure Cloud Shell as the development environment. Note that you can use an environment of your choice as long as it meets the above requirements.
+You can use a platform of your choice as long as it meets the above requirements, including GCE VMs and GCP AI Platform Notebooks.
 
+### Installing and configuring Kubeflow Pipelines SDK 
 
+It is recommended to install KFP SDK to a dedicated Python or Conda environment. The environment must be based on Python 3.5 or higher.
 
-### Install and configure Kubeflow Pipelines SDK on Cloud Shell
-Docker, gcloud SDK and Python 3.5.3 are pre-installed on Cloud Shell. The only missing component is KFP SDK.
-
-
-To install KFP SDK v0.1.20 open a new Cloud Shell session and run the following command:
+To install KFP SDK v0.1.20 run the following command:
 ```
 SDK_VERSION=0.1.20
 python3 -m pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
 ```
 
 ### Configure port forwarding to Kubeflow Pipelines service 
-If you want to submit Kubeflow Pipelines runs programmatically (rather than through GUI) you need access to `ml-pipeline` service that is running on your GKE cluster. By default the service is not exposed on a public IP intefaces. For the purpose of this tutorial you access the service using port forwarding. Ulternatively, you can expose the service through an external IP.
+If you want to submit Kubeflow Pipelines runs programmatically (rather than through GUI) you need access to `ml-pipeline` service that is running on your GKE cluster. By default the service is not exposed on a public IP intefaces. For the purpose of this tutorial you access the service using port forwarding. Alternatively, you can expose the service through an external IP.
+
+To configure access to your GKE cluster.
+
+```
+gcloud container clusters get-credentials [YOUR_CLUSTER_NAME] --zone [YOUR_ZONE]
+```
 
 To configure port forwarding execute the following command in a new Cloud Shell terminal.
 
@@ -183,7 +188,7 @@ Make sure that the terminal window stays open and the command is running when yo
 
 
 ## Rebuilding the components and recompiling the pipelines
-Follow the instructions in the README files in `pipelines` and `components` subfolders if you want to rebuild the components and recompile the pipelines.
+Follow the instructions in the README files in `pipelines` and `components` subfolders if you want to rebuild the components and/or recompile the pipelines.
 
 
 
