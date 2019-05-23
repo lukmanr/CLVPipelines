@@ -55,6 +55,11 @@ The code samples in the tutorial have been developed for version 1.20 of KFP.
 PIPELINE_VERSION=4eeeb6e22432ece32c7d0efbd8307c15bfa9b6d3
 kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$PIPELINE_VERSION/manifests/namespaced-install.yaml
 ```
+It may take a couple of minutes for all services to start. To check the status of the pods:
+```
+kubectl get pods -n kubeflow
+```
+
 ### Connect to Kubeflow Pipelines UI
 
 To connect to KFP UI use Cloud Shell to forward a local port to KFP UI service. 
