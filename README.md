@@ -68,6 +68,7 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8080:80
 ```
 After port forwarding has been established, use Cloud Shell web preview to open KFP UI on port 8080. Note that it may take a couple of minutes before the UI is fully functional.
 
+You are now ready to run the tutorial's pipelines using KFP UI.
 
 ## Running the pipelines using Kubeflow Pipelines UI
 
@@ -90,18 +91,18 @@ At this time AutoML Tables can only read from a regional bucket in the same regi
 
 *For now we will make the bucket public. TBD - finalize security between GKE, KFP, AutoML, Dataproc and BigQuery.*
 
-In Cloud Shell.
+In a new Cloud Shell session.
 
 ```
-gsutil mb gs://[YOUR_BUCKET_NAME] -c regional -l us-central1
+gsutil mb  -c regional -l us-central1 gs://[YOUR_BUCKET_NAME]
 gsutil bucketpolicyonly set on gs://[YOUR_BUCKET_NAME]
-gsutil acl ch -u AllUsers:R gs://[YOUR_BUCKET_NAME]
+gsutil iam ch allUsers:objectViewer gs://[YOUR_BUCKET_NAME]
 
+
+Copy the the sample dataset to the newly created bucket.
 ```
-
-
-
-
+gsutil cp gs://clv-datasets/transactions/transactions.csv gs://[YOUR_BUCKET_NAME]/transactions
+```
 
 
 ## Configuring a development environment
