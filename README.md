@@ -18,11 +18,20 @@ To run the code samples you need to set up a Google Cloud Platform (GCP) project
 
 Refer to this [how-to-guide](https://cloud.google.com/apis/docs/enable-disable-apis) to enable the required services.
 
+You are going to use [Cloud Shell](https://cloud.google.com/shell/) to configure the services used in the tutorial.
+
+## Setting the default Project 
+Connect to Cloud Shell and set the default **Project**  to the project you are going to use for the tutorial. To create a new projec follow the [instructions](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+
+
+```
+gcloud config set project [your project ID]
+
+```
 ## Configuring Kubeflow Pipelines
-You are going to use [Cloud Shell](https://cloud.google.com/shell/) to install and configure Kubeflow Pipelines on Google Kubernetes Engine.
 
 ### Install Google Kubernetes Engine (GKE)
-Open a Cloud Shell session and create a single-zone **Standard** cluster. Make sure to replace the placeholders with your zone and cluster name.
+Create a single-zone **Standard** cluster. Make sure to replace the placeholders with your zone and cluster name.
 ```
 CLUSTERNAME=[your cluster name]
 ZONE=[your zone]
