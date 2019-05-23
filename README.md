@@ -168,7 +168,7 @@ python3 -m pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_V
 ```
 
 ### Configure port forwarding to Kubeflow Pipelines service 
-If you want to submit Kubeflow Pipelines runs programmatically (rather than through GUI) you need access to `ml-pipeline` service that is running on your GKE cluster. By default the service is not exposed on a public IP intefaces. For the purpose of this tutorial you access the service using port forwarding. Alternatively, you can expose the service through an external IP.
+If you want to submit Kubeflow Pipelines runs programmatically (rather than through GUI) you need access to the `ml-pipeline` service that is running on your GKE cluster. By default the service is not exposed on a public IP address. For the purpose of this tutorial, you access the service using port forwarding. Alternatively, you can expose the service through an external IP.
 
 To configure access to your GKE cluster.
 
