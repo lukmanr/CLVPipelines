@@ -119,16 +119,15 @@ def prepare_feature_engineering_query(
 def clv_train_bq_automl(
     project_id, 
     source_gcs_path,
-    bq_location='US',
-    transactions_dataset_id='clv_dataset',
-    transactions_table_id='transactions',
+    location='US',
+    dataset_name='clv_dataset',
+    transactions_table_name='transactions',
+    features_table_name='features',
     threshold_date='2011-08-08',
     predict_end='2011-12-12',
-    features_dataset_id='clv_dataset',
-    features_table_id='features',
     max_monetary=15000,
-    compute_region='us-central1',
-    dataset_name='clv_features',
+    aml_compute_region='us-central1',
+    aml_dataset_name='clv_features',
     model_name='clv_regression',
     train_budget='1000',
     target_column_name='target_monetary',
@@ -150,9 +149,9 @@ def clv_train_bq_automl(
     load_sales_transactions_task = load_sales_transactions_op(
         project_id=project_id,
         source_gcs_path=source_gcs_path,
-        location=bq_location,
-        dataset_id=transactions_dataset_id,
-        table_id=transactions_table_id 
+        location=location,
+        dataset_id=dataset_name,
+        table_id=transactions_table_name 
     ) 
 
     # Generate the feature engineering query
@@ -170,20 +169,20 @@ def clv_train_bq_automl(
     engineer_features_task = engineer_features_op(
         query=prepare_feature_engineering_query_task.output,
         project_id=project_id,
-        dataset_id=features_dataset_id,
-        table_id=features_table_id,
+        dataset_id=dataset_name,
+        table_id=features_table_name,
         output_gcs_path='',
-        dataset_location=bq_location,
+        dataset_location=location,
         job_config=''
     )
      
     # Import BQ table with features into AML dataset
     import_dataset_task = import_dataset_op(
         project_id=project_id,
-        location=compute_region,
-        dataset_name=dataset_name,
+        location=aml_compute_region,
+        dataset_name=aml_dataset_name,
         description='',
-        source_data_uri='bq://{}.{}.{}'.format(project_id, features_dataset_id, features_table_id),
+        source_data_uri='bq://{}.{}.{}'.format(project_id, dataset_name, features_table_name),
         target_column_name=target_column_name,
         weight_column_name='',
         ml_use_column_name=''       
@@ -193,7 +192,7 @@ def clv_train_bq_automl(
     # Train the model
     train_model_task = train_model_op(
         project_id=project_id,
-        location=compute_region,
+        location=aml_compute_region,
         dataset_id=import_dataset_task.outputs['output_dataset_id'],
         model_name=model_name,
         train_budget=train_budget,

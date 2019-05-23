@@ -45,3 +45,27 @@ blobs = bucket.list_blobs(prefix=prefix, delimiter=delimiter)
 print('Blobs:')
 for blob in blobs:
      print(blob.name)
+
+#%%
+import re
+from google.cloud import storage
+
+storage_client = storage.Client()
+
+source_gcs_folder = 'gs://clv-pipelines/order-summaries/'
+_, bucket_name, prefix = re.split("gs://|/", source_gcs_folder, 2)
+prefix = prefix + '/' if prefix[-1] != '/' else prefix
+bucket = storage_client.get_bucket(bucket_name)
+blobs = [blob.name for blob in bucket.list_blobs(prefix=prefix, delimiter=delimeter) 
+    if (blob.name != prefix) and not (blob.name.endswith('_SUCCESS'))]
+
+blobs = ','.join(blobs)
+
+
+#%%
+
+import re
+
+re.search('es$', 'order-summaries')
+
+#%%

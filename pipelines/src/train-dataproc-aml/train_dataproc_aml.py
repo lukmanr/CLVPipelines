@@ -69,7 +69,7 @@ def clv_train_pipeline_dataproc_automl(
     max_monetary=15000,
     max_partitions=2,
     compute_region='us-central1',
-    dataset_name='clv_features',
+    aml_dataset_name='clv_features',
     model_name='clv_regression',
     train_budget='1000',
     target_column_name='target_monetary',
@@ -146,7 +146,7 @@ def clv_train_pipeline_dataproc_automl(
         import_dataset_task = import_dataset_op(
             project_id=project_id,
             location=compute_region,
-            dataset_name=dataset_name,
+            dataset_name=aml_dataset_name,
             description='',
             source_data_uri=list_gcs_files_task.output,
             target_column_name=target_column_name,
