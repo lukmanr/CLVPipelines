@@ -97,7 +97,7 @@ In a new Cloud Shell session.
 gsutil mb  -c regional -l us-central1 gs://[YOUR_BUCKET_NAME]
 gsutil bucketpolicyonly set on gs://[YOUR_BUCKET_NAME]
 gsutil iam ch allUsers:objectViewer gs://[YOUR_BUCKET_NAME]
-
+```
 
 Copy the the sample dataset to the newly created bucket.
 ```
