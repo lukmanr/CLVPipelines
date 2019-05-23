@@ -131,7 +131,7 @@ The `clv_train_dataproc_automl.tar.gz` pipeline goes through the following steps
 The `clv_score_bq_automl.tar.gz` pipeline goes through the following steps:
 TBD
 
-The pipelines accept a number of parameters that control their behaviour (TBD to describe parameters for each pipeline). The pipelines have been pre-configured with reasonable defaults. The only two required parameters are: **Your project ID** and **GCS path** to the location of the sample dataset you copied in the previous steps.
+The pipelines accept a number of parameters that control their behaviour (TBD to describe parameters for each pipeline). The pipelines have been pre-configured with reasonable defaults. The only two required parameters are: **Your project ID** and **GCS path** to the location of the sample dataset you downloaded in the previous steps.
 
 Feel free to experiment with different values for other parameters.
 
