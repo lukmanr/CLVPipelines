@@ -73,7 +73,7 @@ You are now ready to run the tutorial's pipelines using KFP UI.
 ## Running the pipelines using Kubeflow Pipelines UI
 
 ### Downloading the sample dataset
-The pipelines expect source training and scoring data with the below schema. Refer to previous articles in CLV series to understand in more detail feature engineering and modelling techniques used in developing Customer Lifetime Value models.
+The pipelines expect source training and scoring data represent customer transactions with the below schema. Refer to previous articles in CLV series to understand in more detail feature engineering and modelling techniques used in developing Customer Lifetime Value models.
 
 | Field | Type |
 |-------|------|
@@ -84,9 +84,8 @@ The pipelines expect source training and scoring data with the below schema. Ref
 
 The dataset used in the tutorial is based on the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. 
 
-The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. You need to copy this file to a public bucket in *your* project.
+The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. You need to copy this file to a bucket in *your* project.
 
-#### Create a regional GCS bucket
 At this time AutoML Tables can only read from a regional bucket in the same region as AutoML Tables service. As of this writing, the only region supported by AutoML Tables is `us-central1`.
 
 *For now we will make the bucket public. TBD - finalize security between GKE, KFP, AutoML, Dataproc and BigQuery.*
@@ -99,10 +98,44 @@ gsutil bucketpolicyonly set on gs://[YOUR_BUCKET_NAME]
 gsutil iam ch allUsers:objectViewer gs://[YOUR_BUCKET_NAME]
 ```
 
-Copy the the sample dataset to the newly created bucket.
+Copy the sample dataset to the newly created bucket.
 ```
 gsutil cp gs://clv-datasets/transactions/transactions.csv gs://[YOUR_BUCKET_NAME]/transactions
 ```
+
+### Running the sample pipelines
+
+The pre-compiled pipelines can be found in the root of the `pipelines` folder. There are three pipelines:
+- `clv_train_bq_automl.tar.gz`
+- `clv_train_dataproc.tar.gz`
+- `clv_score_bq_automl.tar.gz`
+
+The `clv_train_bq_automl.tar.gz` pipeline goes through the following steps:
+1. Load the sample transaction file from GCS to BigQuery table
+1. Use BigQuery to engineer CLV features and store them in the features BigQuery table
+1. Import the features table to AutoML Tables
+1. Train an AutoML Tables model
+1. Retrieve and log (as a KFP artificat) evaluation measures
+1. Check MAE of the trained model against the threshold
+1. If the trained model's MAE is lower than threshold deploy the model
+
+The `clv_train_dataproc_automl.tar.gz` pipeline goes through the following steps:
+1. Load the sample transaction file from GCS to Spark Dataframe (on Dataproc)
+1. Use PySpark to engineer CLV features and store them in the features CSV file on GCS
+1. Import the features table to AutoML Tables
+1. Train an AutoML Tables model
+1. Retrieve and log (as a KFP artificat) evaluation measures
+1. Check MAE of the trained model against the threshold
+1. If the trained model's MAE is lower than threshold deploy the model
+
+The `clv_score_bq_automl.tar.gz` pipeline goes through the following steps:
+TBD
+
+
+
+
+
+
 
 
 ## Configuring a development environment
@@ -115,6 +148,7 @@ To re-build the tutorial's KFP components, recompile the pipelines, or use a pro
 - Access to your GCP project
 
 The following instructions show how to configure Cloud Shell as the development environment. Note that you can use an environment of your choice as long as it meets the above requirements.
+
 
 
 ### Install and configure Kubeflow Pipelines SDK on Cloud Shell
