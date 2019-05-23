@@ -75,7 +75,12 @@ The pipelines expect source training and scoring data with the below schema. Ref
 | quantity | integer |
 | unit_price | float |
 
-The dataset used in the tutorial is based onf the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`.
+The dataset used in the tutorial is based on the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. 
+
+The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. You need to copy this file to a public bucket in *your* project.
+
+#### Create a public GCS bucket
+
 
 
 
