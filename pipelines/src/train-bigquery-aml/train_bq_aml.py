@@ -16,6 +16,7 @@ import kfp
 from kfp import dsl
 import os
 import argparse
+import json
 
 
 # Define helper lightweight Python components
@@ -107,7 +108,7 @@ def prepare_feature_engineering_query(
 BIGQUERY_COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/bigquery/query/component.yaml'
 AML_IMPORT_DATASET_SPEC_URI = 'gs://clv-pipelines/specs/aml-import-dataset.yaml'
 AML_TRAIN_MODEL_SPEC_URI = 'gs://clv-pipelines/specs/aml-train-model.yaml'
-AML_LOG_METRICS_SPEC_URI = 'gs://clv-pipelines/specs/aml-log-metrics.yaml'
+AML_RETRIEVE_METRICS_SPEC_URI = 'gs://clv-pipelines/specs/aml-retrieve-regression-metrics.yaml'
 AML_DEPLOY_MODEL_SPEC_URI = 'gs://clv-pipelines/specs/aml-deploy-model.yaml'
 # Set the URI to the location of the feature engineering query template
 QUERY_TEMPLATE_URI = 'gs://clv-pipelines/scripts/create_features_template.sql'
@@ -133,7 +134,7 @@ def clv_train_bq_automl(
     train_budget='1000',
     target_column_name='target_monetary',
     features_to_exclude='customer_id',
-    rmse_threshold='800'
+    mae_threshold='700'
 ):
     # Create component factories
     load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
@@ -141,12 +142,10 @@ def clv_train_bq_automl(
     engineer_features_op = kfp.components.load_component_from_url(BIGQUERY_COMPONENT_SPEC_URI)
     import_dataset_op = kfp.components.load_component_from_url(AML_IMPORT_DATASET_SPEC_URI)
     train_model_op = kfp.components.load_component_from_url(AML_TRAIN_MODEL_SPEC_URI)
-    log_metrics_op = kfp.components.load_component_from_url(AML_LOG_METRICS_SPEC_URI)
+    retrieve_metrics_op = kfp.components.load_component_from_url(AML_RETRIEVE_METRICS_SPEC_URI)
     deploy_model_op = kfp.components.load_component_from_url(AML_DEPLOY_MODEL_SPEC_URI)
 
     # Define workflow
-
-    """
 
     # Load sales transactions from GCS to Big Query
     load_sales_transactions_task = load_sales_transactions_op(
@@ -203,19 +202,10 @@ def clv_train_bq_automl(
         features_to_exclude=features_to_exclude
         )
 
-    """
+    # Retrieve regression metrics for the model 
+    retrieve_metrics_task = retrieve_metrics_op(
+       model_full_id=train_model_task.output) 
 
-    train_model_task = train_model_op(
-        project_id=project_id,
-        location=compute_region,
-        dataset_id='jfalfalfjalsdjf',
-        model_name=model_name,
-        train_budget=train_budget,
-        optimization_objective='MINIMIZE_MAE',
-        target_name=target_column_name,
-        features_to_exclude=features_to_exclude
-        )
-
-    # Deploy the model if MAE is below the threshold
-    with dsl.Condition(800 == rmse_threshold):
-        deploy_model_tast = deploy_model_op(train_model_task.outputs['output_model_full_id'])
+    # If MAE is above the threshold deploy the model
+    with dsl.Condition(retrieve_metrics_task.outputs['output_mae'] > mae_threshold):
+        deploy_model_tast = deploy_model_op(train_model_task.output)

@@ -85,60 +85,6 @@ def train_model(
     return response.result().name
 
 
-def retrieve_evaluation_metrics(model_full_id):
-    """Retrieves the latest metrics for a given model
-    
-    Currently, only regression metrics are supported
-    """
-    
-    client = automl.AutoMlClient()
-
-    create_seconds = 0
-    evaluation_metrics = None
-    for evaluation in client.list_model_evaluations(model_full_id):
-        if evaluation.regression_evaluation_metrics.ListFields():
-            if evaluation.create_time.seconds > create_seconds:
-                evaluation_metrics = evaluation.regression_evaluation_metrics
-                create_seconds = evaluation.create_time.seconds
-
-    if evaluation_metrics:
-        metrics = {
-            "type": "regression",
-            "RMSE": round(evaluation_metrics.root_mean_squared_error, 2),    
-            "MAE": round(evaluation_metrics.mean_absolute_error, 2),
-            "R-squared": round(evaluation_metrics.r_squared, 2)
-        }
-    else:
-        metrics = {"type": "None"}
-
-    return metrics 
-
-
-def evaluation_metrics_to_markdown_metadata(metrics):
-    """Converts evaluation metrics to markdown
-    
-    Currently only regression evaluation metrics are supported
-    """
-
-    if metrics['type'] == 'regression':
-        markdown_template = (
-            "**Evaluation Metrics:**  \n"
-            "&nbsp;&nbsp;&nbsp;&nbsp;**RMSE:**            {rmse}  \n"
-            "&nbsp;&nbsp;&nbsp;&nbsp;**MAE:**             {mae}  \n"
-            "&nbsp;&nbsp;&nbsp;&nbsp;**R-squared:**       {rsquared}  \n"
-        )
-        markdown = markdown_template.format(
-            rmse=round(metrics['RMSE'], 2),
-            mae=round(metrics['MAE'], 2),
-            rsquared=round(metrics['R-squared'], 2)
-        )
-    else:
-        markdown = "**Evaluation Metrics:** TBD"
-
-    markdown_metadata = {"type": "markdown", "storage": "inline", "source": markdown}
-
-    return markdown_metadata
-
 def write_metadata_for_output_viewers(*argv):
     """Writes items to be rendered by KFP UI as artificats"""
 
@@ -200,11 +146,6 @@ def _parse_arguments():
         type=str,
         required=True,
         help='The file to write the ID of the trained model. Provided by KFP.')
-    parser.add_argument(
-        '--output-metrics',
-        type=str,
-        required=True,
-        help='The file to write the model evaluation metrics. Provided by KFP.')
   
     return parser.parse_args()
 
@@ -214,8 +155,7 @@ if __name__ == '__main__':
     args = _parse_arguments()
 
     logging.info( "Starting model training: {}".format(args.model_name))
-    """
-    model_id = train_model(
+    model_full_id = train_model(
         project_id=args.project_id,
         location=args.location,
         dataset_id=args.dataset_id,
@@ -225,21 +165,12 @@ if __name__ == '__main__':
         target_name=args.target_name,
         features_to_exclude=args.features_to_exclude
     )
-    """
-    model_full_id = "projects/165540728514/locations/us-central1/models/TBL8180375306746462208"
-
-    metrics = retrieve_evaluation_metrics(model_full_id) 
-
-    write_metadata_for_output_viewers(
-        evaluation_metrics_to_markdown_metadata(metrics))
 
     logging.info("Training completed")
 
     # Save model full id and evaluation metrics to output
     Path(args.output_model_full_id).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output_model_full_id).write_text(model_full_id)
-    Path(args.output_metrics).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.output_metrics).write_text(json.dumps(metrics))
-
+ 
     
     

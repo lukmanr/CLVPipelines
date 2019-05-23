@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Log Regresssion Metrics
+name: Retrieve Regresssion Metrics
 description: |
-  Logs regression metrics for a given model
+  Retrieves regression evaluation metrics an AutoML  model
 inputs:
   - name: model_full_id
     description: 'The full id of the model'
@@ -33,7 +33,7 @@ outputs:
 implementation:
   container:
     image: gcr.io/clv-pipelines/automl-tables-component:latest
-    command: ["python", "log_metrics.py"]
+    command: ["python", "retrieve_regression_metrics.py"]
     args: [
       --model-full-id, {inputValue: model_full_id},
       --output-rmse, {outputPath: output_rmse},

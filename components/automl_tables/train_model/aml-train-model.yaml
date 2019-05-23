@@ -44,10 +44,7 @@ outputs:
   - name: output_model_full_id
     description: 'AutoML model ID.'
     type: String
-  - name: output_metrics
-    description: 'Evaluation metrics'
-    type: String
-
+ 
 implementation:
   container:
     image: gcr.io/clv-pipelines/automl-tables-component:latest
@@ -62,5 +59,4 @@ implementation:
       --target-name, {inputValue: target_name},
       --features-to-exclude, {inputValue: features_to_exclude},
       --output-model-full-id, {outputPath: output_model_full_id},
-      --output-metrics, {outputPath: output_metrics}
     ]

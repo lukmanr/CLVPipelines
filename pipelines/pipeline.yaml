@@ -1,0 +1,173 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: clv-training-bigquery-automl-
+spec:
+  arguments:
+    parameters:
+    - name: project-id
+    - name: source-gcs-path
+      value: gs://clv-pipelines/transactions/transactions.csv
+    - name: bq-location
+      value: US
+    - name: transactions-dataset-id
+      value: clv_dataset
+    - name: transactions-table-id
+      value: transactions
+    - name: threshold-date
+      value: '2011-08-08'
+    - name: predict-end
+      value: '2011-12-12'
+    - name: features-dataset-id
+      value: clv_dataset
+    - name: features-table-id
+      value: features
+    - name: max-monetary
+      value: '15000'
+    - name: compute-region
+      value: us-central1
+    - name: dataset-name
+      value: clv_features
+    - name: model-name
+      value: clv_regression
+    - name: train-budget
+      value: '1000'
+    - name: target-column-name
+      value: target_monetary
+    - name: features-to-exclude
+      value: customer_id
+    - name: mae-threshold
+      value: '700'
+  entrypoint: clv-training-bigquery-automl
+  serviceAccountName: pipeline-runner
+  templates:
+  - dag:
+      tasks:
+      - arguments:
+          parameters:
+          - name: mae-threshold
+            value: '{{inputs.parameters.mae-threshold}}'
+          - name: train-model-output-model-full-id
+            value: '{{tasks.train-model.outputs.parameters.train-model-output-model-full-id}}'
+        dependencies:
+        - train-model
+        name: condition-1
+        template: condition-1
+        when: '{{inputs.parameters.mae-threshold}} < {{pipelineparam:op=Train Model;name=output_metrics;value=;type=String;}}'
+      - arguments:
+          parameters:
+          - name: compute-region
+            value: '{{inputs.parameters.compute-region}}'
+          - name: features-to-exclude
+            value: '{{inputs.parameters.features-to-exclude}}'
+          - name: model-name
+            value: '{{inputs.parameters.model-name}}'
+          - name: project-id
+            value: '{{inputs.parameters.project-id}}'
+          - name: target-column-name
+            value: '{{inputs.parameters.target-column-name}}'
+          - name: train-budget
+            value: '{{inputs.parameters.train-budget}}'
+        name: train-model
+        template: train-model
+    inputs:
+      parameters:
+      - name: compute-region
+      - name: features-to-exclude
+      - name: mae-threshold
+      - name: model-name
+      - name: project-id
+      - name: target-column-name
+      - name: train-budget
+    name: clv-training-bigquery-automl
+  - dag:
+      tasks:
+      - arguments:
+          parameters:
+          - name: mae-threshold
+            value: '{{inputs.parameters.mae-threshold}}'
+          - name: train-model-output-model-full-id
+            value: '{{inputs.parameters.train-model-output-model-full-id}}'
+        name: deploy-model
+        template: deploy-model
+    inputs:
+      parameters:
+      - name: mae-threshold
+      - name: train-model-output-model-full-id
+    name: condition-1
+  - container:
+      args:
+      - --model-full-id
+      - '{{inputs.parameters.train-model-output-model-full-id}}'
+      - --output-deployment
+      - /outputs/output_deployment/data
+      command:
+      - python
+      - deploy_model.py
+      image: gcr.io/clv-pipelines/automl-tables-component:latest
+    inputs:
+      parameters:
+      - name: train-model-output-model-full-id
+    name: deploy-model
+    outputs:
+      artifacts:
+      - name: mlpipeline-ui-metadata
+        optional: true
+        path: /mlpipeline-ui-metadata.json
+      - name: mlpipeline-metrics
+        optional: true
+        path: /mlpipeline-metrics.json
+      parameters:
+      - name: deploy-model-output-deployment
+        valueFrom:
+          path: /outputs/output_deployment/data
+  - container:
+      args:
+      - --project-id
+      - '{{inputs.parameters.project-id}}'
+      - --location
+      - '{{inputs.parameters.compute-region}}'
+      - --dataset-id
+      - jfalfalfjalsdjf
+      - --model-name
+      - '{{inputs.parameters.model-name}}'
+      - --train-budget
+      - '{{inputs.parameters.train-budget}}'
+      - --optimization-objective
+      - MINIMIZE_MAE
+      - --target-name
+      - '{{inputs.parameters.target-column-name}}'
+      - --features-to-exclude
+      - '{{inputs.parameters.features-to-exclude}}'
+      - --output-model-full-id
+      - /outputs/output_model_full_id/data
+      - --output-metrics
+      - /outputs/output_metrics/data
+      command:
+      - python
+      - train_model.py
+      image: gcr.io/clv-pipelines/automl-tables-component:latest
+    inputs:
+      parameters:
+      - name: compute-region
+      - name: features-to-exclude
+      - name: model-name
+      - name: project-id
+      - name: target-column-name
+      - name: train-budget
+    name: train-model
+    outputs:
+      artifacts:
+      - name: mlpipeline-ui-metadata
+        optional: true
+        path: /mlpipeline-ui-metadata.json
+      - name: mlpipeline-metrics
+        optional: true
+        path: /mlpipeline-metrics.json
+      parameters:
+      - name: train-model-output-metrics
+        valueFrom:
+          path: /outputs/output_metrics/data
+      - name: train-model-output-model-full-id
+        valueFrom:
+          path: /outputs/output_model_full_id/data

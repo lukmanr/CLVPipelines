@@ -19,8 +19,8 @@ from pathlib import Path
 from google.cloud import automl_v1beta1 as automl
 
 
-def log_regression_evaluation_metrics(model_full_id):
-    """Retrieves and logs the latest regression metrics for a given model"""
+def retrieve_regression_evaluation_metrics(model_full_id):
+    """Retrieves  the latest regression metrics for an AutoML Tables  model"""
     
     client = automl.AutoMlClient()
 
@@ -33,13 +33,41 @@ def log_regression_evaluation_metrics(model_full_id):
                 evaluation_metrics = evaluation.regression_evaluation_metrics
                 create_seconds = evaluation.create_time.seconds
 
-    if evaluation_metrics:
-       _write_metrics(evaluation_metrics)
-
     return evaluation_metrics
 
 
-def _write_metrics(metrics):
+def regression_evaluation_metrics_to_markdown_metadata(metrics):
+    """Converts regresssion evaluation metrics to markdown metadata """
+
+    markdown_template = (
+        "**Evaluation Metrics:**  \n"
+        "&nbsp;&nbsp;&nbsp;&nbsp;**RMSE:**            {rmse}  \n"
+        "&nbsp;&nbsp;&nbsp;&nbsp;**MAE:**             {mae}  \n"
+        "&nbsp;&nbsp;&nbsp;&nbsp;**R-squared:**       {rsquared}  \n"
+    )
+    markdown = markdown_template.format(
+        rmse=round(metrics.root_mean_squared_error, 2),
+        mae=round(metrics.mean_absolute_error, 2),
+        rsquared=round(metrics.r_squared, 2)
+    )
+
+    markdown_metadata = {"type": "markdown", "storage": "inline", "source": markdown}
+
+    return markdown_metadata
+
+def write_metadata_for_output_viewers(*argv):
+    """Writes items to be rendered by KFP UI as artificats"""
+
+    metadata = {
+        "version": 1,
+        "outputs": argv 
+    }
+
+    with open('/mlpipeline-ui-metadata.json', 'w') as f:
+            json.dump(metadata, f)
+
+    
+def write_regression_metrics(metrics):
     metrics = {
         'metrics': [
         {
@@ -61,9 +89,6 @@ def _write_metrics(metrics):
 
     with open('/mlpipeline-metrics.json', 'w') as f:
         json.dump(metrics, f)
-
-    with open('/mlpipeline-metrics.json', 'r') as f:
-        print(json.load(f))
 
 
 def _parse_arguments():
@@ -101,7 +126,11 @@ if __name__ == '__main__':
     
     logging.info("Retrieving metrics for model: {}".format(args.model_full_id))
 
-    metrics = log_regression_evaluation_metrics(args.model_full_id)
+    metrics = retrieve_regression_evaluation_metrics(args.model_full_id)
+    
+    if metrics:
+        write_regression_metrics(metrics)
+        write_metadata_for_output_viewers(regression_evaluation_metrics_to_markdown_metadata(metrics))
  
 
     # Write metrics to the output
