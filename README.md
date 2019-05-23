@@ -112,21 +112,21 @@ The pre-compiled pipelines can be found in the root of the `pipelines` folder. T
 
 The `clv_train_bq_automl.tar.gz` pipeline goes through the following steps:
 1. Load the sample transaction file from GCS to BigQuery table
-1. Use BigQuery to engineer CLV features and store them in the features BigQuery table
-1. Import the features table to AutoML Tables
+1. Use BigQuery to engineer CLV features and store the features in a BigQuery table
+1. Import the table with the features to an AutoML Tables dataset 
 1. Train an AutoML Tables model
-1. Retrieve and log (as a KFP artificat) evaluation measures
-1. Check MAE of the trained model against the threshold
-1. If the trained model's MAE is lower than threshold deploy the model
+1. Retrieve and log (as a KFP artifact) regression evaluation metrics
+1. Check MAE of the trained model against the threshold (passed as a parameter
+1. If the trained model's MAE is lower than the threshold deploy the model
 
 The `clv_train_dataproc_automl.tar.gz` pipeline goes through the following steps:
 1. Load the sample transaction file from GCS to Spark Dataframe (on Dataproc)
-1. Use PySpark to engineer CLV features and store them in the features CSV file on GCS
-1. Import the features table to AutoML Tables
+1. Use PySpark to engineer CLV features and store the features as a CSV file on GCS
+1. Import the table with the features to an AutoML Tables dataset 
 1. Train an AutoML Tables model
-1. Retrieve and log (as a KFP artificat) evaluation measures
-1. Check MAE of the trained model against the threshold
-1. If the trained model's MAE is lower than threshold deploy the model
+1. Retrieve and log (as a KFP artifact) regression evaluation metrics
+1. Check MAE of the trained model against the threshold (passed as a parameter
+1. If the trained model's MAE is lower than the threshold deploy the model
 
 The `clv_score_bq_automl.tar.gz` pipeline goes through the following steps:
 TBD
