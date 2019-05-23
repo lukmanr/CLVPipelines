@@ -5,7 +5,7 @@ python3 ../src/import_dataset.py \
 --location=us-central1 \
 --dataset-name=clv_dataset \
 --description="CLV Dataset" \
---source-data-uri='bq://sandbox-235500.CLVDataset.clv_features' \
+--source-data-uri='gs://clv-pipelines/order-summaries/part-0.csv' \
 --target-column-name=target_monetary \
 --weight-column-name= \
 --ml-use-column-name= \

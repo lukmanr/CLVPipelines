@@ -86,32 +86,7 @@ def import_dataset(
         
     return dataset_id
  
-
-def main():
-    args = _parse_arguments()
-
-    # Import dataset to AutoML tables
-    logging.info("Starting import from: {}".format(args.source_data_uri))
-    dataset_id = import_dataset(
-        project_id=args.project_id,
-        location=args.location,
-        dataset_name=args.dataset_name,
-        description=args.description,
-        source_data_uri=args.source_data_uri,
-        target_column_name=args.target_column_name,
-        weight_column_name=args.weight_column_name,
-        ml_use_column_name=args.ml_use_column_name)
-    logging.info("Import completed. AutoML dataset{}".format(dataset_id))
-
-    # Save project ID, dataset ID, and dataset location to output
-    Path(args.output_project_id).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.output_project_id).write_text(args.project_id)
-    Path(args.output_dataset_id).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.output_dataset_id).write_text(dataset_id)
-    Path(args.output_location).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.output_location).write_text(args.location)
-
-    
+ 
 def _parse_arguments():
     """Parse command line arguments"""
     
@@ -175,8 +150,28 @@ def _parse_arguments():
 
     
 if __name__ == '__main__':
-    #logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
     logging.basicConfig(level=logging.INFO)
-    main()
+    args = _parse_arguments()
+
+    # Import dataset to AutoML tables
+    logging.info("Starting import from: {}".format(args.source_data_uri))
+    dataset_id = import_dataset(
+        project_id=args.project_id,
+        location=args.location,
+        dataset_name=args.dataset_name,
+        description=args.description,
+        source_data_uri=args.source_data_uri,
+        target_column_name=args.target_column_name,
+        weight_column_name=args.weight_column_name,
+        ml_use_column_name=args.ml_use_column_name)
+    logging.info("Import completed. AutoML dataset{}".format(dataset_id))
+
+    # Save project ID, dataset ID, and dataset location to output
+    Path(args.output_project_id).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_project_id).write_text(args.project_id)
+    Path(args.output_dataset_id).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_dataset_id).write_text(dataset_id)
+    Path(args.output_location).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_location).write_text(args.location)
     
     

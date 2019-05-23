@@ -19,8 +19,15 @@ import argparse
 import json
 
 
-# Define helper lightweight Python components
+# URIs to the specifications of the components used in the pipeline
+BIGQUERY_COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/bigquery/query/component.yaml'
+AML_IMPORT_DATASET_SPEC_URI = 'aml-import-dataset.yaml'
+AML_TRAIN_MODEL_SPEC_URI = 'aml-train-model.yaml'
+AML_RETRIEVE_METRICS_SPEC_URI = 'aml-retrieve-regression-metrics.yaml'
+AML_DEPLOY_MODEL_SPEC_URI = 'aml-deploy-model.yaml'
 
+
+# Helper Lightweight Python components
 BASE_IMAGE = 'gcr.io/clv-pipelines/base-image:latest'
 
 @kfp.dsl.python_component(name='Load transactions', base_image=BASE_IMAGE)
@@ -30,7 +37,7 @@ def load_sales_transactions(
     location: str,
     dataset_id: str,
     table_id: str) -> str:
-    """Loads sales transactions from CSV file on GCS to BigQuery table"""
+    """Loads sales transactions from a CSV file on GCS to a BigQuery table"""
 
     from google.cloud import bigquery
     import uuid
@@ -104,22 +111,14 @@ def prepare_feature_engineering_query(
     return query
 
 
-# Set the URIs to the specifications of the components used in the pipeline
-BIGQUERY_COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/bigquery/query/component.yaml'
-AML_IMPORT_DATASET_SPEC_URI = 'gs://clv-pipelines/specs/aml-import-dataset.yaml'
-AML_TRAIN_MODEL_SPEC_URI = 'gs://clv-pipelines/specs/aml-train-model.yaml'
-AML_RETRIEVE_METRICS_SPEC_URI = 'gs://clv-pipelines/specs/aml-retrieve-regression-metrics.yaml'
-AML_DEPLOY_MODEL_SPEC_URI = 'gs://clv-pipelines/specs/aml-deploy-model.yaml'
-# Set the URI to the location of the feature engineering query template
-QUERY_TEMPLATE_URI = 'gs://clv-pipelines/scripts/create_features_template.sql'
-
+# Pipeline definition
 @kfp.dsl.pipeline(
     name='CLV Training BigQuery AutoML',
     description='CLV Training Pipeline using BigQuery for feature engineering and Automl Tables for model training'
 )
 def clv_train_bq_automl(
     project_id, 
-    source_gcs_path='gs://clv-pipelines/transactions/transactions.csv',
+    source_gcs_path,
     bq_location='US',
     transactions_dataset_id='clv_dataset',
     transactions_table_id='transactions',
@@ -140,10 +139,10 @@ def clv_train_bq_automl(
     load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
     prepare_feature_engineering_query_op = kfp.components.func_to_container_op(prepare_feature_engineering_query)
     engineer_features_op = kfp.components.load_component_from_url(BIGQUERY_COMPONENT_SPEC_URI)
-    import_dataset_op = kfp.components.load_component_from_url(AML_IMPORT_DATASET_SPEC_URI)
-    train_model_op = kfp.components.load_component_from_url(AML_TRAIN_MODEL_SPEC_URI)
-    retrieve_metrics_op = kfp.components.load_component_from_url(AML_RETRIEVE_METRICS_SPEC_URI)
-    deploy_model_op = kfp.components.load_component_from_url(AML_DEPLOY_MODEL_SPEC_URI)
+    import_dataset_op = kfp.components.load_component_from_file(AML_IMPORT_DATASET_SPEC_URI)
+    train_model_op = kfp.components.load_component_from_file(AML_TRAIN_MODEL_SPEC_URI)
+    retrieve_metrics_op = kfp.components.load_component_from_file(AML_RETRIEVE_METRICS_SPEC_URI)
+    deploy_model_op = kfp.components.load_component_from_file(AML_DEPLOY_MODEL_SPEC_URI)
 
     # Define workflow
 
@@ -157,6 +156,7 @@ def clv_train_bq_automl(
     ) 
 
     # Generate the feature engineering query
+    QUERY_TEMPLATE_URI = 'gs://clv-pipelines/scripts/create_features_template.sql'
     prepare_feature_engineering_query_task = prepare_feature_engineering_query_op(
         project_id=project_id,
         source_table_id=load_sales_transactions_task.output,

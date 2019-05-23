@@ -15,12 +15,12 @@ def _parse_arguments():
     parser.add_argument(
         '--experiment',
         type=str,
-        default='CLV_TRAIN_BQ',
+        default='CLV_TRAIN_DATAPROC',
         help='KFP experiment name.')
     parser.add_argument(
         '--pipeline_file',
         type=str,
-        default='clv_train_bq_automl.tar.gz',
+        default='clv_train_dataproc.tar.gz',
         help='Pipeline file name.')
     parser.add_argument(
         '--project-id',
@@ -37,19 +37,18 @@ args = _parse_arguments()
 host = 'http://localhost:{}'.format(args.port)
 client = kfp.Client(host)
 experiment = client.create_experiment(args.experiment)
-run_name = 'CLV train with BQ'
+run_name = 'CLV train with Dataproc'
 
 # Prepare pipeline arguments
 arguments = {
     'project_id': args.project_id
 }
+
 # Submit the pipeline
 run = client.run_pipeline(experiment.id, run_name, args.pipeline_file, arguments)
 print(run.id)
 
 # Wait for completion
 result = client.wait_for_run_completion(run.id, timeout=6000)
-
-
     
     

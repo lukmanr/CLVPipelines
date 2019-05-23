@@ -68,6 +68,10 @@ def write_metadata_for_output_viewers(*argv):
 
     
 def write_regression_metrics(metrics):
+    """Writes metrics metadata
+
+    This does not seem to be working with the current UI"""
+
     metrics = {
         'metrics': [
         {

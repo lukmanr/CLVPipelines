@@ -36,20 +36,16 @@ def prepare_features(
     sparkSQL = pyspark.sql.SQLContext(sc)
 
     schema = StructType([
-        StructField('invoice_id', StringType()),
-        StructField('stock_code', StringType()),
-        StructField('description', StringType()),
-        StructField('quantity', IntegerType()),
-        StructField('invoice_date', StringType()),
-        StructField('unit_price', FloatType()),
         StructField('customer_id', StringType()),
-        StructField('country', StringType())
+        StructField('order_date', StringType()),
+        StructField('quantity', IntegerType()),
+        StructField('unit_price', FloatType())
     ])
 
     # Read source file and select columns that will be the base of training features
     sales_transactions = sparkSQL.read \
     .csv(source_gcs_path, header=None, schema=schema) \
-    .select('customer_id', to_date(col('invoice_date'), 'MM/dd/yy').alias('order_date'), 'quantity','unit_price') 
+    .select('customer_id', to_date(col('order_date'), 'yyyy-MM-dd').alias('order_date'), 'quantity','unit_price') 
 
     # Find the most recent order's date for each customer
     latest_orders = sales_transactions \
@@ -105,7 +101,7 @@ def prepare_features(
 
     # Write the output to GCS
     #features_and_target.coalesce(4).write.csv(output_folder, mode='overwrite')
-    features_and_target.write.csv(output_gcs_path, mode='overwrite')
+    features_and_target.write.csv(output_gcs_path, header=True, mode='overwrite')
 
 def _parse_arguments():
     """Parse command line arguments"""

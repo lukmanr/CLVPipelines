@@ -85,18 +85,6 @@ def train_model(
     return response.result().name
 
 
-def write_metadata_for_output_viewers(*argv):
-    """Writes items to be rendered by KFP UI as artificats"""
-
-    metadata = {
-        "version": 1,
-        "outputs": argv 
-    }
-
-    with open('/mlpipeline-ui-metadata.json', 'w') as f:
-            json.dump(metadata, f)
-
-     
 def _parse_arguments():
     """Parse command line arguments"""
     
@@ -168,7 +156,7 @@ if __name__ == '__main__':
 
     logging.info("Training completed")
 
-    # Save model full id and evaluation metrics to output
+    # Save model full id  to output
     Path(args.output_model_full_id).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output_model_full_id).write_text(model_full_id)
  
