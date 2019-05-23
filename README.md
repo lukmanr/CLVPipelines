@@ -31,7 +31,8 @@ gcloud config set project [your project ID]
 ## Configuring Kubeflow Pipelines on Google Kubernetes Engine
 
 ### Install Google Kubernetes Engine (GKE)
-Create a single-zone **Standard** cluster. Make sure to replace the placeholders with your zone and cluster name.
+Create a single-zone **Standard** cluster. Make sure to replace the placeholders with your zone and cluster name. 
+
 ```
 CLUSTERNAME=[your cluster name]
 ZONE=[your zone]
