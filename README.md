@@ -28,7 +28,7 @@ Connect to Cloud Shell and set the default **Project**  to the project you are g
 gcloud config set project [your project ID]
 
 ```
-## Configuring Kubeflow Pipelines
+## Configuring Kubeflow Pipelines on Google Kubernetes Engine
 
 ### Install Google Kubernetes Engine (GKE)
 Create a single-zone **Standard** cluster. Make sure to replace the placeholders with your zone and cluster name.
@@ -64,6 +64,11 @@ After port forwarding has been established, use Cloud Shell web preview to open 
 
 
 ## Running pipelines using Kubeflow Pipelines UI
+
+### Downloading the sample dataset
+The dataset used in the tutorial is based onf the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository.
+
+
 
 
 ## Configuring a development environment
