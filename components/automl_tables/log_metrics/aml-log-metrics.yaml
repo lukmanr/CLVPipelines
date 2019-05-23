@@ -35,7 +35,7 @@ implementation:
     image: gcr.io/clv-pipelines/automl-tables-component:latest
     command: ["python", "log_metrics.py"]
     args: [
-      --model_full-id, {inputValue: model_full_id},
+      --model-full-id, {inputValue: model_full_id},
       --output-rmse, {outputPath: output_rmse},
       --output-mae, {outputPath: output_mae},
       --output-rsquared, {outputPath: output_rsquared}

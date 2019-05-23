@@ -59,8 +59,11 @@ def _write_metrics(metrics):
         }]
     }
 
-    with open('mlpipeline-metrics.json', 'w') as f:
+    with open('/mlpipeline-metrics.json', 'w') as f:
         json.dump(metrics, f)
+
+    with open('/mlpipeline-metrics.json', 'r') as f:
+        print(json.load(f))
 
 
 def _parse_arguments():

@@ -20,7 +20,7 @@ from google.cloud.automl_v1beta1 import enums
 
 
 def deploy_model(model_full_id):
-    """Deploys a trained AutoML model"""
+    """Deploys an AutoML Tables model"""
 
     client = automl.AutoMlClient()
 
@@ -37,7 +37,7 @@ def deploy_model(model_full_id):
  
 
 def _parse_arguments():
-    """Parse command line arguments"""
+    """Parses command line arguments"""
     
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -58,15 +58,15 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     args = _parse_arguments()
 
-    # Import dataset to AutoML tables
+    # Deploy a model
     logging.info("Starting model deployment: {}".format(args.model_full_id))
     result = deploy_model( model_full_id=args.model_full_id)
+    logging.info("Deployment completed: {}".format(result))
 
-    # Save project ID, dataset ID, and dataset location to output
+    # Save deployment outcome to output
     Path(args.output_deployment).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output_deployment).write_text(result)
 
-    """
 
     
     

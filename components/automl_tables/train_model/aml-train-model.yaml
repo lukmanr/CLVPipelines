@@ -41,14 +41,11 @@ inputs:
     description: 'A comma separated list of features to exclude from training'
     type: String
 outputs:
-  - name: output_project_id
-    description: 'Project ID.'
-    type: String
-  - name: output_model_id
+  - name: output_model_full_id
     description: 'AutoML model ID.'
     type: String
-  - name: output_location
-    description: 'AutoML model location.'
+  - name: output_metrics
+    description: 'Evaluation metrics'
     type: String
 
 implementation:
@@ -64,7 +61,6 @@ implementation:
       --optimization-objective, {inputValue: optimization_objective},
       --target-name, {inputValue: target_name},
       --features-to-exclude, {inputValue: features_to_exclude},
-      --output-project-id, {outputPath: output_project_id},
-      --output-model-id, {outputPath: output_model_id},
-      --output-location, {outputPath: output_location}
+      --output-model-full-id, {outputPath: output_model_full_id},
+      --output-metrics, {outputPath: output_metrics}
     ]

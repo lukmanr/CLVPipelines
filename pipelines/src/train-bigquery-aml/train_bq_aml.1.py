@@ -132,8 +132,7 @@ def clv_train_bq_automl(
     model_name='clv_regression',
     train_budget='1000',
     target_column_name='target_monetary',
-    features_to_exclude='customer_id',
-    rmse_threshold='800'
+    features_to_exclude='customer_id'
 ):
     # Create component factories
     load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
@@ -208,14 +207,10 @@ def clv_train_bq_automl(
     train_model_task = train_model_op(
         project_id=project_id,
         location=compute_region,
-        dataset_id='jfalfalfjalsdjf',
+        dataset_id='',
         model_name=model_name,
         train_budget=train_budget,
         optimization_objective='MINIMIZE_MAE',
         target_name=target_column_name,
         features_to_exclude=features_to_exclude
         )
-
-    # Deploy the model if MAE is below the threshold
-    with dsl.Condition(800 == rmse_threshold):
-        deploy_model_tast = deploy_model_op(train_model_task.outputs['output_model_full_id'])

@@ -1,1 +1,1 @@
-metrics
+{"RMSE": 1744.99, "type": "regression", "R-squared": 0.79, "MAE": 746.22}
