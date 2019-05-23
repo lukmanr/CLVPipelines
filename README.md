@@ -176,13 +176,13 @@ To configure access to your GKE cluster.
 gcloud container clusters get-credentials [YOUR_CLUSTER_NAME] --zone [YOUR_ZONE]
 ```
 
-To configure port forwarding execute the following command in a new Cloud Shell terminal.
+To configure port forwarding to `ml-pipeline`.
 
 ```
 kubectl port-forward -n kubeflow svc/ml-pipeline 8082:8888
 ```
 
-The command forwards the local (Cloud Shell) port 8082 to port 8888 (ml-pipeline service port) on the cluster.
+Note that you can use other ports than 8082.
 
 Make sure that the terminal window stays open and the command is running when you submit the jobs using KFP SDK client API.
 
