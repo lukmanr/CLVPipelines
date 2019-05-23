@@ -79,8 +79,19 @@ The dataset used in the tutorial is based on the publicly available [Online Reta
 
 The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. You need to copy this file to a public bucket in *your* project.
 
-#### Create a public GCS bucket
+#### Create a regional GCS bucket
+At this time AutoML Tables can only read from a regional bucket in the same region as AutoML Tables service. As of this writing, the only region supported by AutoML Tables is `us-central1`.
 
+*For now we will make the bucket public. TBD - finalize security between GKE, KFP, AutoML, Dataproc and BigQuery.*
+
+In Cloud Shell.
+
+```
+gsutil mb gs://[YOUR_BUCKET_NAME] -c regional -l us-central1
+gsutil bucketpolicyonly set on gs://[YOUR_BUCKET_NAME]
+gsutil acl ch -u AllUsers:R gs://[YOUR_BUCKET_NAME]
+
+```
 
 
 
