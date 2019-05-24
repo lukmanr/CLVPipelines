@@ -93,6 +93,7 @@ def clv_train_pipeline_dataproc_automl(
         region=compute_region,
         name=cluster_name
     )
+    dataproc_delete_cluster_task.is_exit_handler = True
  
     with dsl.ExitHandler(dataproc_delete_cluster_task):
         # Create a Dataproc cluster
