@@ -88,12 +88,12 @@ def clv_train_pipeline_dataproc_automl(
     deploy_model_op = kfp.components.load_component_from_file(AML_DEPLOY_MODEL_SPEC_URI)
 
     # Delete a Dataproc cluster - this is an exit handler
+    dataproc_create_cluster_op.is_exit_handler = True
     delete_cluster_exit_handler = dataproc_delete_cluster_op(
         project_id=project_id,
         region=compute_region,
         name=cluster_name
     )
-    delete_cluster_exit_handler.is_exit_handler = True
  
     with dsl.ExitHandler(delete_cluster_exit_handler):
         # Create a Dataproc cluster
