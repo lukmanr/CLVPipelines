@@ -93,14 +93,15 @@ At this time AutoML Tables can only read from a regional bucket in the same regi
 In a new Cloud Shell session.
 
 ```
-gsutil mb  -c regional -l us-central1 gs://[YOUR_BUCKET_NAME]
-gsutil bucketpolicyonly set on gs://[YOUR_BUCKET_NAME]
-gsutil iam ch allUsers:objectViewer gs://[YOUR_BUCKET_NAME]
+BUCKET=[YOUR_BUCKET_NAME]
+gsutil mb  -c regional -l us-central1 gs://$BUCKET
+gsutil bucketpolicyonly set on gs://$BUCKET
+gsutil iam ch allUsers:objectViewer gs://$BUCKET
 ```
 
 Copy the sample dataset to the newly created bucket.
 ```
-gsutil cp gs://clv-datasets/transactions/transactions.csv gs://[YOUR_BUCKET_NAME]/transactions
+gsutil cp gs://clv-datasets/transactions/transactions.csv gs://$BUCKET/transactions/transactions.csv
 ```
 
 ### Running the sample pipelines
@@ -168,7 +169,7 @@ python3 -m pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_V
 ```
 
 ### Configure port forwarding to Kubeflow Pipelines service 
-If you want to submit Kubeflow Pipelines runs programmatically (rather than through GUI) you need access to `ml-pipeline` service that is running on your GKE cluster. By default the service is not exposed on a public IP intefaces. For the purpose of this tutorial you access the service using port forwarding. Alternatively, you can expose the service through an external IP.
+If you want to submit Kubeflow Pipelines runs programmatically (rather than through GUI) you need access to the `ml-pipeline` service that is running on your GKE cluster. By default the service is not exposed on a public IP address. For the purpose of this tutorial, you access the service using port forwarding. Alternatively, you can expose the service through an external IP.
 
 To configure access to your GKE cluster.
 
@@ -176,13 +177,13 @@ To configure access to your GKE cluster.
 gcloud container clusters get-credentials [YOUR_CLUSTER_NAME] --zone [YOUR_ZONE]
 ```
 
-To configure port forwarding execute the following command in a new Cloud Shell terminal.
+To configure port forwarding to `ml-pipeline`.
 
 ```
 kubectl port-forward -n kubeflow svc/ml-pipeline 8082:8888
 ```
 
-The command forwards the local (Cloud Shell) port 8082 to port 8888 (ml-pipeline service port) on the cluster.
+Note that you can use other ports than 8082.
 
 Make sure that the terminal window stays open and the command is running when you submit the jobs using KFP SDK client API.
 
