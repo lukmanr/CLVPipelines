@@ -101,7 +101,7 @@ gsutil iam ch allUsers:objectViewer gs://$BUCKET
 
 Copy the sample dataset to the newly created bucket.
 ```
-gsutil cp gs://clv-datasets/transactions/transactions.csv gs://[YOUR_BUCKET_NAME]/transactions
+gsutil cp gs://clv-datasets/transactions/transactions.csv gs://$BUCKET/transactions
 ```
 
 ### Running the sample pipelines
