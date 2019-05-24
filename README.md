@@ -93,9 +93,10 @@ At this time AutoML Tables can only read from a regional bucket in the same regi
 In a new Cloud Shell session.
 
 ```
-gsutil mb  -c regional -l us-central1 gs://[YOUR_BUCKET_NAME]
-gsutil bucketpolicyonly set on gs://[YOUR_BUCKET_NAME]
-gsutil iam ch allUsers:objectViewer gs://[YOUR_BUCKET_NAME]
+BUCKET=[YOUR_BUCKET_NAME]
+gsutil mb  -c regional -l us-central1 gs://$BUCKET
+gsutil bucketpolicyonly set on gs://$BUCKET
+gsutil iam ch allUsers:objectViewer gs://$BUCKET
 ```
 
 Copy the sample dataset to the newly created bucket.
