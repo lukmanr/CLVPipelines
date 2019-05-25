@@ -20,11 +20,10 @@ from pathlib import Path
 from google.cloud import automl_v1beta1 as automl
 
 
-def batch_predict(project_id, region, model_id, datasource, output):
+def batch_predict(client, project_id, region, model_id, datasource, output):
   """Runs batch predict on an AutoML tables model."""
 
   # Prepare prediction query config
-  client = automl.PredictionServiceClient()
   model_full_id = client.model_path(
       project_id, region, model_id
   )
@@ -35,7 +34,8 @@ def batch_predict(project_id, region, model_id, datasource, output):
     input_config = {"gcs_source": {"input_uris": input_uris}}
 
   if output.startswith("bq"):
-    output_config = {"bigquery_destinatin": {"output_uri": output}}
+  #  output_config = {"bigquery_destination": {"output_uri": output}}
+    output_config = {"bigquery_destination": {"output_uri": output}}
   else:
     output_uris = output.split(",").strip()
     output_config = {"gcs_destination": {"output_uris": output_uris}}
@@ -54,6 +54,10 @@ def _parse_arguments():
   """Parse command line arguments."""
 
   parser = argparse.ArgumentParser()
+  parser.add_argument(
+      "--key_file",
+      type=str,
+      help="SA key file")
   parser.add_argument(
       "--project-id",
       type=str,
@@ -81,11 +85,20 @@ def _parse_arguments():
 if __name__ == "__main__":
   logging.basicConfig(level=logging.INFO)
   args = _parse_arguments()
+  if args.key_file:
+    client = automl.PredictionServiceClient.from_service_account_file(args.key_file)
+  else:
+    client = automl.PredictionServiceClient()
 
   # Run scoring
   logging.info("Starting batch scoring using: {}".format(args.datasource))
   result = batch_predict(
-      args.project_id, args.region, args.region, args.datasource, args.output)
+      client,
+      args.project_id,
+      args.region,
+      args.region,
+      args.datasource,
+      args.output)
   logging.info("Batch scoring completed: {}:".format(result))
 
   # Save results
