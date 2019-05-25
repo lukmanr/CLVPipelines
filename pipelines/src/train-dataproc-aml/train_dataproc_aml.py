@@ -88,15 +88,15 @@ def clv_train_pipeline_dataproc_automl(
     deploy_model_op = kfp.components.load_component_from_file(AML_DEPLOY_MODEL_SPEC_URI)
 
     # Delete a Dataproc cluster - this is an exit handler
-    dataproc_delete_cluster_task = dataproc_delete_cluster_op(
+    delete_cluster_exit_handler = dataproc_delete_cluster_op(
         project_id=project_id,
         region=compute_region,
         name=cluster_name
     )
  
-    with dsl.ExitHandler(dataproc_delete_cluster_task):
+    with dsl.ExitHandler(exit_op=delete_cluster_exit_handler):
         # Create a Dataproc cluster
-        dataproc_create_cluster_task = dataproc_create_cluster_op(
+        create_cluster_task = dataproc_create_cluster_op(
             project_id=project_id,
             region=compute_region,
             name=cluster_name,
@@ -127,10 +127,10 @@ def clv_train_pipeline_dataproc_automl(
 
         CREATE_FEATURES_SCRIPT_URI = 'gs://clv-pipelines/scripts/create_features.py'
 
-        dataproc_submit_pyspark_job_task = dataproc_submit_pyspark_job_op(
+        submit_pyspark_job_task = dataproc_submit_pyspark_job_op(
             project_id=project_id,
             region=compute_region,
-            cluster_name=dataproc_create_cluster_task.output,
+            cluster_name=create_cluster_task.output,
             main_python_file_uri = CREATE_FEATURES_SCRIPT_URI,
             args=pyspark_script_args,
             pyspark_job='{}',
@@ -138,9 +138,16 @@ def clv_train_pipeline_dataproc_automl(
             wait_interval='30'
         )
 
+        delete_cluster_task = dataproc_delete_cluster_op(
+            project_id=project_id,
+            region=compute_region,
+            name=cluster_name
+        )
+        delete_cluster_task.after(submit_pyspark_job_task)
+
         # Create a list of full gcs filenames from the dataproc output folder
         list_gcs_files_task = list_gcs_files_op(output_gcs_path)
-        list_gcs_files_task.after(dataproc_submit_pyspark_job_task)
+        list_gcs_files_task.after(submit_pyspark_job_task)
 
         # Import files with features into AML dataset
         import_dataset_task = import_dataset_op(
