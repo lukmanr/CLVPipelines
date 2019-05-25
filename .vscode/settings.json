@@ -1,4 +1,0 @@
-{
-    "python.pythonPath": "/home/jupyter/kfp/bin/python",
-    "python.envFile": "${workspaceFolder}/dev.env"
-}

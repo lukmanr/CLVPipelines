@@ -67,6 +67,3 @@ if __name__ == '__main__':
     Path(args.output_deployment).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output_deployment).write_text(result)
 
-
-    
-    

@@ -69,3 +69,7 @@ import re
 re.search('es$', 'order-summaries')
 
 #%%
+
+#%%
+
+from google.cloud import storage
