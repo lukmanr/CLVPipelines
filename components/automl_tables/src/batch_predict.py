@@ -17,11 +17,12 @@
 import argparse
 import logging
 import time
+import json
 from pathlib import Path
 from google.cloud import automl_v1beta1 as automl
 
 
-def batch_predict(client, project_id, region, model_id, datasource, output):
+def batch_predict(client, project_id, region, model_id, datasource, destination_prefix):
   """Runs batch predict on an AutoML tables model."""
 
   # Prepare prediction query config
@@ -34,26 +35,49 @@ def batch_predict(client, project_id, region, model_id, datasource, output):
     input_uris = datasource.split(",")
     input_config = {"gcs_source": {"input_uris": input_uris}}
 
-  if output.startswith("bq"):
-    output_config = {"bigquery_destination": {"output_uri": output}}
+  if destination_prefix.startswith("bq"):
+    output_config = {"bigquery_destination": {"output_uri": destination_prefix}}
   else:
-    output_config = {"gcs_destination": {"output_uri_prefix": output}}
+    output_config = {"gcs_destination": {"output_uri_prefix": destination_prefix}}
 
   # Run the prediction query
   response = client.batch_predict(
       model_full_id, input_config, output_config)
-    
 
   # Wait for completion
+  # WORKAROUND: hide errors thrown by response.result()
+  try:
+    response.result()
+  except:
+    pass
 
-  # while response.done() is False:
-  #  time.sleep(1)
-  # result = response.result()
+  return response.metadata
+  
+def prediction_metadata_to_markdown_metadata(response_metadata):
+    """Converts batch predict response metadat to markdown"""
 
-  response.result()
+    markdown_template = (
+        "**Batch predict results:**  \n"
+        "&nbsp;&nbsp;&nbsp;&nbsp;**Input datasource:**&nbsp{input}  \n"
+        "&nbsp;&nbsp;&nbsp;&nbsp;**Output destination:**&nbsp{output}  \n"
+    )
+    markdown = markdown_template.format(
+        input=response_metadata.batch_predict_details.input_config,
+        output=response_metadata.batch_predict_details.output_info
+    )
+    return markdown
 
-  return "result"
 
+def write_metadata_for_output_viewers(*argv):
+    """Writes items to be rendered by KFP UI as artificats"""
+
+    metadata = {
+        "version": 1,
+        "outputs": argv 
+    }
+
+    with open('mlpipeline-ui-metadata.json', 'w') as f:
+            json.dump(metadata, f)
 
 def _parse_arguments():
   """Parse command line arguments."""
@@ -84,11 +108,15 @@ def _parse_arguments():
       required=True,
       help="Input datasource")
   parser.add_argument(
-      "--output",
+      "--destination-prefix",
+      type=str,
+      required=True,
+      help="Destination sink for predictions")
+  parser.add_argument(
+      "--output-destination",
       type=str,
       required=True,
       help="Output")
-
   return parser.parse_args()
 
 
@@ -108,10 +136,14 @@ if __name__ == "__main__":
       args.region,
       args.model_id,
       args.datasource,
-      args.output)
-  logging.info("Batch scoring completed")
+      args.destination_prefix)
+  logging.info("Batch scoring completed: {}".format(str(result)))
+  write_metadata_for_output_viewers(prediction_metadata_to_markdown_metadata(result))
 
   # Save results
-  # TBD ******
-  Path(args.output).parent.mkdir(parents=True, exist_ok=True)
-  Path(args.output).write_text(result)
+  if args.destination_prefix.startswith("bq"):
+    output = result.batch_predict_details.output_info.bigquery_output_dataset
+  else:
+    output = "bbb"
+  Path(args.output_destination).parent.mkdir(parents=True, exist_ok=True)
+  Path(args.output_destination).write_text(output)

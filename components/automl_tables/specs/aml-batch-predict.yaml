@@ -14,57 +14,36 @@
 
 name: Batch Predict
 description: |
-  Imports data from either BigQuery or GCS to AutoML Dataset
+  Runs AutoML batch predict job
 inputs:
   - name: project_id
     description: 'The project_id for AutoML processing'
     type: GCPProjectID
-  - name: location
-    description: 'AutoML dataset location.'
+  - name: region
+    description: 'AutoML compute tegion'
     type: String
-  - name: dataset_name
-    description: 'AutoML dataset name.'
+  - name: model_id
+    description: 'AutoML model ID'
     type: String
-  - name: description
-    description: 'AutoML dataset description.'
+  - name: datasource
+    description: 'Data source to score GCS or BigQuery'
     type: String
-  - name: source_data_uri
-    description: 'Source data URI'
-    type: String
-  - name: target_column_name
-    description: 'Target column name'
-    type: String
-  - name: weight_column_name
-    description: 'Weight column name'
-    type: String
-  - name: ml_use_column_name
-    description: 'ML use column name'
+  - name: destination_prefix
+    description: 'Destination for predictions'
     type: String
 outputs:
-  - name: output_project_id
-    description: 'Project ID.'
+  - name: output_destination
+    description: 'Prediction output'
     type: String
-  - name: output_dataset_id
-    description: 'AutoML dataset ID.'
-    type: String
-  - name: output_location
-    description: 'AutoML dataset location.'
-    type: String
-
 implementation:
   container:
     image: gcr.io/clv-pipelines/automl-tables-component:latest
     command: ["python", "batch_predict.py"]
     args: [
       --project-id, {inputValue: project_id},
-      --location, {inputValue: location},
-      --dataset-name, {inputValue: dataset_name},
-      --description, {inputValue: description},
-      --source-data-uri, {inputValue: source_data_uri},
-      --target-column-name, {inputValue: target_column_name},
-      --weight-column-name, {inputValue: weight_column_name},
-      --ml-use-column-name, {inputValue: ml_use_column_name},
-      --output-project-id, {outputPath: output_project_id},
-      --output-dataset-id, {outputPath: output_dataset_id},
-      --output-location, {outputPath: output_location}
+      --region, {inputValue: region},
+      --model-id, {inputValue: model_id},
+      --datasource, {inputValue: datasource},
+      --destination-prefix, {inputValue: destination_prefix},
+      --output-destination, {outputPath: output_destination}
     ]
