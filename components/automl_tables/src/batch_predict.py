@@ -76,7 +76,7 @@ def write_metadata_for_output_viewers(*argv):
         "outputs": argv 
     }
 
-    with open('mlpipeline-ui-metadata.json', 'w') as f:
+    with open('/mlpipeline-ui-metadata.json', 'w') as f:
             json.dump(metadata, f)
 
 def _parse_arguments():

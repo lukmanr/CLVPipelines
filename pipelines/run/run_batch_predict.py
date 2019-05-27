@@ -43,12 +43,12 @@ def _parse_arguments():
     parser.add_argument(
         '--dataproc_gcs_output',
         type=str,
-        default='gs:/clv-testing/features',
+        default='gs://clv-testing/features',
         help='GCS location for CLV feature')
     parser.add_argument(
         '--pyspark_script_path',
         type=str,
-        default='gs://clv-testing/scripts/create_features_and_labels.py',
+        default='gs://clv-testing/scripts/create_features_and_label.py',
         help='GCS path to the PySpark preprocessing script')
      
     return parser.parse_args()
@@ -60,12 +60,13 @@ args = _parse_arguments()
 host = 'http://localhost:{}'.format(args.port)
 client = kfp.Client(host)
 experiment = client.create_experiment(args.experiment)
-run_name = 'CLV train with Dataproc'
+run_name = 'CLV batch predict'
 
 # Prepare pipeline arguments
 arguments = {
     'project_id': args.project_id,
     'model_id': args.model_id,
+    'datasource': args.datasource,
     'bq_destination': args.bq_destination,
     'dataproc_gcs_output': args.dataproc_gcs_output,
     'pyspark_script_path': args.pyspark_script_path

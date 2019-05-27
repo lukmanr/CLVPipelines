@@ -41,7 +41,7 @@ def clv_batch_predict(
     predict_end='2011-12-12',
     max_monetary=15000,
     max_partitions=8,
-    cluster_name='clv_spark_cluster'):
+    cluster_name='clv-spark-cluster'):
 
   # Create component factories
   dataproc_create_cluster_op = kfp.components.load_component_from_url(

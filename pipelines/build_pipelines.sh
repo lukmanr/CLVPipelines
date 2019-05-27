@@ -10,8 +10,15 @@
 cp ../components/automl_tables/specs/*.yaml .
 
 # Compile the pipelines
-dsl-compile --py src/train-bigquery/train_bq.py --output compiled/clv_train_bq.tar.gz
-dsl-compile --py src/train-dataproc/train_dataproc.py --output compiled/clv_train.tar.gz
-dsl-compile --py src/batch-predict/batch_predict.py --output compiled/clv_batch_predict.tar.gz
+dsl-compile --py src/train-bigquery-pipeline/train_bq_pipeline.py --output compiled/clv_train_bq.tar.gz
+dsl-compile --py src/train-dataproc-pipeline/train_dataproc_pipeline.py --output compiled/clv_train_dataproc.tar.gz
+dsl-compile --py src/batch-predict-pipeline/batch_predict_pipeline.py --output compiled/clv_batch_predict.tar.gz
 
+# Just in case remove yaml files
 rm *.yaml
+
+# Copy script to GCS
+gsutil cp src/scripts/* gs://clv-testing/scripts
+
+
+
