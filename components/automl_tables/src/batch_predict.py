@@ -41,15 +41,15 @@ def batch_predict(client, project_id, region, model_id, datasource, destination_
     output_config = {"gcs_destination": {"output_uri_prefix": destination_prefix}}
 
   # Run the prediction query
-
-  print("*** Befoer calling client.batch_predict")
-  print("*** {}".format(output_config))
-  
   response = client.batch_predict(
       model_full_id, input_config, output_config)
 
   # Wait for completion
-  response.result()
+  # WORKAROUND to catch exception thrown by response.result()
+  try:
+    response.result()
+  except:
+    pass
 
   return response.metadata
   
@@ -65,10 +65,6 @@ def prediction_metadata_to_markdown_metadata(response_metadata):
         input=response_metadata.batch_predict_details.input_config,
         output=response_metadata.batch_predict_details.output_info
     )
-
-    print("***markdown***")
-    print(markdown)
-    print("******")
 
     return markdown
 
@@ -90,10 +86,6 @@ def _parse_arguments():
   """Parse command line arguments."""
 
   parser = argparse.ArgumentParser()
-  parser.add_argument(
-      "--key_file",
-      type=str,
-      help="SA key file")
   parser.add_argument(
       "--project-id",
       type=str,
@@ -130,10 +122,7 @@ def _parse_arguments():
 if __name__ == "__main__":
   logging.basicConfig(level=logging.INFO)
   args = _parse_arguments()
-  if args.key_file:
-    client = automl.PredictionServiceClient.from_service_account_file(args.key_file)
-  else:
-    client = automl.PredictionServiceClient()
+  client = automl.PredictionServiceClient()
 
   # Run scoring
   logging.info("Starting batch scoring using: {}".format(args.datasource))
@@ -152,5 +141,6 @@ if __name__ == "__main__":
     output = result.batch_predict_details.output_info.bigquery_output_dataset
   else:
     output = "bbb"
+
   Path(args.output_destination).parent.mkdir(parents=True, exist_ok=True)
   Path(args.output_destination).write_text(output)
