@@ -58,8 +58,8 @@ def prediction_metadata_to_markdown_metadata(response_metadata):
 
     markdown_template = (
         "**Batch predict results:**  \n"
-        "&nbsp;&nbsp;&nbsp;&nbsp;**Input datasource:**&nbsp{input}  \n"
-        "&nbsp;&nbsp;&nbsp;&nbsp;**Output destination:**&nbsp{output}  \n"
+        "&nbsp;&nbsp;&nbsp;&nbsp;**Input datasource:**&nbsp;{input}  \n"
+        "&nbsp;&nbsp;&nbsp;&nbsp;**Output destination:**&nbsp;{output}  \n"
     )
     markdown = markdown_template.format(
         input=response_metadata.batch_predict_details.input_config,
