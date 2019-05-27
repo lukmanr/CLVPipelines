@@ -66,7 +66,9 @@ def prediction_metadata_to_markdown_metadata(response_metadata):
         output=response_metadata.batch_predict_details.output_info
     )
 
-    return markdown
+    markdown_metadata = {"type": "markdown", "storage": "inline", "source": markdown}
+
+    return markdown_metadata
 
 
 def write_metadata_for_output_viewers(*argv):
@@ -79,11 +81,6 @@ def write_metadata_for_output_viewers(*argv):
     with open('/mlpipeline-ui-metadata.json', 'w') as f:
             json.dump(metadata, f)
 
-
-    ### Debug code ###
-    print("Debug: Wrote to /mlpipeline-ui-metadata.json")
-    with open('/mlpipeline-ui-metadata.json', 'r') as f:
-      print(f.read())
 
 def _parse_arguments():
   """Parse command line arguments."""
