@@ -140,7 +140,7 @@ if __name__ == "__main__":
   if args.destination_prefix.startswith("bq"):
     output = result.batch_predict_details.output_info.bigquery_output_dataset
   else:
-    output = "bbb"
+    output = result.batch_predict_details.output_info.gcs_output_directory
 
   Path(args.output_destination).parent.mkdir(parents=True, exist_ok=True)
   Path(args.output_destination).write_text(output)

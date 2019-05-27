@@ -62,7 +62,7 @@ def clv_batch_predict(
     project_id,
     model_id,
     datasource,
-    bq_destination,
+    destination,
     dataproc_gcs_output,
     pyspark_script_path,
     region='us-central1',
@@ -152,5 +152,5 @@ def clv_batch_predict(
       region=region,
       model_id=model_id,
       datasource=list_gcs_files_task.output,
-      destination_prefix=bq_destination
+      destination_prefix=destination
   )
