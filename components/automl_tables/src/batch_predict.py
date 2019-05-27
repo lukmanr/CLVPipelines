@@ -76,11 +76,14 @@ def write_metadata_for_output_viewers(*argv):
         "version": 1,
         "outputs": argv 
     }
-
-    print("**** In write_ ***")
-
     with open('/mlpipeline-ui-metadata.json', 'w') as f:
             json.dump(metadata, f)
+
+
+    ### Debug code ###
+    print("Debug: Wrote to /mlpipeline-ui-metadata.json")
+    with open('/mlpipeline-ui-metadata.json', 'r') as f:
+      print(f.read())
 
 def _parse_arguments():
   """Parse command line arguments."""
