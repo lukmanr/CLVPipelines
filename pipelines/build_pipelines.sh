@@ -7,16 +7,11 @@
 #
 # Eventually YAML specs will be moved to a public repo and referenced using load_component_from_url
 #
-cp ../components/automl_tables/import_dataset/aml-import-dataset.yaml .
-cp ../components/automl_tables/train_model/aml-train-model.yaml .
-cp ../components/automl_tables/retrieve_regression_metrics/aml-retrieve-regression-metrics.yaml .
-cp ../components/automl_tables/deploy_model/aml-deploy-model.yaml .
+cp ../components/automl_tables/specs/*.yaml .
 
 # Compile the pipelines
-dsl-compile --py src/train-bigquery-aml/train_bq_aml.py --output clv_train_bq_automl.tar.gz
-dsl-compile --py src/train-dataproc-aml/train_dataproc_aml.py --output clv_train_dataproc.tar.gz
+dsl-compile --py src/train-bigquery/train_bq.py --output compiled/clv_train_bq.tar.gz
+dsl-compile --py src/train-dataproc/train_dataproc.py --output compiled/clv_train.tar.gz
+dsl-compile --py src/batch-predict/batch_predict.py --output compiled/clv_batch_predict.tar.gz
 
-rm aml-import-dataset.yaml 
-rm aml-train-model.yaml 
-rm aml-retrieve-regression-metrics.yaml 
-rm aml-deploy-model.yaml 
+rm *.yaml

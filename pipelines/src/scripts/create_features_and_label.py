@@ -1,4 +1,3 @@
-
 # Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +24,7 @@ def prepare_features(
     output_gcs_path,
     threshold_date,
     predict_end,
+    calculate_target,
     max_monetary,
     max_partitions):
     """Creates CLV features from sales transactions"""
@@ -42,10 +42,9 @@ def prepare_features(
         StructField('unit_price', FloatType())
     ])
 
-    # Read source file and select columns that will be the base of training features
+    # Read source CSV files
     sales_transactions = sparkSQL.read \
-    .csv(source_gcs_path, header=None, schema=schema) \
-    .select('customer_id', to_date(col('order_date'), 'yyyy-MM-dd').alias('order_date'), 'quantity','unit_price') 
+    .csv(source_gcs_path, header=True, schema=schema) 
 
     # Find the most recent order's date for each customer
     latest_orders = sales_transactions \
@@ -75,13 +74,6 @@ def prepare_features(
     .filter(datediff(to_date(lit(predict_end)), col('latest_order')) < 90) \
     .filter((col('order_qty_articles')*col('order_value'))>0)
 
-    # Calculate a monetary target for each customer
-    monetary_targets = filtered_daily_summaries \
-    .filter(col('order_date')>threshold_date) \
-    .groupBy('customer_id') \
-    .agg(sum('order_value').alias('target_monetary')) \
-    .select('customer_id', 'target_monetary')
-
     # Calculate features for each customer
     features = filtered_daily_summaries \
     .filter(col('order_date')<=threshold_date) \
@@ -95,62 +87,72 @@ def prepare_features(
         sum(when(col('order_value')<0, 1).otherwise(0)).alias('cnt_returns')) \
     .filter((col('monetary')>0) & (col('monetary')<max_monetary))
 
-    # Join features with targets
-    features_and_target = features \
-    .join(monetary_targets, 'customer_id')
+    
+    # If requested, calculate a monetary target for each customer
+    if calculate_target:
+      monetary_targets = filtered_daily_summaries \
+      .filter(col('order_date')>threshold_date) \
+      .groupBy('customer_id') \
+      .agg(sum('order_value').alias('target_monetary')) \
+      .select('customer_id', 'target_monetary')
+      output = features \
+      .join(monetary_targets, 'customer_id')
+    else:
+      output = features
 
-    # Write the output to GCS
-    #features_and_target.coalesce(4).write.csv(output_folder, mode='overwrite')
-    features_and_target.write.csv(output_gcs_path, header=True, mode='overwrite')
+    output.write.csv(output_gcs_path, header=True, mode='overwrite')
+
 
 def _parse_arguments():
-    """Parse command line arguments"""
-    
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--source-gcs-path',
-        type=str,
-        required=True,
-        help='The GCS location with sales transaction CSV files.')
-    parser.add_argument(
-        '--output-gcs-path',
-        type=str,
-        required=True,
-        help='The GCS location for the output feature files')
-    parser.add_argument(
-        '--threshold-date',
-        type=str,
-        required=True,
-        help='Begining date for target value calculations.')
-    parser.add_argument(
-        '--predict-end',
-        type=str,
-        required=True,
-        help='End date for target value calculations.')
-    parser.add_argument(
-        '--max-monetary',
-        type=str,
-        default=15000,
-        help='Maximum monetary value.') 
-    parser.add_argument(
-        '--max-partitions',
-        type=int,
-        default=8,
-        help='Maximum number of partitions.') 
-    return parser.parse_args()
+  """Parse command line arguments"""
+
+  parser = argparse.ArgumentParser()
+  parser.add_argument(
+      '--source-gcs-path',
+      type=str,
+      required=True,
+      help='The GCS location with sales transaction CSV files.')
+  parser.add_argument(
+      '--output-gcs-path',
+      type=str,
+      required=True,
+      help='The GCS location for the output feature files')
+  parser.add_argument(
+      '--threshold-date',
+      type=str,
+      required=True,
+      help='Begining date for target value calculations.')
+  parser.add_argument(
+      '--predict-end',
+      type=str,
+      required=True,
+      help='End date for target value calculations.')
+  parser.add_argument(
+      '--calculate-target',
+      action='store_true',
+      help='Flag controlling target calculations')
+  parser.add_argument(
+      '--max-monetary', 
+      type=str, 
+      default=15000, 
+      help='Maximum monetary value threshold.')
+  parser.add_argument(
+      '--max-partitions',
+      type=int,
+      default=8,
+      help='Maximum number of partitions.')
+  return parser.parse_args()
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
-    args = _parse_arguments()
+  logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+  args = _parse_arguments()
 
-    prepare_features(
-        source_gcs_path=args.source_gcs_path,
-        output_gcs_path=args.output_gcs_path,
-        threshold_date=args.threshold_date,
-        predict_end=args.predict_end,
-        max_monetary=args.max_monetary,
-        max_partitions=args.max_partitions
-    )
-    
-
+  prepare_features(
+      source_gcs_path=args.source_gcs_path,
+      output_gcs_path=args.output_gcs_path,
+      threshold_date=args.threshold_date,
+      predict_end=args.predict_end,
+      calculate_target=args.calculate_target,
+      max_monetary=args.max_monetary,
+      max_partitions=args.max_partitions)

@@ -62,23 +62,21 @@ def list_gcs_files(source_gcs_folder: str) -> str:
     name='CLV Training Pipeline - Dataproc',
     description='CLV Training Pipeline using Dataproc/Spark for feature engineering and AutoML Tables for model training'
 )
-def clv_train_pipeline_dataproc_automl(
-    project_id,
-    source_gcs_path,
-    output_gcs_path,
-    threshold_date='2011-08-08',
-    predict_end='2011-12-12',
-    max_monetary=15000,
-    max_partitions=2,
-    compute_region='us-central1',
-    aml_dataset_name='clv_features',
-    model_name='clv_regression',
-    train_budget='1000',
-    target_column_name='target_monetary',
-    features_to_exclude='customer_id',
-    mae_threshold='990',
-    cluster_name='clv-spark-cluster'
- ):
+def clv_train_pipeline_dataproc_automl(project_id,
+                                       source_gcs_path,
+                                       output_gcs_path,
+                                       threshold_date='2011-08-08',
+                                       predict_end='2011-12-12',
+                                       max_monetary=15000,
+                                       max_partitions=2,
+                                       compute_region='us-central1',
+                                       aml_dataset_name='clv_features',
+                                       model_name='clv_regression',
+                                       train_budget='1000',
+                                       target_column_name='target_monetary',
+                                       features_to_exclude='customer_id',
+                                       mae_threshold='990',
+                                       cluster_name='clv-spark-cluster'):
 
   # Create component factories
   list_gcs_files_op = kfp.components.func_to_container_op(list_gcs_files)
@@ -120,6 +118,7 @@ def clv_train_pipeline_dataproc_automl(
                            '"--output-gcs-path={}",'
                            '"--threshold-date={}",'
                            '"--predict-end={}",'
+                           '"--calculate-target",'
                            '"--max-monetary={}",'
                            '"--max-partitions={}",'
                            ']').format(source_gcs_path, output_gcs_path,
