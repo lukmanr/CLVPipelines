@@ -18,6 +18,35 @@ import os
 import argparse
 import json
 
+# Helper Lightweight Python components
+BASE_IMAGE = 'gcr.io/clv-pipelines/base-image:latest'
+@kfp.dsl.python_component(name='List GCS files ', base_image=BASE_IMAGE)
+def list_gcs_files(source_gcs_folder: str) -> str:
+  """Returns a list of full GCS paths
+
+  This is a helper component designed to bridge an output of a Dataproc/Spark
+  processing to an input of AutoML Import Dataset. The component takes as an
+  input a path of to a GCS folder returns a comma-delimited list of full GCS
+  paths - as required by AutoML Import Dataset.
+  """
+
+  import re
+  from google.cloud import storage
+
+  storage_client = storage.Client()
+
+  _, bucket_name, prefix = re.split('gs://|/', source_gcs_folder, 2)
+  prefix = prefix + '/' if prefix[-1] != '/' else prefix
+  bucket = storage_client.get_bucket(bucket_name)
+  blobs = [
+      'gs://{}/{}'.format(bucket_name, blob.name)
+      for blob in bucket.list_blobs(prefix=prefix, delimiter='')
+      if (blob.name != prefix) and not (blob.name.endswith('_SUCCESS'))
+  ]
+
+  return ','.join(blobs)
+
+
 # URIs to the specifications of the components used in the pipeline
 CREATE_DATAPROC_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/d2f5cc92a46012b9927209e2aaccab70961582dc/components/gcp/dataproc/create_cluster/component.yaml'
 DELETE_DATAPROC_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/d2f5cc92a46012b9927209e2aaccab70961582dc/components/gcp/dataproc/delete_cluster/component.yaml'
@@ -44,6 +73,7 @@ def clv_batch_predict(
     cluster_name='clv-spark-cluster'):
 
   # Create component factories
+  list_gcs_files_op = kfp.components.func_to_container_op(list_gcs_files)
   dataproc_create_cluster_op = kfp.components.load_component_from_url(
       CREATE_DATAPROC_SPEC_URI)
   dataproc_delete_cluster_op = kfp.components.load_component_from_url(
@@ -55,6 +85,8 @@ def clv_batch_predict(
 
   # Define workflow
   # Delete a Dataproc cluster - this is an exit handler
+
+  """
   delete_cluster_exit_handler = dataproc_delete_cluster_op(
       project_id=project_id, region=region, name=cluster_name)
 
@@ -83,8 +115,6 @@ def clv_batch_predict(
                                        threshold_date, predict_end, 
                                        max_monetary, max_partitions)
 
-    CREATE_FEATURES_SCRIPT_URI = 'gs://clv-pipelines/scripts/create_features.py'
-
     submit_pyspark_job_task = dataproc_submit_pyspark_job_op(
         project_id=project_id,
         region=region,
@@ -98,3 +128,29 @@ def clv_batch_predict(
     delete_cluster_task = dataproc_delete_cluster_op(
         project_id=project_id, region=region, name=cluster_name)
     delete_cluster_task.after(submit_pyspark_job_task)
+
+    # Create a list of full gcs filenames from the dataproc output folder
+    list_gcs_files_task = list_gcs_files_op(dataproc_gcs_output)
+    list_gcs_files_task.after(submit_pyspark_job_task)
+
+    batch_predict_task = batch_predict_op(
+        project_id=project_id,
+        region=region,
+        model_id=model_id,
+        datasource=list_gcs_files_task.output,
+        destination_prefix=bq_destination
+    )
+
+    # Run batch predict on the output of PySpark job
+    batch_predict_task.after(submit_pyspark_job_task)
+
+"""
+  # Create a list of full gcs filenames from the dataproc output folder
+  list_gcs_files_task = list_gcs_files_op(dataproc_gcs_output)
+  batch_predict_task = batch_predict_op(
+      project_id=project_id,
+      region=region,
+      model_id=model_id,
+      datasource=list_gcs_files_task.output,
+      destination_prefix=bq_destination
+  )

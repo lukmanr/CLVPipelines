@@ -83,11 +83,11 @@ def prepare_features(
         avg('order_qty_articles').alias('avg_basket_size'),
         datediff(max('order_date'), min('order_date')).alias('recency'),
         datediff(to_date(lit(threshold_date)), min('order_date')).alias('T'),
-        countDistinct('order_date').alias('cnt_orders'),
+        countDistinct('order_date').alias('frequency'),
         sum(when(col('order_value')<0, 1).otherwise(0)).alias('cnt_returns')) \
     .filter((col('monetary')>0) & (col('monetary')<max_monetary))
+    features = features.withColumn('time_between', col('recency')/col('frequency'))
 
-    
     # If requested, calculate a monetary target for each customer
     if calculate_target:
       monetary_targets = filtered_daily_summaries \

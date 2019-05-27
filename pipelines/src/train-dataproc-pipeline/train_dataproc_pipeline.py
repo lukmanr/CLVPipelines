@@ -28,8 +28,6 @@ AML_RETRIEVE_METRICS_SPEC_URI = 'aml-retrieve-regression-metrics.yaml'
 
 # Helper Lightweight Python components
 BASE_IMAGE = 'gcr.io/clv-pipelines/base-image:latest'
-
-
 @kfp.dsl.python_component(name='List GCS files ', base_image=BASE_IMAGE)
 def list_gcs_files(source_gcs_folder: str) -> str:
   """Returns a list of full GCS paths

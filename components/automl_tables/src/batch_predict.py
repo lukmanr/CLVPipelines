@@ -41,15 +41,15 @@ def batch_predict(client, project_id, region, model_id, datasource, destination_
     output_config = {"gcs_destination": {"output_uri_prefix": destination_prefix}}
 
   # Run the prediction query
+
+  print("*** Befoer calling client.batch_predict")
+  print("*** {}".format(output_config))
+  
   response = client.batch_predict(
       model_full_id, input_config, output_config)
 
   # Wait for completion
-  # WORKAROUND: hide errors thrown by response.result()
-  try:
-    response.result()
-  except:
-    pass
+  response.result()
 
   return response.metadata
   
@@ -65,6 +65,11 @@ def prediction_metadata_to_markdown_metadata(response_metadata):
         input=response_metadata.batch_predict_details.input_config,
         output=response_metadata.batch_predict_details.output_info
     )
+
+    print("***markdown***")
+    print(markdown)
+    print("******")
+
     return markdown
 
 
@@ -75,6 +80,8 @@ def write_metadata_for_output_viewers(*argv):
         "version": 1,
         "outputs": argv 
     }
+
+    print("**** In write_ ***")
 
     with open('/mlpipeline-ui-metadata.json', 'w') as f:
             json.dump(metadata, f)
