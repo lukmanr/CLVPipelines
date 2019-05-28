@@ -175,6 +175,8 @@ SDK_VERSION=0.1.20
 python3 -m pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
 ```
 
+### Installing Python Fire
+
 To install Python Fire
 ```
 python3 -m pip install fire
