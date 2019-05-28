@@ -132,6 +132,14 @@ The `clv_score_bq_automl.tar.gz` pipeline goes through the following steps:
 1. Use a PySpark scrip to engineer CLV features from customer transactions. Both input (transactions) and output (features) are CSV files stored in GCS.
 2. Use a trained AutoML Tables model to score feature files and store predictions in a BigQuery table.
 
+The pipelines utilize SQL (`clv_train_bq.tar.gz`) and PySpark (`clv_train_dataproc.tar.gz` and `clv_batch_predict.tar.gz`) scripts. The pipelines expect to find the scripts in GCS location passed as one of the pipelines' parameters.
+
+To upload the scripts into your GCS bucket.
+
+```
+gsutil cp [repo root folder]/pipelines/src/scripts/* gs://$BUCKET/scripts
+```
+
 The pipelines accept a number of parameters that control their behaviour (TBD to describe parameters for each pipeline). The pipelines have been pre-configured with reasonable default for some of the parameters.
 
 Feel free to experiment with different values for other parameters.
