@@ -2,14 +2,14 @@
 
 python3 run_pipeline.py \
 --port 8082 \
---experiment CLV_TRAIN_DATAPROC \
+--experiment CLV_TRAIN_BQ \
 --run-name TESTING_RUN \
---pipeline_file ../compiled/clv_train_dataproc.tar.gz \
+--pipeline_file ../compiled/clv_train_bq.tar.gz \
 --arguments '{\
-"pyspark_script_path": "gs://clv-testing/scripts/create_features_and_label.py", \
 "project_id": "sandbox-235500", \
-"source_gcs_path": "gs://clv-testing/transactions", \
-"output_gcs_path": "gs://clv-testing/features", \
+"source_gcs_path": "gs://clv-testing/transactions/transactions.csv", \
+"bq_dataset_name": "clv_dataset", \
+"query_template_uri": "gs://clv-testing/scripts/create_features_and_label_template.sql", \
 "aml_dataset_name": "clv_features", \
 "model_name": "clv_regression", \
 "train_budget": 1000, \

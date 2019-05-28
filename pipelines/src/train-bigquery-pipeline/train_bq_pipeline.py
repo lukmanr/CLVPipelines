@@ -35,7 +35,7 @@ def load_sales_transactions(
     project_id: str,
     source_gcs_path: str,
     location: str,
-    dataset_id: str,
+    dataset_name: str,
     table_id: str) -> str:
     """Loads sales transactions from a CSV file on GCS to a BigQuery table"""
 
@@ -46,7 +46,7 @@ def load_sales_transactions(
     client = bigquery.Client(project=project_id)
 
     # Create or get a dataset reference
-    dataset = bigquery.Dataset("{}.{}".format(project_id, dataset_id))
+    dataset = bigquery.Dataset("{}.{}".format(project_id, dataset_name))
     dataset.location = location
     dataset_ref = client.create_dataset(dataset, exists_ok=True) 
 
@@ -73,7 +73,7 @@ def load_sales_transactions(
     # Wait for table load to complete
     load_job.result()
 
-    return "{}.{}.{}".format(project_id, dataset_id, table_id)
+    return "{}.{}.{}".format(project_id, dataset_name, table_id)
 
 
 @kfp.dsl.python_component(name='Prepare query', base_image=BASE_IMAGE)
@@ -119,16 +119,17 @@ def prepare_feature_engineering_query(
 def clv_train_bq_automl(
     project_id, 
     source_gcs_path,
+    bq_dataset_name,
+    query_template_uri,
+    aml_dataset_name,
+    model_name,
+    transactions_table_name="transactions",
+    features_table_name="features",
     location='US',
-    dataset_name='clv_dataset',
-    transactions_table_name='transactions',
-    features_table_name='features',
     threshold_date='2011-08-08',
     predict_end='2011-12-12',
     max_monetary=15000,
     aml_compute_region='us-central1',
-    aml_dataset_name='clv_features',
-    model_name='clv_regression',
     train_budget='1000',
     target_column_name='target_monetary',
     features_to_exclude='customer_id',
@@ -150,26 +151,25 @@ def clv_train_bq_automl(
         project_id=project_id,
         source_gcs_path=source_gcs_path,
         location=location,
-        dataset_id=dataset_name,
+        dataset_name=bq_dataset_name,
         table_id=transactions_table_name 
     ) 
 
     # Generate the feature engineering query
-    QUERY_TEMPLATE_URI = 'gs://clv-pipelines/scripts/create_features_template.sql'
     prepare_feature_engineering_query_task = prepare_feature_engineering_query_op(
         project_id=project_id,
         source_table_id=load_sales_transactions_task.output,
         threshold_date=threshold_date,
         predict_end=predict_end,
         max_monetary=max_monetary,
-        query_template_uri=QUERY_TEMPLATE_URI
+        query_template_uri=query_template_uri
     )
 
     # Run the feature engineering query on BigQuery.
     engineer_features_task = engineer_features_op(
         query=prepare_feature_engineering_query_task.output,
         project_id=project_id,
-        dataset_id=dataset_name,
+        dataset_id=bq_dataset_name,
         table_id=features_table_name,
         output_gcs_path='',
         dataset_location=location,
@@ -182,7 +182,7 @@ def clv_train_bq_automl(
         location=aml_compute_region,
         dataset_name=aml_dataset_name,
         description='',
-        source_data_uri='bq://{}.{}.{}'.format(project_id, dataset_name, features_table_name),
+        source_data_uri='bq://{}.{}.{}'.format(project_id, bq_dataset_name, features_table_name),
         target_column_name=target_column_name,
         weight_column_name='',
         ml_use_column_name=''       

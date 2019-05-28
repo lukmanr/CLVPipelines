@@ -8,8 +8,8 @@ python3 run_pipeline.py \
 --arguments '{\
 "project_id": "sandbox-235500", \
 "model_id": "TBL403503175207747584", \
-"datasource": "gs://clv-testing/transactions", \
+"source_gcs_path": "gs://clv-testing/transactions", \
+"output_gcs_path": "gs://clv-testing/features", \
 "destination": "bq://sandbox-235500", \
-"dataproc_gcs_output": "gs://clv-testing/features", \
 "pyspark_script_path": "gs://clv-testing/scripts/create_features_and_label.py" \
 }'

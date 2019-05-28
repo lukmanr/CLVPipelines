@@ -26,6 +26,8 @@ AML_BATCH_PREDICT_SPEC_URI = 'aml-batch-predict.yaml'
 
 # Helper Lightweight Python components
 BASE_IMAGE = 'gcr.io/clv-pipelines/base-image:latest'
+
+
 @kfp.dsl.python_component(name='List GCS files ', base_image=BASE_IMAGE)
 def list_gcs_files(source_gcs_folder: str) -> str:
   """Returns a list of full GCS paths
@@ -52,44 +54,36 @@ def list_gcs_files(source_gcs_folder: str) -> str:
 
   return ','.join(blobs)
 
+
 # WORKAROUND
 # Since kfp.components.load_component does not currently support exit handlers
 # we explicitly define an exit handler op on dataproc delete cluster component
-def dataproc_delete_cluster_exit_handler_op(
-    project_id,
-    region,
-    name
-):
+def dataproc_delete_cluster_exit_handler_op(project_id, region, name):
   return dsl.ContainerOp(
       name='Delete cluster exit handler',
       image='gcr.io/ml-pipeline/ml-pipeline-gcp:3b949b37aa2cefd3180398d59116f43ce965a2a6',
       arguments=[
-          'kfp_component.google.dataproc', 'delete_cluster',
-          '--project_id', project_id,
-          '--region', region,
-          '--name', name,
-          '--wait_interval', 30
+          'kfp_component.google.dataproc', 'delete_cluster', '--project_id',
+          project_id, '--region', region, '--name', name, '--wait_interval', 30
       ],
-      is_exit_handler=True
-  )
+      is_exit_handler=True)
 
 
 @kfp.dsl.pipeline(
     name='CLV Batch Predict AutoML',
     description='CLV predictions using Dataproc for feature engineering and BQ as a final destination'
 )
-def clv_batch_predict(
-    project_id,
-    model_id,
-    datasource,
-    destination,
-    dataproc_gcs_output,
-    pyspark_script_path,
-    region='us-central1',
-    threshold_date='2011-08-08',
-    predict_end='2011-12-12',
-    max_monetary=15000,
-    max_partitions=8,):
+def clv_batch_predict(project_id,
+                      pyspark_script_path,
+                      source_gcs_path,
+                      output_gcs_path,
+                      model_id,
+                      destination,
+                      region='us-central1',
+                      threshold_date='2011-08-08',
+                      predict_end='2011-12-12',
+                      max_monetary=15000,
+                      max_partitions=8):
 
   # Create component factories
   list_gcs_files_op = kfp.components.func_to_container_op(list_gcs_files)
@@ -102,7 +96,7 @@ def clv_batch_predict(
   batch_predict_op = kfp.components.load_component_from_file(
       AML_BATCH_PREDICT_SPEC_URI)
 
-  cluster_name ='dataproc-{{workflow.name}}'
+  cluster_name = 'dataproc-{{workflow.name}}'
 
   # Define workflow
   # Define the delete Dataproc cluster exit handler
@@ -130,8 +124,8 @@ def clv_batch_predict(
                            '"--predict-end={}",'
                            '"--max-monetary={}",'
                            '"--max-partitions={}",'
-                           ']').format(datasource, dataproc_gcs_output,
-                                       threshold_date, predict_end, 
+                           ']').format(source_gcs_path, output_gcs_path,
+                                       threshold_date, predict_end,
                                        max_monetary, max_partitions)
 
     submit_pyspark_job_task = dataproc_submit_pyspark_job_op(
@@ -149,7 +143,7 @@ def clv_batch_predict(
     delete_cluster_task.after(submit_pyspark_job_task)
 
     # Create a list of full gcs filenames from the dataproc output folder
-    list_gcs_files_task = list_gcs_files_op(dataproc_gcs_output)
+    list_gcs_files_task = list_gcs_files_op(output_gcs_path)
     list_gcs_files_task.after(submit_pyspark_job_task)
 
     batch_predict_task = batch_predict_op(
@@ -157,10 +151,7 @@ def clv_batch_predict(
         region=region,
         model_id=model_id,
         datasource=list_gcs_files_task.output,
-        destination_prefix=destination
-    )
+        destination_prefix=destination)
 
     # Run batch predict on the output of PySpark job
     batch_predict_task.after(submit_pyspark_job_task)
-
-    
