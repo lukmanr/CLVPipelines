@@ -137,7 +137,7 @@ The pipelines utilize SQL (`clv_train_bq.tar.gz`) and PySpark (`clv_train_datapr
 To upload the scripts into your GCS bucket.
 
 ```
-gsutil cp [repo root folder]/pipelines/src/scripts/* gs://$BUCKET/scripts
+gsutil cp [REPO_ROOT_FOLDER]/pipelines/src/scripts/* gs://$BUCKET/scripts
 ```
 
 The pipelines accept a number of parameters that control their behaviour (TBD to describe parameters for each pipeline). The pipelines have been pre-configured with reasonable default for some of the parameters.
