@@ -12,11 +12,7 @@ All components are packaged into a single Docker image.
 The folder structure:
 - `src` - Source code for the components
 - `tests` - TBD. Currently some helper scripts.
-- `import_dataset` - *Import Dataset* component definition file
-- `train_model` - *Train Model* component definition file
-- `deploy_model` - *Deploy Model* component definition file
-- `batch_predict` - *Batch Predict* component definition file
-- `retrieve_regression_evaluation_metrics` - *Retrieve Regresssion Evaluation Metrics* component definition file
+- `specs` - YAML specifications of the components
 
 To build the image run `./build_image.sh`. The script builds an image and deploys it to `gcr.io/clv-pipelines/kfp-automl-tables:latest`. 
 
