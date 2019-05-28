@@ -55,6 +55,28 @@ def list_gcs_files(source_gcs_folder: str) -> str:
   return ','.join(blobs)
 
 
+# WORKAROUND
+# Since kfp.components.load_component does not currently support exit handlers
+# we explicitly define an exit handler op on dataproc delete cluster component
+def dataproc_delete_cluster_exit_handler_op(
+    project_id,
+    region,
+    name
+):
+  return dsl.ContainerOp(
+      name='Delete cluster exit handler',
+      image='gcr.io/ml-pipeline/ml-pipeline-gcp:3b949b37aa2cefd3180398d59116f43ce965a2a6',
+      arguments=[
+          'kfp_component.google.dataproc', 'delete_cluster',
+          '--project_id', project_id,
+          '--region', region,
+          '--name', name,
+          '--wait_interval', 30
+      ],
+      is_exit_handler=True
+  )
+
+
 # Pipeline definition
 @kfp.dsl.pipeline(
     name='CLV Training Pipeline - Dataproc',
@@ -63,18 +85,17 @@ def list_gcs_files(source_gcs_folder: str) -> str:
 def clv_train_pipeline_dataproc_automl(project_id,
                                        source_gcs_path,
                                        output_gcs_path,
+                                       aml_dataset_name,
+                                       model_name,
+                                       features_to_exclude,
+                                       train_budget,
+                                       mae_threshold,
+                                       target_column_name='target_monetary',
                                        threshold_date='2011-08-08',
                                        predict_end='2011-12-12',
                                        max_monetary=15000,
-                                       max_partitions=2,
-                                       compute_region='us-central1',
-                                       aml_dataset_name='clv_features',
-                                       model_name='clv_regression',
-                                       train_budget='1000',
-                                       target_column_name='target_monetary',
-                                       features_to_exclude='customer_id',
-                                       mae_threshold='990',
-                                       cluster_name='clv-spark-cluster'):
+                                       max_partitions=8,
+                                       region='us-central1'):
 
   # Create component factories
   list_gcs_files_op = kfp.components.func_to_container_op(list_gcs_files)
@@ -93,15 +114,17 @@ def clv_train_pipeline_dataproc_automl(project_id,
   deploy_model_op = kfp.components.load_component_from_file(
       AML_DEPLOY_MODEL_SPEC_URI)
 
-  # Delete a Dataproc cluster - this is an exit handler
-  delete_cluster_exit_handler = dataproc_delete_cluster_op(
-      project_id=project_id, region=compute_region, name=cluster_name)
+cluster_name='dataproc-{{workflow.name}}'
+
+  # Define the delete Dataproc cluster exit handler
+  delete_cluster_exit_handler = dataproc_delete_cluster_exit_handler_op(
+      project_id=project_id, region=region, name=cluster_name)
 
   with dsl.ExitHandler(exit_op=delete_cluster_exit_handler):
     # Create a Dataproc cluster
     create_cluster_task = dataproc_create_cluster_op(
         project_id=project_id,
-        region=compute_region,
+        region=region,
         name=cluster_name,
         name_prefix='',
         initialization_actions='',
@@ -127,7 +150,7 @@ def clv_train_pipeline_dataproc_automl(project_id,
 
     submit_pyspark_job_task = dataproc_submit_pyspark_job_op(
         project_id=project_id,
-        region=compute_region,
+        region=region,
         cluster_name=create_cluster_task.output,
         main_python_file_uri=CREATE_FEATURES_SCRIPT_URI,
         args=pyspark_script_args,
@@ -136,7 +159,7 @@ def clv_train_pipeline_dataproc_automl(project_id,
         wait_interval='30')
 
     delete_cluster_task = dataproc_delete_cluster_op(
-        project_id=project_id, region=compute_region, name=cluster_name)
+        project_id=project_id, region=region, name=cluster_name)
     delete_cluster_task.after(submit_pyspark_job_task)
 
     # Create a list of full gcs filenames from the dataproc output folder
@@ -146,7 +169,7 @@ def clv_train_pipeline_dataproc_automl(project_id,
     # Import files with features into AML dataset
     import_dataset_task = import_dataset_op(
         project_id=project_id,
-        location=compute_region,
+        location=region,
         dataset_name=aml_dataset_name,
         description='',
         source_data_uri=list_gcs_files_task.output,
@@ -157,7 +180,7 @@ def clv_train_pipeline_dataproc_automl(project_id,
     # Train the model
     train_model_task = train_model_op(
         project_id=project_id,
-        location=compute_region,
+        location=region,
         dataset_id=import_dataset_task.outputs['output_dataset_id'],
         model_name=model_name,
         train_budget=train_budget,
