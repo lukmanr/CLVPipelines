@@ -106,12 +106,12 @@ gsutil cp gs://clv-datasets/transactions/transactions.csv gs://$BUCKET/transacti
 
 ### Running the sample pipelines
 
-The pre-compiled pipelines can be found in the root of the `pipelines` folder. There are three pipelines:
-- `clv_train_bq_automl.tar.gz`
+The pre-compiled pipelines can be found in the root of the `pipelines/compiled` folder. There are three pipelines:
+- `clv_train_bq.tar.gz`
 - `clv_train_dataproc.tar.gz`
-- `clv_score_bq_automl.tar.gz`
+- `clv_batch_predict.tar.gz`
 
-The `clv_train_bq_automl.tar.gz` pipeline goes through the following steps:
+The `clv_train_bq.tar.gz` pipeline goes through the following steps:
 1. Load the sample transaction file from GCS to BigQuery table
 1. Use BigQuery to engineer CLV features and store the features in a BigQuery table
 1. Import the table with the features to an AutoML Tables dataset 
@@ -120,9 +120,8 @@ The `clv_train_bq_automl.tar.gz` pipeline goes through the following steps:
 1. Check MAE of the trained model against the threshold (passed as a parameter
 1. If the trained model's MAE is lower than the threshold deploy the model
 
-The `clv_train_dataproc_automl.tar.gz` pipeline goes through the following steps:
-1. Load the sample transaction file from GCS to Spark Dataframe (on Dataproc)
-1. Use PySpark to engineer CLV features and store the features as a CSV file on GCS
+The `clv_train_dataproc.tar.gz` pipeline goes through the following steps:
+1. Use a PySpark scrip to engineer CLV features from customer transactions. Both input (transactions) and output (features) are CSV files stored in GCS.
 1. Import the table with the features to an AutoML Tables dataset 
 1. Train an AutoML Tables model
 1. Retrieve and log (as a KFP artifact) regression evaluation metrics
@@ -130,9 +129,10 @@ The `clv_train_dataproc_automl.tar.gz` pipeline goes through the following steps
 1. If the trained model's MAE is lower than the threshold deploy the model
 
 The `clv_score_bq_automl.tar.gz` pipeline goes through the following steps:
-TBD
+1. Use a PySpark scrip to engineer CLV features from customer transactions. Both input (transactions) and output (features) are CSV files stored in GCS.
+2. Use a trained AutoML Tables model to score feature files and store predictions in a BigQuery table.
 
-The pipelines accept a number of parameters that control their behaviour (TBD to describe parameters for each pipeline). The pipelines have been pre-configured with reasonable defaults. The only two required parameters are: **Your project ID** and **GCS path** to the location of the sample dataset you downloaded in the previous steps.
+The pipelines accept a number of parameters that control their behaviour (TBD to describe parameters for each pipeline). The pipelines have been pre-configured with reasonable default for some of the parameters.
 
 Feel free to experiment with different values for other parameters.
 
@@ -144,13 +144,12 @@ To run the pipeline. Using KFP GUI.
 Depending on the value of the *train_budget* pipeline parameter, the training step may take up to a few hours. 
 
 
-
-
 ## Configuring a development environment
 
 To re-build the tutorial's KFP components, customize and recompile the pipelines, or use a programmatic inteface to Kubeflow Pipelines, you need a development environment with the following configuration:
 - Python 3.5+
-- Docker
+- Python Fire package
+- Docker client
 - Kubeflow Pipelines SDK v 1.20
 - gcloud SDK
 - kubectl
@@ -167,6 +166,12 @@ To install KFP SDK v0.1.20 run the following command:
 SDK_VERSION=0.1.20
 python3 -m pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
 ```
+
+To install Python Fire
+```
+python3 -m pip install fire
+```
+
 
 ### Configure port forwarding to Kubeflow Pipelines service 
 If you want to submit Kubeflow Pipelines runs programmatically (rather than through GUI) you need access to the `ml-pipeline` service that is running on your GKE cluster. By default the service is not exposed on a public IP address. For the purpose of this tutorial, you access the service using port forwarding. Alternatively, you can expose the service through an external IP.
