@@ -1,5 +1,25 @@
-This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value model training and deployment with Kubeflow Pipelines**. The tutorial is the fifth part of the series [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
-The fifth part focuses on demonstrating how to operationalize model training, deployment, and inference using Kubeflow Pipelines on Google Kubernetes Engine.
+This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value (CLV) model training and deployment with Kubeflow Pipelines (KFP)**. The tutorial is the fifth part of the series [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
+The fifth part focuses on demonstrating how to operationalize model training, deployment, and inference using Kubeflow Pipelines on Google Kubernetes Engine (GKE). 
+
+Refer to the previous articles in the series for a more detailed overview of the techniques used in data preparation, feature engineering and modeling of Customer Lifetime Value scenarios.
+
+The repository includes two template Kubeflow Pipelines and an example Kubeflow Pipeline component:
+- A pipeline orchestrating traning and deployment of a Customer Lifetime Value prediction model
+- A pipeline orchestrating batch predictions using the model
+- A component that encapsulates AutoML Tables API 
+
+## Training and deploying a Customer Lifetime Value prediction model
+Training and deployment of a CLV model is orchestrated by a Kubeflow Pipeline that uses BigQuery for data preprocessing and feature engineering and AutoML Tables for model training and deployment. 
+
+
+
+
+
+### Runtime arguments
+The pipeline accepts the following runtime arguments:
+
+
+
 
 The repository includes two subfolders: `pipelines` and `components`.
 
