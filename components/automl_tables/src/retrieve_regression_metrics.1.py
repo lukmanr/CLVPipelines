@@ -35,47 +35,21 @@ def retrieve_regression_evaluation_metrics(model_full_id):
 
     return evaluation_metrics
 
-def retrieve_latest_evaluation_metrics(model_full_id):
-    """Retrieves the latest evaluation metrics for an AutoML Tables model"""
-    
-    client = automl.AutoMlClient()
 
-    evaluations = list(client.list_model_evaluations(model_full_id))
-    create_seconds = 0
-    evaluation_metrics = None
-    for evaluation in evaluations:
-        if evaluation.create_time.seconds > create_seconds:
-          if evaluation.regression_evaluation_metrics.ListFields():
-            evaluation_metrics = evaluation.regression_evaluation_metrics
-            create_seconds = evaluation.create_time.seconds
-          elif evaluation.classification_evaluation_metrics.ListFields():
-            evaluation_metrics = evaluation.classification_evaluation_metrics
-            create_seconds = evaluation.create_time.seconds
+def regression_evaluation_metrics_to_markdown_metadata(metrics):
+    """Converts regresssion evaluation metrics to markdown metadata """
 
-    return evaluation_metrics
-
-
-def evaluation_metrics_to_markdown_metadata(metrics):
-    """Converts evaluation metrics to KFP Viewer markdown metadata
-    
-    Currently, only regression evaluation metrics are supported..
-    """
-
-    regression_markdown_template = (
+    markdown_template = (
         "**Evaluation Metrics:**  \n"
         "&nbsp;&nbsp;&nbsp;&nbsp;**RMSE:**            {rmse}  \n"
         "&nbsp;&nbsp;&nbsp;&nbsp;**MAE:**             {mae}  \n"
         "&nbsp;&nbsp;&nbsp;&nbsp;**R-squared:**       {rsquared}  \n"
     )
-
-    if isinstance(metrics, automl.types.RegressionEvaluationMetrics):
-        markdown = regression_markdown_template.format(
-            rmse=round(metrics.root_mean_squared_error, 2),
-            mae=round(metrics.mean_absolute_error, 2),
-            rsquared=round(metrics.r_squared, 2)
-        )
-    else:
-        markdown = "TBD"
+    markdown = markdown_template.format(
+        rmse=round(metrics.root_mean_squared_error, 2),
+        mae=round(metrics.mean_absolute_error, 2),
+        rsquared=round(metrics.r_squared, 2)
+    )
 
     markdown_metadata = {"type": "markdown", "storage": "inline", "source": markdown}
 
@@ -156,16 +130,17 @@ if __name__ == '__main__':
     
     logging.info("Retrieving metrics for model: {}".format(args.model_full_id))
 
-    metrics = retrieve_latest_evaluation_metrics(args.model_full_id)
-
-    print(evaluation_metrics_to_markdown_metadata(metrics))
+    metrics = retrieve_regression_evaluation_metrics(args.model_full_id)
     
+    if metrics:
+        write_regression_metrics(metrics)
+        write_metadata_for_output_viewers(regression_evaluation_metrics_to_markdown_metadata(metrics))
  
 
     # Write metrics to the output
-    #Path(args.output_rmse).parent.mkdir(parents=True, exist_ok=True)
-    #Path(args.output_rmse).write_text(str(metrics.root_mean_squared_error) if metrics else 'N/A')
-    #Path(args.output_mae).parent.mkdir(parents=True, exist_ok=True)
-    #Path(args.output_mae).write_text(str(metrics.mean_absolute_error) if metrics else 'N/A')
-    #Path(args.output_rsquared).parent.mkdir(parents=True, exist_ok=True)
-    #Path(args.output_rsquared).write_text(str(metrics.r_squared) if metrics else 'N/A')
+    Path(args.output_rmse).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_rmse).write_text(str(metrics.root_mean_squared_error) if metrics else 'N/A')
+    Path(args.output_mae).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_mae).write_text(str(metrics.mean_absolute_error) if metrics else 'N/A')
+    Path(args.output_rsquared).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output_rsquared).write_text(str(metrics.r_squared) if metrics else 'N/A')

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ $1 == "" ]]; then
-    full_image_name="gcr.io/clv-pipelines/automl-tables-component:latest"
+    full_image_name="gcr.io/clv-pipelines/clv-automl-tables-component:latest"
 else
     full_image_name="$1"
 fi

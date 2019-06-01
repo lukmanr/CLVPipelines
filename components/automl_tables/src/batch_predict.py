@@ -115,7 +115,7 @@ def _parse_arguments():
       "--output-destination",
       type=str,
       required=True,
-      help="Output")
+      help="Component output")
   return parser.parse_args()
 
 

@@ -10,4 +10,3 @@ python3 ../src/train_model.py \
 --target-name=target_monetary \
 --features-to-exclude=customer_id \
 --output-model-full-id='outputs/model_full_id.txt' \
---output-metrics='outputs/metrics.txt' \

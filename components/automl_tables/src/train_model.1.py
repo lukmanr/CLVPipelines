@@ -85,65 +85,6 @@ def train_model(
     return response.result().name
 
 
-def retrieve_latest_evaluation_metrics(model_full_id):
-    """Retrieves the latest evaluation metrics for an AutoML Tables model"""
-    
-    client = automl.AutoMlClient()
-
-    evaluations = list(client.list_model_evaluations(model_full_id))
-    create_seconds = 0
-    evaluation_metrics = None
-    for evaluation in evaluations:
-        if evaluation.create_time.seconds > create_seconds:
-          if evaluation.regression_evaluation_metrics.ListFields():
-            evaluation_metrics = evaluation.regression_evaluation_metrics
-            create_seconds = evaluation.create_time.seconds
-          elif evaluation.classification_evaluation_metrics.ListFields():
-            evaluation_metrics = evaluation.classification_evaluation_metrics
-            create_seconds = evaluation.create_time.seconds
-
-    return evaluation_metrics
-
-
-def evaluation_metrics_to_markdown_metadata(metrics):
-    """Converts evaluation metrics to KFP Viewer markdown metadata
-    
-    Currently, only regression evaluation metrics are supported..
-    """
-
-    regression_markdown_template = (
-        "**Evaluation Metrics:**  \n"
-        "&nbsp;&nbsp;&nbsp;&nbsp;**RMSE:**            {rmse}  \n"
-        "&nbsp;&nbsp;&nbsp;&nbsp;**MAE:**             {mae}  \n"
-        "&nbsp;&nbsp;&nbsp;&nbsp;**R-squared:**       {rsquared}  \n"
-    )
-
-    if isinstance(metrics, automl.types.RegressionEvaluationMetrics):
-        markdown = regression_markdown_template.format(
-            rmse=round(metrics.root_mean_squared_error, 2),
-            mae=round(metrics.mean_absolute_error, 2),
-            rsquared=round(metrics.r_squared, 2)
-        )
-    else:
-        markdown = "TBD"
-
-    markdown_metadata = {"type": "markdown", "storage": "inline", "source": markdown}
-
-    return markdown_metadata
-
-
-def write_metadata_for_output_viewers(*argv):
-    """Writes items to be rendered by KFP UI as artificats"""
-
-    metadata = {
-        "version": 1,
-        "outputs": argv 
-    }
-
-    with open('/mlpipeline-ui-metadata.json', 'w') as f:
-            json.dump(metadata, f)
-
-
 def _parse_arguments():
     """Parse command line arguments"""
     
@@ -212,12 +153,8 @@ if __name__ == '__main__':
         target_name=args.target_name,
         features_to_exclude=args.features_to_exclude
     )
-    logging.info("Training completed")
 
-    # Write evaluation metrics to Output Viewer
-    metrics = retrieve_latest_evaluation_metrics(model_full_id)
-    markdown = evaluation_metrics_to_markdown_metadata(metrics)
-    write_metadata_for_output_viewers(markdown)
+    logging.info("Training completed")
 
     # Save model full id  to output
     Path(args.output_model_full_id).parent.mkdir(parents=True, exist_ok=True)
