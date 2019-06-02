@@ -31,7 +31,6 @@ BASE_IMAGE = 'gcr.io/clv-pipelines/base-image:latest'
 @kfp.dsl.python_component(name='List GCS files ', base_image=BASE_IMAGE)
 def list_gcs_files(source_gcs_folder: str) -> str:
   """Returns a list of full GCS paths
-
   This is a helper component designed to bridge an output of a Dataproc/Spark
   processing to an input of AutoML Import Dataset. The component takes as an
   input a path of to a GCS folder returns a comma-delimited list of full GCS

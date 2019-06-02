@@ -1,0 +1,376 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: clv-training-bigquery-automl-
+spec:
+  arguments:
+    parameters:
+    - name: project-id
+    - name: source-gcs-path
+    - name: source-bq-table
+    - name: bq-dataset-name
+    - name: transactions-table-name
+    - name: features-table-name
+    - name: threshold-date
+    - name: predict-end
+    - name: max-monetary
+    - name: dataset-location
+      value: US
+    - name: aml-dataset-name
+      value: clv_features
+    - name: aml-model-name
+      value: clv_regression
+    - name: aml-compute-region
+      value: us-central1
+    - name: train-budget
+      value: '1000'
+    - name: target-column-name
+      value: target_monetary
+    - name: features-to-exclude
+      value: customer_id
+    - name: optimization-objective
+      value: MINIMIZE_MAE
+    - name: deployment-threshold
+      value: '900'
+    - name: skip-deployment
+      value: 'True'
+    - name: query-template-uri
+      value: gs://clv-pipelines/scripts/create_features_template.sql
+  entrypoint: clv-training-bigquery-automl
+  serviceAccountName: pipeline-runner
+  templates:
+  - container:
+      args:
+      - kfp_component.google.bigquery
+      - query
+      - --query
+      - '{{inputs.parameters.prepare-query-query}}'
+      - --project_id
+      - '{{inputs.parameters.project-id}}'
+      - --dataset_id
+      - '{{inputs.parameters.prepare-query-dataset-name}}'
+      - --table_id
+      - '{{inputs.parameters.prepare-query-table-name}}'
+      - --output_gcs_path
+      - ''
+      - --job_config
+      - ''
+      command: []
+      env:
+      - name: KFP_POD_NAME
+        value: '{{pod.name}}'
+      image: gcr.io/ml-pipeline/ml-pipeline-gcp:c3235d725eb1d1eb06b5600a8291967aa6cf518f
+    inputs:
+      parameters:
+      - name: prepare-query-dataset-name
+      - name: prepare-query-query
+      - name: prepare-query-table-name
+      - name: project-id
+    name: bigquery-query
+    outputs:
+      artifacts:
+      - name: mlpipeline-ui-metadata
+        optional: true
+        path: /mlpipeline-ui-metadata.json
+      - name: mlpipeline-metrics
+        optional: true
+        path: /mlpipeline-metrics.json
+      parameters:
+      - name: bigquery-query-output-gcs-path
+        valueFrom:
+          path: /tmp/kfp/output/bigquery/query-output-path.txt
+  - dag:
+      tasks:
+      - arguments:
+          parameters:
+          - name: prepare-query-dataset-name
+            value: '{{tasks.prepare-query.outputs.parameters.prepare-query-dataset-name}}'
+          - name: prepare-query-query
+            value: '{{tasks.prepare-query.outputs.parameters.prepare-query-query}}'
+          - name: prepare-query-table-name
+            value: '{{tasks.prepare-query.outputs.parameters.prepare-query-table-name}}'
+          - name: project-id
+            value: '{{inputs.parameters.project-id}}'
+        dependencies:
+        - prepare-query
+        name: bigquery-query
+        template: bigquery-query
+      - arguments:
+          parameters:
+          - name: aml-compute-region
+            value: '{{inputs.parameters.aml-compute-region}}'
+          - name: aml-dataset-name
+            value: '{{inputs.parameters.aml-dataset-name}}'
+          - name: prepare-query-dataset-name
+            value: '{{tasks.prepare-query.outputs.parameters.prepare-query-dataset-name}}'
+          - name: prepare-query-table-name
+            value: '{{tasks.prepare-query.outputs.parameters.prepare-query-table-name}}'
+          - name: project-id
+            value: '{{inputs.parameters.project-id}}'
+          - name: target-column-name
+            value: '{{inputs.parameters.target-column-name}}'
+        dependencies:
+        - bigquery-query
+        - prepare-query
+        name: import-dataset
+        template: import-dataset
+      - arguments:
+          parameters:
+          - name: bq-dataset-name
+            value: '{{inputs.parameters.bq-dataset-name}}'
+          - name: dataset-location
+            value: '{{inputs.parameters.dataset-location}}'
+          - name: project-id
+            value: '{{inputs.parameters.project-id}}'
+          - name: source-bq-table
+            value: '{{inputs.parameters.source-bq-table}}'
+          - name: source-gcs-path
+            value: '{{inputs.parameters.source-gcs-path}}'
+          - name: transactions-table-name
+            value: '{{inputs.parameters.transactions-table-name}}'
+        name: load-transactions
+        template: load-transactions
+      - arguments:
+          parameters:
+          - name: bq-dataset-name
+            value: '{{inputs.parameters.bq-dataset-name}}'
+          - name: features-table-name
+            value: '{{inputs.parameters.features-table-name}}'
+          - name: load-transactions-output
+            value: '{{tasks.load-transactions.outputs.parameters.load-transactions-output}}'
+          - name: max-monetary
+            value: '{{inputs.parameters.max-monetary}}'
+          - name: predict-end
+            value: '{{inputs.parameters.predict-end}}'
+          - name: project-id
+            value: '{{inputs.parameters.project-id}}'
+          - name: query-template-uri
+            value: '{{inputs.parameters.query-template-uri}}'
+          - name: threshold-date
+            value: '{{inputs.parameters.threshold-date}}'
+        dependencies:
+        - load-transactions
+        name: prepare-query
+        template: prepare-query
+    inputs:
+      parameters:
+      - name: aml-compute-region
+      - name: aml-dataset-name
+      - name: bq-dataset-name
+      - name: dataset-location
+      - name: features-table-name
+      - name: max-monetary
+      - name: predict-end
+      - name: project-id
+      - name: query-template-uri
+      - name: source-bq-table
+      - name: source-gcs-path
+      - name: target-column-name
+      - name: threshold-date
+      - name: transactions-table-name
+    name: clv-training-bigquery-automl
+  - container:
+      args:
+      - --project-id
+      - '{{inputs.parameters.project-id}}'
+      - --location
+      - '{{inputs.parameters.aml-compute-region}}'
+      - --dataset-name
+      - '{{inputs.parameters.aml-dataset-name}}'
+      - --description
+      - ''
+      - --source-data-uri
+      - bq://{{inputs.parameters.project-id}}.{{inputs.parameters.prepare-query-dataset-name}}.{{inputs.parameters.prepare-query-table-name}}
+      - --target-column-name
+      - '{{inputs.parameters.target-column-name}}'
+      - --weight-column-name
+      - ''
+      - --ml-use-column-name
+      - ''
+      - --output-project-id
+      - /outputs/output_project_id/data
+      - --output-dataset-id
+      - /outputs/output_dataset_id/data
+      - --output-location
+      - /outputs/output_location/data
+      command:
+      - python
+      - import_dataset.py
+      image: gcr.io/clv-pipelines/automl-tables-component:latest
+    inputs:
+      parameters:
+      - name: aml-compute-region
+      - name: aml-dataset-name
+      - name: prepare-query-dataset-name
+      - name: prepare-query-table-name
+      - name: project-id
+      - name: target-column-name
+    name: import-dataset
+    outputs:
+      artifacts:
+      - name: mlpipeline-ui-metadata
+        optional: true
+        path: /mlpipeline-ui-metadata.json
+      - name: mlpipeline-metrics
+        optional: true
+        path: /mlpipeline-metrics.json
+      parameters:
+      - name: import-dataset-output-dataset-id
+        valueFrom:
+          path: /outputs/output_dataset_id/data
+      - name: import-dataset-output-location
+        valueFrom:
+          path: /outputs/output_location/data
+      - name: import-dataset-output-project-id
+        valueFrom:
+          path: /outputs/output_project_id/data
+  - container:
+      args:
+      - '{{inputs.parameters.project-id}}'
+      - '{{inputs.parameters.source-gcs-path}}'
+      - '{{inputs.parameters.source-bq-table}}'
+      - '{{inputs.parameters.dataset-location}}'
+      - '{{inputs.parameters.bq-dataset-name}}'
+      - '{{inputs.parameters.transactions-table-name}}'
+      - /outputs/Output/data
+      command:
+      - python3
+      - -c
+      - "def load_sales_transactions(\n    project_id: str,\n    source_gcs_path:\
+        \ str,\n    source_bq_table: str,\n    dataset_location: str,\n    dataset_name:\
+        \ str,\n    table_id: str) -> str:\n    \"\"\"Loads historical sales transactions\
+        \ to BigQuery.\n    \n    If source_gcs_path is passed loads data from a CSV\
+        \ file in GCS.\n    If source_bq_table is passed no load is executed and source\
+        \ table id is passed as\n    an output. One and only one type of source must\
+        \ be specified.\n    \"\"\"\n\n    import uuid\n    import logging\n    from\
+        \ google.cloud import bigquery\n\n    client = bigquery.Client(project=project_id)\n\
+        \n    if source_gcs_path:\n        # Create or get a dataset reference\n \
+        \       if not dataset_name:\n           dataset_name = 'clv_dataset_{}'.format(uuid.uuid4().hex)\n\
+        \        dataset = bigquery.Dataset(\"{}.{}\".format(project_id, dataset_name))\n\
+        \        dataset.location = dataset_location\n        dataset_ref = client.create_dataset(dataset,\
+        \ exists_ok=True) \n\n        # Configure Load job settings\n        job_config\
+        \ = bigquery.LoadJobConfig()\n        job_config.schema = [\n            bigquery.SchemaField(\"\
+        customer_id\", \"STRING\"),\n            bigquery.SchemaField(\"order_date\"\
+        , \"DATE\"),\n            bigquery.SchemaField(\"quantity\", \"INTEGER\"),\n\
+        \            bigquery.SchemaField(\"unit_price\", \"FLOAT\")\n        ]\n\
+        \        job_config.source_format = bigquery.SourceFormat.CSV\n        job_config.create_disposition\
+        \ = bigquery.job.CreateDisposition.CREATE_IF_NEEDED\n        job_config.write_disposition\
+        \ = bigquery.job.WriteDisposition.WRITE_TRUNCATE\n        job_config.skip_leading_rows\
+        \ = 1\n\n        if not table_id:\n           table_id = 'transactions_{}'.format(uuid.uuid4().hex)\n\
+        \  \n        # Start the load job\n        load_job = client.load_table_from_uri(\n\
+        \            source_gcs_path,\n            dataset_ref.table(table_id),\n\
+        \            job_config=job_config\n        )  \n\n        # Wait for table\
+        \ load to complete\n        load_job.result()\n\n        output = \"{}.{}.{}\"\
+        .format(project_id, dataset_name, table_id)\n    else:\n        output = source_bq_table\n\
+        \n    return output\n\nimport sys\n_args = {\n    'project_id': str(sys.argv[1]),\n\
+        \    'source_gcs_path': str(sys.argv[2]),\n    'source_bq_table': str(sys.argv[3]),\n\
+        \    'dataset_location': str(sys.argv[4]),\n    'dataset_name': str(sys.argv[5]),\n\
+        \    'table_id': str(sys.argv[6]),\n}\n_output_files = [\n    sys.argv[7],\n\
+        ]\n\n_outputs = load_sales_transactions(**_args)\n\nif not hasattr(_outputs,\
+        \ '__getitem__') or isinstance(_outputs, str):\n    _outputs = [_outputs]\n\
+        \nfrom pathlib import Path\nfor idx, filename in enumerate(_output_files):\n\
+        \    _output_path = Path(filename)\n    _output_path.parent.mkdir(parents=True,\
+        \ exist_ok=True)\n    _output_path.write_text(str(_outputs[idx]))\n"
+      image: gcr.io/clv-pipelines/base-image:latest
+    inputs:
+      parameters:
+      - name: bq-dataset-name
+      - name: dataset-location
+      - name: project-id
+      - name: source-bq-table
+      - name: source-gcs-path
+      - name: transactions-table-name
+    name: load-transactions
+    outputs:
+      artifacts:
+      - name: mlpipeline-ui-metadata
+        optional: true
+        path: /mlpipeline-ui-metadata.json
+      - name: mlpipeline-metrics
+        optional: true
+        path: /mlpipeline-metrics.json
+      parameters:
+      - name: load-transactions-output
+        valueFrom:
+          path: /outputs/Output/data
+  - container:
+      args:
+      - '{{inputs.parameters.project-id}}'
+      - '{{inputs.parameters.load-transactions-output}}'
+      - '{{inputs.parameters.bq-dataset-name}}'
+      - '{{inputs.parameters.features-table-name}}'
+      - '{{inputs.parameters.threshold-date}}'
+      - '{{inputs.parameters.predict-end}}'
+      - '{{inputs.parameters.max-monetary}}'
+      - '{{inputs.parameters.query-template-uri}}'
+      - /outputs/query/data
+      - /outputs/dataset_name/data
+      - /outputs/table_name/data
+      command:
+      - python3
+      - -c
+      - "from typing import NamedTuple\n\ndef prepare_feature_engineering_query(\n\
+        \    project_id: str,\n    source_table_id: str,\n    destination_dataset:\
+        \ str,\n    features_table_name: str, \n    threshold_date: str,\n    predict_end:\
+        \ str,\n    max_monetary: str,\n    query_template_uri: str) -> NamedTuple('ComponentOutput',\n\
+        \                                            [('query', str), \n         \
+        \                                    ('dataset_name', str),\n            \
+        \                                 ('table_name', str)]):\n    \"\"\"Generates\
+        \ a feature engineering query.\n    \n    This a lightweight Python KFP component\
+        \ that generates a query\n    that processes an input BQ table with sales\
+        \ transactions into features\n    that will be used for CLV model training.\
+        \ The component replaces placeholders\n    in a query template with values\
+        \ passed as parameters.\n    \"\"\"\n\n    import uuid\n    import logging\n\
+        \    import re\n    from google.cloud import storage\n    from google.cloud\
+        \ import bigquery\n    \n    # Read a query template from GCS\n    _, bucket,\
+        \ blob_name = re.split(\"gs://|/\", query_template_uri, 2)\n    blob = storage.Client(project_id).get_bucket(bucket).blob(blob_name)\n\
+        \    query_template = blob.download_as_string().decode('utf-8')\n\n    # Substitute\
+        \ placeholders in the query template\n    query = query_template.format(\n\
+        \        data_source_id=source_table_id,\n        threshold_date=threshold_date,\n\
+        \        predict_end=predict_end,\n        max_monetary=max_monetary\n   \
+        \ )\n\n    # Create unique destination dataset and table names if not set\n\
+        \    if not destination_dataset:\n       destination_dataset = 'clv_dataset_{}'.format(uuid.uuid4().hex)\
+        \ \n\n    if not features_table_name:\n        features_table_name = 'clv_features_{}'.format(uuid.uuid4().hex)\n\
+        \n    from collections import namedtuple\n    output = namedtuple('ComponentOutput',\
+        \ ['query', 'dataset_name', 'table_name'])\n    \n    return output(query,\
+        \ destination_dataset, features_table_name)\n\nimport sys\n_args = {\n   \
+        \ 'project_id': str(sys.argv[1]),\n    'source_table_id': str(sys.argv[2]),\n\
+        \    'destination_dataset': str(sys.argv[3]),\n    'features_table_name':\
+        \ str(sys.argv[4]),\n    'threshold_date': str(sys.argv[5]),\n    'predict_end':\
+        \ str(sys.argv[6]),\n    'max_monetary': str(sys.argv[7]),\n    'query_template_uri':\
+        \ str(sys.argv[8]),\n}\n_output_files = [\n    sys.argv[9],\n    sys.argv[10],\n\
+        \    sys.argv[11],\n]\n\n_outputs = prepare_feature_engineering_query(**_args)\n\
+        \nif not hasattr(_outputs, '__getitem__') or isinstance(_outputs, str):\n\
+        \    _outputs = [_outputs]\n\nfrom pathlib import Path\nfor idx, filename\
+        \ in enumerate(_output_files):\n    _output_path = Path(filename)\n    _output_path.parent.mkdir(parents=True,\
+        \ exist_ok=True)\n    _output_path.write_text(str(_outputs[idx]))\n"
+      image: gcr.io/clv-pipelines/base-image:latest
+    inputs:
+      parameters:
+      - name: bq-dataset-name
+      - name: features-table-name
+      - name: load-transactions-output
+      - name: max-monetary
+      - name: predict-end
+      - name: project-id
+      - name: query-template-uri
+      - name: threshold-date
+    name: prepare-query
+    outputs:
+      artifacts:
+      - name: mlpipeline-ui-metadata
+        optional: true
+        path: /mlpipeline-ui-metadata.json
+      - name: mlpipeline-metrics
+        optional: true
+        path: /mlpipeline-metrics.json
+      parameters:
+      - name: prepare-query-dataset-name
+        valueFrom:
+          path: /outputs/dataset_name/data
+      - name: prepare-query-query
+        valueFrom:
+          path: /outputs/query/data
+      - name: prepare-query-table-name
+        valueFrom:
+          path: /outputs/table_name/data

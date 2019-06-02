@@ -10,9 +10,8 @@
 cp ../components/automl_tables/specs/*.yaml .
 
 # Compile the pipelines
-dsl-compile --py src/train-bigquery-pipeline/train_bq_pipeline.py --output compiled/clv_train_bq.tar.gz
-dsl-compile --py src/train-dataproc-pipeline/train_dataproc_pipeline.py --output compiled/clv_train_dataproc.tar.gz
-dsl-compile --py src/batch-predict-pipeline/batch_predict_pipeline.py --output compiled/clv_batch_predict.tar.gz
+dsl-compile --py src/train_pipeline.py --output compiled/clv_train.tar.gz --disable-type-check
+dsl-compile --py src/batch_predict_pipeline.py --output compiled/clv_batch_predict.tar.gz --disable-type-check
 
 # Just in case remove yaml files
 rm *.yaml
