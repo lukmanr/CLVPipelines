@@ -7,17 +7,20 @@
 #
 # Eventually YAML specs will be moved to a public repo and referenced using load_component_from_url
 #
-cp ../components/automl_tables/specs/*.yaml .
+#cp ../components/automl_tables/specs/*.yaml .
 
 # Compile the pipelines
-dsl-compile --py src/train_pipeline.py --output compiled/clv_train.tar.gz --disable-type-check
-dsl-compile --py src/batch_predict_pipeline.py --output compiled/clv_batch_predict.tar.gz --disable-type-check
+# dsl-compile --py src/train_pipeline.py --output compiled/clv_train.tar.gz --disable-type-check
+# dsl-compile --py src/batch_predict_pipeline.py --output compiled/clv_batch_predict.tar.gz --disable-type-check
 
 # Just in case remove yaml files
-rm *.yaml
+#rm *.yaml
 
 # Copy script to GCS
-gsutil cp src/scripts/* gs://clv-testing/scripts
+#gsutil cp src/scripts/* gs://clv-testing/scripts
+
+
+python batch_predict_pipeline.py --out-folder=compiled 
 
 
 

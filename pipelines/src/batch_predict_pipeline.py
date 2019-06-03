@@ -19,23 +19,28 @@ import json
 import uuid
 from kfp import dsl
 from kfp import gcp
+from kfp import components
+
 from helper_components import load_sales_transactions, prepare_feature_engineering_query
 
 platform='Local'
 
 # URIs to the specifications of the components used in the pipeline
 BIGQUERY_COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/bigquery/query/component.yaml'
-AML_IMPORT_DATASET_SPEC_URI = 'aml-import-dataset.yaml'
-AML_TRAIN_MODEL_SPEC_URI = 'aml-train-model.yaml'
-AML_RETRIEVE_METRICS_SPEC_URI = 'aml-retrieve-regression-metrics.yaml'
-AML_DEPLOY_MODEL_SPEC_URI = 'aml-deploy-model.yaml'
-AML_BATCH_PREDICT_SPEC_URI = 'aml-batch-predict.yaml'
+#AML_IMPORT_DATASET_SPEC_URI = 'aml-import-dataset.yaml'
+#AML_TRAIN_MODEL_SPEC_URI = 'aml-train-model.yaml'
+#AML_RETRIEVE_METRICS_SPEC_URI = 'aml-retrieve-regression-metrics.yaml'
+#AML_DEPLOY_MODEL_SPEC_URI = 'aml-deploy-model.yaml'
+#AML_BATCH_PREDICT_SPEC_URI = 'aml-batch-predict.yaml'
 
-# Create component factories
+
+ Create component factories
 load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
 prepare_feature_engineering_query_op = kfp.components.func_to_container_op(prepare_feature_engineering_query)
-engineer_features_op = kfp.components.load_component_from_url(BIGQUERY_COMPONENT_SPEC_URI)
-batch_predict_op = kfp.components.load_component_from_file(AML_BATCH_PREDICT_SPEC_URI)
+#batch_predict_op = kfp.components.load_component_from_file(AML_BATCH_PREDICT_SPEC_URI)
+#engineer_features_op = kfp.components.load_component_from_url(BIGQUERY_COMPONENT_SPEC_URI)
+engineer_features_op = component_store.load_component('bigquery/query')
+batch_predict_op = component_store.load_component('aml-batch-predict')
 
 # Define the batch predict pipeline
 @kfp.dsl.pipeline(
@@ -58,7 +63,15 @@ def clv_batch_predict(
     aml_compute_region='us-central1',
     query_template_uri='gs://clv-pipelines/scripts/create_features_template.sql'
 ):
-  
+
+    # Create component factories
+    load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
+    prepare_feature_engineering_query_op = kfp.components.func_to_container_op(prepare_feature_engineering_query)  
+    engineer_features_op = component_store.load_component('bigquery/query')
+    batch_predict_op = component_store.load_component('aml-batch-predict')
+
+    # Define the workflow
+ 
     # Load sales transactions 
     load_sales_transactions = load_sales_transactions_op(
         project_id=project_id,
@@ -110,8 +123,64 @@ def clv_batch_predict(
     # Configure the pipeline to use GCP service account secret if running on GCP
     steps = [load_sales_transactions,
              prepare_feature_engineering_query,
-             engineer_features,
-             predict_batch]
+             engineer_features]#,
+             #predict_batch]
     for step in steps:
         if platform == 'GCP':
             step.apply(gcp.use_gcp_secret('user-gcp-sa'))
+
+
+
+def _parse_arguments():
+    """Parse command line arguments"""
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--out-folder',
+        type=str,
+        required=True,
+        help='The output folder for a compiled pipeline')
+    parser.add_argument(
+        '--local-search-path',
+        type=str,
+        required=True,
+        help='Local search path for component definitions')
+    parser.add_argument(
+        '--url-search-prefixes',
+        type=str,
+        required=True,
+        help='The URL prefix to look for component definitions)
+    parser.add_argument(
+        '--type-check',
+        type=str,
+        default=False,
+        help='Check types during compilation if True')
+     
+    return parser.parse_args()
+        
+
+if __name__ == '__main__':
+    args = _parse_arguments()
+
+
+    """
+
+    # Initialize Component Store
+    # local_search_paths = ['/Users/jarekk/projects/CLVPipelines/components/specs'] 
+    # url_search_prefixes = ['https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/']
+    component_store = kfp.components.ComponentStore(args.local_search_paths, args.url_search_prefixes)
+
+    # Compile the pipeline
+    pipeline_func = clv_batch_predict
+    pipeline_filename = pipeline_func.__name__ + '.tar.gz'
+    pipeline_path = os.path.join(args.out_folder, pipeline_filename)
+
+    kfp.compiler.Compiler().compile(pipeline_func, pipeline_path, type_check=args.type_check) 
+
+    """
+
+    
+
+
+
+#
