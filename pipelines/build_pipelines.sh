@@ -20,7 +20,8 @@
 #gsutil cp src/scripts/* gs://clv-testing/scripts
 
 
-python batch_predict_pipeline.py --out-folder=compiled 
 
+python src/batch_predict_pipeline.py --output-dir=compiled --local-search-paths='/Users/jarekk/projects/CLVPipelines/components/specs' --url-search-prefixes='https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/'
+python src/train_pipeline.py --output-dir=compiled --local-search-paths='/Users/jarekk/projects/CLVPipelines/components/specs' --url-search-prefixes='https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/'
 
 

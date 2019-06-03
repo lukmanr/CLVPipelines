@@ -18,8 +18,7 @@ import os
 import argparse
 import json
 import uuid
-
-from helper_components import load_sales_transactions, prepare_feature_engineering_query
+import helper_components 
 
 
 # URIs to the specifications of the components used in the pipeline
@@ -35,7 +34,7 @@ AML_DEPLOY_MODEL_SPEC_URI = 'aml-deploy-model.yaml'
     name='CLV Training BigQuery AutoML',
     description='CLV Training Pipeline using BigQuery for feature engineering and Automl Tables for model training'
 )
-def clv_train_bq_automl(
+def clv_train(
     project_id, 
     source_gcs_path,
     source_bq_table,
@@ -58,13 +57,15 @@ def clv_train_bq_automl(
     query_template_uri='gs://clv-pipelines/scripts/create_features_template.sql'
 ):
     # Create component factories
-    load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
-    prepare_feature_engineering_query_op = kfp.components.func_to_container_op(prepare_feature_engineering_query)
-    engineer_features_op = kfp.components.load_component_from_url(BIGQUERY_COMPONENT_SPEC_URI)
-    import_dataset_op = kfp.components.load_component_from_file(AML_IMPORT_DATASET_SPEC_URI)
-    train_model_op = kfp.components.load_component_from_file(AML_TRAIN_MODEL_SPEC_URI)
-    retrieve_metrics_op = kfp.components.load_component_from_file(AML_RETRIEVE_METRICS_SPEC_URI)
-    deploy_model_op = kfp.components.load_component_from_file(AML_DEPLOY_MODEL_SPEC_URI)
+    load_sales_transactions_op = kfp.components.func_to_container_op(
+        helper_components.load_sales_transactions)
+    prepare_feature_engineering_query_op = kfp.components.func_to_container_op(
+        helper_components.prepare_feature_engineering_query)
+    engineer_features_op = component_store.load_component('bigquery/query') 
+    import_dataset_op = component_store.load_component('aml-import-dataset') 
+    train_model_op = component_store.load_component('aml-train-model')  
+    deploy_model_op = component_store.load_component('aml-deploy-model')  
+    retrieve_metrics_op = component_store.load_component('aml-retrieve-metrics')
 
     # Define workflow
 
@@ -120,13 +121,12 @@ def clv_train_bq_automl(
     )
     import_dataset_task.after(engineer_features_task)
 
-    """
     # Train the model
     train_model_task = train_model_op(
         project_id=project_id,
         location=aml_compute_region,
         dataset_id=import_dataset_task.outputs['output_dataset_id'],
-        model_name=automl_model_name,
+        model_name=aml_model_name,
         train_budget=train_budget,
         optimization_objective='MINIMIZE_MAE',
         target_name=target_column_name,
@@ -138,7 +138,53 @@ def clv_train_bq_automl(
        model_full_id=train_model_task.output) 
 
     # If MAE is above the threshold deploy the model
-    with dsl.Condition(retrieve_metrics_task.outputs['output_mae'] < mae_threshold):
+    with dsl.Condition(retrieve_metrics_task.outputs['output_mae'] < deployment_threshold):
         deploy_model_tast = deploy_model_op(train_model_task.output)
 
-    """
+
+
+def _parse_arguments():
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--output-dir',
+        type=str,
+        required=True,
+        help='The output folder for a compiled pipeline')
+    parser.add_argument(
+        '--local-search-paths',
+        type=str,
+        required=True,
+        help='Local search path for component definitions')
+    parser.add_argument(
+        '--url-search-prefixes',
+        type=str,
+        required=True,
+        help='The URL prefix to look for component definitions')
+    parser.add_argument(
+        '--type-check',
+        type=str,
+        default=False,
+        help='Check types during compilation if True')
+     
+    return parser.parse_args()
+        
+platform='Local'
+
+if __name__ == '__main__':
+
+    args = _parse_arguments()
+
+    local_search_paths = args.local_search_paths.split(',')
+    url_search_prefixes = args.url_search_prefixes.split(',')
+
+    component_store = kfp.components.ComponentStore(local_search_paths, url_search_prefixes)
+
+    # Compile the pipeline
+    pipeline_func = clv_train
+    pipeline_filename = pipeline_func.__name__ + '.tar.gz'
+    pipeline_path = os.path.join(args.output_dir, pipeline_filename)
+
+    kfp.compiler.Compiler().compile(pipeline_func, pipeline_path, type_check=args.type_check) 
+
+

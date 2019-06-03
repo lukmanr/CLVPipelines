@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import kfp
+import fire
 import os
 import argparse
 import json
@@ -20,27 +21,8 @@ import uuid
 from kfp import dsl
 from kfp import gcp
 from kfp import components
+import helper_components
 
-from helper_components import load_sales_transactions, prepare_feature_engineering_query
-
-platform='Local'
-
-# URIs to the specifications of the components used in the pipeline
-BIGQUERY_COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/bigquery/query/component.yaml'
-#AML_IMPORT_DATASET_SPEC_URI = 'aml-import-dataset.yaml'
-#AML_TRAIN_MODEL_SPEC_URI = 'aml-train-model.yaml'
-#AML_RETRIEVE_METRICS_SPEC_URI = 'aml-retrieve-regression-metrics.yaml'
-#AML_DEPLOY_MODEL_SPEC_URI = 'aml-deploy-model.yaml'
-#AML_BATCH_PREDICT_SPEC_URI = 'aml-batch-predict.yaml'
-
-
- Create component factories
-load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
-prepare_feature_engineering_query_op = kfp.components.func_to_container_op(prepare_feature_engineering_query)
-#batch_predict_op = kfp.components.load_component_from_file(AML_BATCH_PREDICT_SPEC_URI)
-#engineer_features_op = kfp.components.load_component_from_url(BIGQUERY_COMPONENT_SPEC_URI)
-engineer_features_op = component_store.load_component('bigquery/query')
-batch_predict_op = component_store.load_component('aml-batch-predict')
 
 # Define the batch predict pipeline
 @kfp.dsl.pipeline(
@@ -65,8 +47,10 @@ def clv_batch_predict(
 ):
 
     # Create component factories
-    load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
-    prepare_feature_engineering_query_op = kfp.components.func_to_container_op(prepare_feature_engineering_query)  
+    load_sales_transactions_op = kfp.components.func_to_container_op(
+        helper_components.load_sales_transactions)
+    prepare_feature_engineering_query_op = kfp.components.func_to_container_op(
+        helper_components.prepare_feature_engineering_query)  
     engineer_features_op = component_store.load_component('bigquery/query')
     batch_predict_op = component_store.load_component('aml-batch-predict')
 
@@ -93,6 +77,7 @@ def clv_batch_predict(
         max_monetary=max_monetary,
         query_template_uri=query_template_uri
     )
+
 
     # Run the feature engineering query on BigQuery.
     engineer_features = engineer_features_op(
@@ -131,17 +116,34 @@ def clv_batch_predict(
 
 
 
+
+"""
+def compile_pipeline(output_dir, local_search_paths, url_search_prefixes, type_check=False):
+
+    component_store = kfp.components.ComponentStore(local_search_paths, url_search_prefixes)
+
+    pipeline_func = clv_batch_predict
+    pipeline_filename = pipeline_func.__name__ + '.tar.gz'
+    pipeline_path = os.path.join(output_dir, pipeline_filename)
+    kfp.compiler.Compiler().compile(pipeline_func, pipeline_path, type_check=type_check) 
+
+if __name__ == '__main__':
+    component_store = None
+    fire.Fire(compile_pipeline)
+
+"""
+
+
 def _parse_arguments():
-    """Parse command line arguments"""
     
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--out-folder',
+        '--output-dir',
         type=str,
         required=True,
         help='The output folder for a compiled pipeline')
     parser.add_argument(
-        '--local-search-path',
+        '--local-search-paths',
         type=str,
         required=True,
         help='Local search path for component definitions')
@@ -149,7 +151,7 @@ def _parse_arguments():
         '--url-search-prefixes',
         type=str,
         required=True,
-        help='The URL prefix to look for component definitions)
+        help='The URL prefix to look for component definitions')
     parser.add_argument(
         '--type-check',
         type=str,
@@ -158,29 +160,23 @@ def _parse_arguments():
      
     return parser.parse_args()
         
+platform='Local'
 
 if __name__ == '__main__':
+
     args = _parse_arguments()
 
+    local_search_paths = args.local_search_paths.split(',')
+    url_search_prefixes = args.url_search_prefixes.split(',')
 
-    """
-
-    # Initialize Component Store
-    # local_search_paths = ['/Users/jarekk/projects/CLVPipelines/components/specs'] 
-    # url_search_prefixes = ['https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/']
-    component_store = kfp.components.ComponentStore(args.local_search_paths, args.url_search_prefixes)
+    component_store = kfp.components.ComponentStore(local_search_paths, url_search_prefixes)
 
     # Compile the pipeline
     pipeline_func = clv_batch_predict
     pipeline_filename = pipeline_func.__name__ + '.tar.gz'
-    pipeline_path = os.path.join(args.out_folder, pipeline_filename)
+    pipeline_path = os.path.join(args.output_dir, pipeline_filename)
 
     kfp.compiler.Compiler().compile(pipeline_func, pipeline_path, type_check=args.type_check) 
 
-    """
 
     
-
-
-
-#
