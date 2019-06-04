@@ -45,6 +45,7 @@ def clv_train(
     target_column_name='target_monetary',
     features_to_exclude='customer_id',
     optimization_objective='MINIMIZE_MAE',
+    primary_metric='mean_absolute_error',
     deployment_threshold=900, 
     skip_deployment=True,
     query_template_uri='gs://clv-pipelines/scripts/create_features_template.sql'
@@ -84,7 +85,6 @@ def clv_train(
         query_template_uri=query_template_uri
     )
 
-
     # Run the feature engineering query on BigQuery.
     engineer_features = engineer_features_op(
         query=prepare_feature_engineering_query.outputs['query'],
@@ -121,15 +121,13 @@ def clv_train(
         dataset_id=import_dataset.outputs['output_dataset_id'],
         model_name=aml_model_name,
         train_budget=train_budget,
-        optimization_objective='MINIMIZE_MAE',
+        optimization_objective=optimization_objective,
+        primary_metric=primary_metric,
         target_name=target_column_name,
         features_to_exclude=features_to_exclude
         )
 
-    # Retrieve regression metrics for the model 
-    retrieve_metrics = retrieve_metrics_op(
-       model_full_id=train_model.output) 
-
+    """
     # If MAE is above the threshold deploy the model
     with kfp.dsl.Condition(retrieve_metrics.outputs['output_mae'] < deployment_threshold):
         deploy_model = deploy_model_op(train_model.output)
@@ -145,6 +143,7 @@ def clv_train(
         if platform == 'GCP':
             step.apply(gcp.use_gcp_secret('user-gcp-sa'))
 
+    """
 
 def _compile_pipeline(output_dir, local_search_paths, url_search_prefixes, platform='GCP', type_check=False):
     """Compile the pipeline"""
