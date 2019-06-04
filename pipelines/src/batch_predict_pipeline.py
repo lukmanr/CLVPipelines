@@ -12,17 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import kfp
 import fire
-import os
-import argparse
-import json
-import uuid
-from kfp import dsl
-from kfp import gcp
-from kfp import components
 import helper_components
+from kfp import gcp
 
+# Initialize component store
+component_store = kfp.components.ComponentStore()
+platform = "GCP"
 
 # Define the batch predict pipeline
 @kfp.dsl.pipeline(
@@ -115,68 +113,20 @@ def clv_batch_predict(
             step.apply(gcp.use_gcp_secret('user-gcp-sa'))
 
 
+def _compile_pipeline(output_dir, local_search_paths, url_search_prefixes, platform='GCP', type_check=False):
+    """Compile the pipeline"""
 
+    # Set globals controlling compilation
+    component_store.local_search_paths = local_search_paths 
+    component_store.url_search_prefixes = url_search_prefixes
+    platform=platform
 
-"""
-def compile_pipeline(output_dir, local_search_paths, url_search_prefixes, type_check=False):
-
-    component_store = kfp.components.ComponentStore(local_search_paths, url_search_prefixes)
-
+    # Compile the pipeline using the name of the pipeline function as a file prefix
     pipeline_func = clv_batch_predict
     pipeline_filename = pipeline_func.__name__ + '.tar.gz'
     pipeline_path = os.path.join(output_dir, pipeline_filename)
     kfp.compiler.Compiler().compile(pipeline_func, pipeline_path, type_check=type_check) 
 
 if __name__ == '__main__':
-    component_store = None
-    fire.Fire(compile_pipeline)
+    fire.Fire(_compile_pipeline)
 
-"""
-
-
-def _parse_arguments():
-    
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--output-dir',
-        type=str,
-        required=True,
-        help='The output folder for a compiled pipeline')
-    parser.add_argument(
-        '--local-search-paths',
-        type=str,
-        required=True,
-        help='Local search path for component definitions')
-    parser.add_argument(
-        '--url-search-prefixes',
-        type=str,
-        required=True,
-        help='The URL prefix to look for component definitions')
-    parser.add_argument(
-        '--type-check',
-        type=str,
-        default=False,
-        help='Check types during compilation if True')
-     
-    return parser.parse_args()
-        
-platform='Local'
-
-if __name__ == '__main__':
-
-    args = _parse_arguments()
-
-    local_search_paths = args.local_search_paths.split(',')
-    url_search_prefixes = args.url_search_prefixes.split(',')
-
-    component_store = kfp.components.ComponentStore(local_search_paths, url_search_prefixes)
-
-    # Compile the pipeline
-    pipeline_func = clv_batch_predict
-    pipeline_filename = pipeline_func.__name__ + '.tar.gz'
-    pipeline_path = os.path.join(args.output_dir, pipeline_filename)
-
-    kfp.compiler.Compiler().compile(pipeline_func, pipeline_path, type_check=args.type_check) 
-
-
-    
