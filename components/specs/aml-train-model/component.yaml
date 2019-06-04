@@ -34,6 +34,9 @@ inputs:
   - name: optimization_objective 
     description: 'AutoML optimization objective'
     type: String
+  - name: primary_metric 
+    description: 'Primary metric to report through output'
+    type: String
   - name: target_name 
     description: 'Target (Label) column in the training dataset'
     type: String
@@ -44,7 +47,10 @@ outputs:
   - name: output_model_full_id
     description: 'AutoML model ID.'
     type: String
- 
+  - name: output_primary_metric_value
+    description: 'Primary metric value.'
+    type: String
+  
 implementation:
   container:
     image: gcr.io/clv-pipelines/automl-tables-component:latest
@@ -56,7 +62,9 @@ implementation:
       --model-name, {inputValue: model_name},
       --train-budget, {inputValue: train_budget},
       --optimization-objective, {inputValue: optimization_objective},
+      --primary-metric, {inputValue: primary_metric},
       --target-name, {inputValue: target_name},
       --features-to-exclude, {inputValue: features_to_exclude},
       --output-model-full-id, {outputPath: output_model_full_id},
+      --output-primary-metric-value, {outputPath: output_primary_metric_value}
     ]

@@ -85,12 +85,12 @@ def train_model(
     return response.result().name
 
 
-def get_latest_evaluation_metrics(model_full_id):
+def retrieve_latest_evaluation_metrics(model_full_id):
     """Retrieves the latest evaluation metrics for an AutoML Tables model"""
     
     client = automl.AutoMlClient()
-    evaluations = list(client.list_model_evaluations(model_full_id))
 
+    evaluations = list(client.list_model_evaluations(model_full_id))
     create_seconds = 0
     evaluation_metrics = None
     for evaluation in evaluations:
@@ -179,11 +179,6 @@ def _parse_arguments():
         required=True,
         help='AutoML optimization objective')
     parser.add_argument(
-        '--primary-metric',
-        type=str,
-        required=True,
-        help='Primary metric to pass to output')
-    parser.add_argument(
         '--target-name',
         type=str,
         required=True,
@@ -198,25 +193,19 @@ def _parse_arguments():
         type=str,
         required=True,
         help='The file to write the ID of the trained model. Provided by KFP.')
-    parser.add_argument(
-        '--output-primary-metric-value',
-        type=str,
-        required=True,
-        help='The file to write the value of primary metric. Provided by KFP.')
-   
+  
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     args = _parse_arguments()
- 
-    """
+
     logging.info( "Starting model training: {}".format(args.model_name))
     model_full_id = train_model(
         project_id=args.project_id,
         location=args.location,
-        dsataset_id=args.dataset_id,
+        dataset_id=args.dataset_id,
         model_name=args.model_name,
         train_budget=args.train_budget,
         optimization_objective=args.optimization_objective,
@@ -224,24 +213,15 @@ if __name__ == '__main__':
         features_to_exclude=args.features_to_exclude
     )
     logging.info("Training completed")
-    """
-
-    model_full_id = "projects/165540728514/locations/us-central1/models/TBL1359603302349668352"
-    print(model_full_id)
 
     # Write evaluation metrics to Output Viewer
-    metrics = get_latest_evaluation_metrics(model_full_id)
+    metrics = retrieve_latest_evaluation_metrics(model_full_id)
     markdown = evaluation_metrics_to_markdown_metadata(metrics)
-    #write_metadata_for_output_viewers(markdown)
-
-    # Get the primary metric from evaluation metrics
-    primary_metric_value = str(getattr(metrics, args.primary_metric)) if hasattr(metrics, args.primary_metric) else 'N/A'
+    write_metadata_for_output_viewers(markdown)
 
     # Save model full id  to output
     Path(args.output_model_full_id).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output_model_full_id).write_text(model_full_id)
-    Path(args.output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.output_primary_metric_value).write_text(primary_metric_value)
-  
+ 
     
     
