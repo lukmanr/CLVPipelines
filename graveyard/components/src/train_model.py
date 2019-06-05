@@ -144,6 +144,31 @@ def write_metadata_for_output_viewers(*argv):
             json.dump(metadata, f)
 
 
+
+
+
+def _compile_pipeline(output_dir, local_search_paths, url_search_prefixes, platform='GCP', type_check=False):
+    """Compile the pipeline"""
+
+    # Set globals controlling compilation
+    component_store.local_search_paths = local_search_paths 
+    component_store.url_search_prefixes = url_search_prefixes
+    platform=platform
+
+    # Compile the pipeline using the name of the pipeline function as a file prefix
+    pipeline_func = clv_train
+    pipeline_filename = pipeline_func.__name__ + '.tar.gz'
+    pipeline_path = os.path.join(output_dir, pipeline_filename)
+    kfp.compiler.Compiler().compile(pipeline_func, pipeline_path, type_check=type_check) 
+
+
+
+
+if __name__ == '__main__':
+    fire.Fire(_compile_pipeline)
+
+
+"""
 def _parse_arguments():
     """Parse command line arguments"""
     
@@ -211,7 +236,6 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     args = _parse_arguments()
  
-    """
     logging.info( "Starting model training: {}".format(args.model_name))
     model_full_id = train_model(
         project_id=args.project_id,
@@ -224,7 +248,6 @@ if __name__ == '__main__':
         features_to_exclude=args.features_to_exclude
     )
     logging.info("Training completed")
-    """
 
     model_full_id = "projects/165540728514/locations/us-central1/models/TBL1359603302349668352"
     print(model_full_id)
@@ -243,5 +266,6 @@ if __name__ == '__main__':
     Path(args.output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output_primary_metric_value).write_text(primary_metric_value)
   
-    
+   """
+
     

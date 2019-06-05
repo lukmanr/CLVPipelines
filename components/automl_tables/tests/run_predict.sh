@@ -1,18 +1,26 @@
 #!/bin/bash
 
-python3 ../src/batch_predict.py \
---project-id=sandbox-235500 \
---region=us-central1 \
---model-id=TBL403503175207747584 \
---datasource=gs://clv-testing/features/part-00000-eaa03287-5d54-45e3-b547-e1488db2d42b-c000.csv,gs://clv-testing/features/part-00001-eaa03287-5d54-45e3-b547-e1488db2d42b-c000.csv,gs://clv-testing/features/part-00002-eaa03287-5d54-45e3-b547-e1488db2d42b-c000.csv \
---destination=bq://sandbox-235500 \
---output=outputs/metadata.txt \
---key_file=key.json 
-
-#python3 ../src/batch_predict.py \
+#python3 -m launcher batch_predict predict \
 #--project-id=sandbox-235500 \
 #--region=us-central1 \
-#--model-id=TBL403503175207747584 \
-#--datasource=gs://clv-testing/test-features/features.csv \
-#--output=gs://clv-testing/predictions 
-#--key_file=key.json \
+#--model-id=TBL1359603302349668352 \
+#--datasource='gs://clv-testing/features/part-0.csv,gs://clv-testing/features/part-1.csv,gs://clv-testing/features/part-2.csv' \
+#--destination_prefix=bq://sandbox-235500 \
+#--output-destination=outputs/metadata.txt \
+
+#python3 -m launcher batch_predict predict \
+#--project-id=sandbox-235500 \
+#--region=us-central1 \
+#--model-id=TBL1359603302349668352 \
+#--datasource='bq://sandbox-235500.clv_dataset.features' \
+#--destination_prefix=bq://sandbox-235500 \
+#--output_destination=outputs/metadata.txt  
+
+
+python3 -m launcher batch_predict predict \
+--project-id=sandbox-235500 \
+--region=us-central1 \
+--model-id=TBL1359603302349668352 \
+--datasource='bq://sandbox-235500.clv_dataset.features' \
+--destination_prefix='gs://clv-testing/clv-predictions' \
+--output_destination=outputs/metadata.txt  
