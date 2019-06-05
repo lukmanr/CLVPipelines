@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python3 -m launcher train_model train \
+python -m launcher train_model train \
 --project-id=sandbox-235500 \
 --region=us-central1 \
 --dataset-id=TBL4552901728759971840 \

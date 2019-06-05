@@ -30,7 +30,7 @@ def launch(module_path, args):
     try:
         module = importlib.import_module(module_path)
     except Exception:
-      logging.error('Failed to find the module {}'.format(module_path))
+      logging.error('Failed to find the module: {}'.format(module_path))
       sys.exit(1)
 
     return fire.Fire(module, command=args, name=module.__name__)
