@@ -19,8 +19,8 @@ inputs:
   - name: project_id
     description: 'The project_id for AutoML processing'
     type: GCPProjectID
-  - name: location
-    description: 'AutoML project location.'
+  - name: region
+    description: 'AutoML compute region.'
     type: String
   - name: dataset_id
     description: 'AutoML dataset id.'
@@ -41,7 +41,7 @@ inputs:
     description: 'Target (Label) column in the training dataset'
     type: String
   - name: features_to_exclude 
-    description: 'A comma separated list of features to exclude from training'
+    description: 'A list (literal) of features to exclude from training'
     type: String
 outputs:
   - name: output_model_full_id
@@ -53,11 +53,11 @@ outputs:
   
 implementation:
   container:
-    image: gcr.io/clv-pipelines/automl-tables-component:latest
-    command: ["python", "train_model.py"]
+    image: gcr.io/clv-pipelines/automl-tables-components:latest
+    command: ["train_model", "train"]
     args: [
       --project-id, {inputValue: project_id},
-      --location, {inputValue: location},
+      --region, {inputValue: region},
       --dataset-id, {inputValue: dataset_id},
       --model-name, {inputValue: model_name},
       --train-budget, {inputValue: train_budget},

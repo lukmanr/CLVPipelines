@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python3 -m launcher import_dataset import_dataset \
+python -m launcher import_dataset import_dataset \
 --project-id=sandbox-235500 \
 --region=us-central1 \
 --dataset-name=clv_dataset \

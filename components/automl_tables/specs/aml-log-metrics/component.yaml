@@ -12,31 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Retrieve  Metrics
+name: Log Metrics
 description: |
-  Retrieves regression evaluation metrics an AutoML  model
+  Retrieves and logs evaluation metrics an AutoML model
 inputs:
   - name: model_full_id
     description: 'The full id of the model'
     type: String
-outputs:
-  - name: output_rmse
-    description: 'RMSE metric'
-    type: String
-  - name: output_mae
-    description: 'MAE metric'
-    type: String
-  - name: output_rsquared
-    description: 'R-squared metric'
-    type: String
 
 implementation:
   container:
-    image: gcr.io/clv-pipelines/automl-tables-component:latest
-    command: ["python", "retrieve_regression_metrics.py"]
+    image: gcr.io/clv-pipelines/automl-tables-components:latest
+    command: ["log_evaluation_metrics", "log_metrics"]
     args: [
-      --model-full-id, {inputValue: model_full_id},
-      --output-rmse, {outputPath: output_rmse},
-      --output-mae, {outputPath: output_mae},
-      --output-rsquared, {outputPath: output_rsquared}
+      --model-full-id, {inputValue: model_full_id}
     ]

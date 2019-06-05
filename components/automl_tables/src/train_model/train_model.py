@@ -80,9 +80,9 @@ def train(
             {'optimization_objective': optimization_objective}
         )
 
+    logging.info('Starting model training')
     """
     # Create a model with the model metadata in the region
-    logging.info('Starting model trainin')
     location_path = client.location_path(project_id, region)
     response = client.create_model(
         parent=location_path,
@@ -94,9 +94,9 @@ def train(
     )
     # Wait for completion
     model_full_id = response.result().name
-    loggin.info('Model training completed: {}'.format(model_full_id))
     """
     model_full_id = 'projects/165540728514/locations/us-central1/models/TBL1359603302349668352'
+    logging.info('Model training completed: {}'.format(model_full_id))
 
     # Retrieve the latest evaluation metrics and output the model full id and primary metric
     metrics = get_latest_evaluation_metrics(model_full_id)

@@ -43,23 +43,7 @@ def write_metadata_for_output_viewers(*argv):
         "version": 1,
         "outputs": argv 
     }
-    with open('mlpipeline-ui-metadata.json', 'w') as f:
+    with open('/mlpipeline-ui-metadata.json', 'w') as f:
             json.dump(metadata, f)
 
 
-def prediction_metadata_to_markdown_metadata(response_metadata):
-    """Converts batch predict response metadat to markdown"""
-
-    markdown_template = (
-        "**Batch predict results:**  \n"
-        "&nbsp;&nbsp;&nbsp;&nbsp;**Input datasource:**&nbsp;{input}  \n"
-        "&nbsp;&nbsp;&nbsp;&nbsp;**Output destination:**&nbsp;{output}  \n"
-    )
-    markdown = markdown_template.format(
-        input=response_metadata.batch_predict_details.input_config,
-        output=response_metadata.batch_predict_details.output_info
-    )
-
-    markdown_metadata = {"type": "markdown", "storage": "inline", "source": markdown}
-
-    return markdown_metadata

@@ -21,9 +21,27 @@ import json
 from pathlib import Path
 from google.cloud import automl_v1beta1 as automl
 
-from common import (write_metadata_for_output_viewers,
-                    prediction_metadata_to_markdown_metadata)
+from common import write_metadata_for_output_viewers
+                    
 
+def prediction_metadata_to_markdown_metadata(response_metadata):
+    """Converts batch predict response metadat to markdown"""
+
+    markdown_template = (
+        "**Batch predict results:**  \n"
+        "&nbsp;&nbsp;&nbsp;&nbsp;**Input datasource:**&nbsp;{input}  \n"
+        "&nbsp;&nbsp;&nbsp;&nbsp;**Output destination:**&nbsp;{output}  \n"
+    )
+    markdown = markdown_template.format(
+        input=response_metadata.batch_predict_details.input_config,
+        output=response_metadata.batch_predict_details.output_info
+    )
+
+    markdown_metadata = {"type": "markdown", "storage": "inline", "source": markdown}
+
+    return markdown_metadata
+
+  
 def predict(project_id, 
             region,
             model_id, 

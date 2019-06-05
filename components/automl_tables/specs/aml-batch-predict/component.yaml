@@ -37,8 +37,8 @@ outputs:
     type: String
 implementation:
   container:
-    image: gcr.io/clv-pipelines/automl-tables-component:latest
-    command: ["python", "batch_predict.py"]
+    image: gcr.io/clv-pipelines/automl-tables-components:latest
+    command: ["batch_predict", "predict"]
     args: [
       --project-id, {inputValue: project_id},
       --region, {inputValue: region},

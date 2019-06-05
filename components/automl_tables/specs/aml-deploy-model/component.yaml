@@ -25,8 +25,8 @@ outputs:
     type: String
 implementation:
   container:
-    image: gcr.io/clv-pipelines/automl-tables-component:latest
-    command: ["python", "deploy_model.py"]
+    image: gcr.io/clv-pipelines/automl-tables-components:latest
+    command: ["deploy_model", "deploy]
     args: [
       --model-full-id, {inputValue: model_full_id},
       --output-deployment, {outputPath: output_deployment}

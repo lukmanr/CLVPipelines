@@ -19,8 +19,8 @@ inputs:
   - name: project_id
     description: 'The project_id for AutoML processing'
     type: GCPProjectID
-  - name: location
-    description: 'AutoML dataset location.'
+  - name: region
+    description: 'AutoML compute region.'
     type: String
   - name: dataset_name
     description: 'AutoML dataset name.'
@@ -53,11 +53,11 @@ outputs:
 
 implementation:
   container:
-    image: gcr.io/clv-pipelines/automl-tables-component:latest
-    command: ["python", "import_dataset.py"]
+    image: gcr.io/clv-pipelines/automl-tables-components:latest
+    command: ["import_dataset", "import_dataset"]
     args: [
       --project-id, {inputValue: project_id},
-      --location, {inputValue: location},
+      --region {inputValue: region},
       --dataset-name, {inputValue: dataset_name},
       --description, {inputValue: description},
       --source-data-uri, {inputValue: source_data_uri},
