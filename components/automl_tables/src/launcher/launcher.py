@@ -16,7 +16,6 @@ import fire
 import importlib
 import sys
 import logging
-import train_model
 
 
 def launch(module_path, args):
@@ -27,7 +26,7 @@ def launch(module_path, args):
     Returns:
         The return value from the launched function.
     """
-    
+
     try:
         module = importlib.import_module(module_path)
     except Exception:
