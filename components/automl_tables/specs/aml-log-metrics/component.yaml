@@ -23,7 +23,7 @@ inputs:
 implementation:
   container:
     image: gcr.io/clv-pipelines/automl-tables-components:latest
-    command: ["log_evaluation_metrics", "log_metrics"]
     args: [
+      log_evaluation_metrics, log_metrics,
       --model-full-id, {inputValue: model_full_id}
     ]

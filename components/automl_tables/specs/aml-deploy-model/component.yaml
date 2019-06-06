@@ -26,8 +26,8 @@ outputs:
 implementation:
   container:
     image: gcr.io/clv-pipelines/automl-tables-components:latest
-    command: ["deploy_model", "deploy]
     args: [
+      deploy_model, deploy,
       --model-full-id, {inputValue: model_full_id},
       --output-deployment, {outputPath: output_deployment}
     ]

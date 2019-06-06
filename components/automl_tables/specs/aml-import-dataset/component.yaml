@@ -54,10 +54,10 @@ outputs:
 implementation:
   container:
     image: gcr.io/clv-pipelines/automl-tables-components:latest
-    command: ["import_dataset", "import_dataset"]
     args: [
+      import_dataset, import_dataset,
       --project-id, {inputValue: project_id},
-      --region {inputValue: region},
+      --region, {inputValue: region},
       --dataset-name, {inputValue: dataset_name},
       --description, {inputValue: description},
       --source-data-uri, {inputValue: source_data_uri},

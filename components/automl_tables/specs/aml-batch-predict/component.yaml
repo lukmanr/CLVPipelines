@@ -38,8 +38,8 @@ outputs:
 implementation:
   container:
     image: gcr.io/clv-pipelines/automl-tables-components:latest
-    command: ["batch_predict", "predict"]
     args: [
+      batch_predict, predict,
       --project-id, {inputValue: project_id},
       --region, {inputValue: region},
       --model-id, {inputValue: model_id},

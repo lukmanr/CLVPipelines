@@ -54,8 +54,8 @@ outputs:
 implementation:
   container:
     image: gcr.io/clv-pipelines/automl-tables-components:latest
-    command: ["train_model", "train"]
     args: [
+      train_model, train,
       --project-id, {inputValue: project_id},
       --region, {inputValue: region},
       --dataset-id, {inputValue: dataset_id},
