@@ -15,12 +15,31 @@
 import os
 import kfp
 import fire
-import helper_components 
+
 from kfp import gcp
 
+from config import (
+    LOCAL_SEARCH_PATHS,
+    URL_SEARCH_PREFIXES,
+    USE_SA_SECRET
+)
+from helper_components import (
+    load_sales_transactions,
+    prepare_feature_engineering_query
+)
+
+
 # Initialize component store
-component_store = kfp.components.ComponentStore()
-use_sa_secret = False
+component_store = kfp.components.ComponentStore(LOCAL_SEARCH_PATHS, URL_SEARCH_PREFIXES)
+
+# Create component factories
+load_sales_transactions_op = kfp.components.func_to_container_op(load_sales_transactions)
+prepare_feature_engineering_query_op = kfp.components.func_to_container_op(prepare_feature_engineering_query)
+engineer_features_op = component_store.load_component('bigquery/query') 
+import_dataset_op = component_store.load_component('aml-import-dataset') 
+train_model_op = component_store.load_component('aml-train-model')  
+deploy_model_op = component_store.load_component('aml-deploy-model')  
+log_metrics_op = component_store.load_component('aml-log-metrics')
 
 # Pipeline definition
 @kfp.dsl.pipeline(
@@ -50,18 +69,6 @@ def clv_train(
     skip_deployment=False,
     query_template_uri='gs://clv-pipelines/scripts/create_features_template.sql'
 ):
-    # Create component factories
-    load_sales_transactions_op = kfp.components.func_to_container_op(
-        helper_components.load_sales_transactions)
-    prepare_feature_engineering_query_op = kfp.components.func_to_container_op(
-        helper_components.prepare_feature_engineering_query)
-    engineer_features_op = component_store.load_component('bigquery/query') 
-    import_dataset_op = component_store.load_component('aml-import-dataset') 
-    train_model_op = component_store.load_component('aml-train-model')  
-    deploy_model_op = component_store.load_component('aml-deploy-model')  
-    log_metrics_op = component_store.load_component('aml-log-metrics')
-
-    # Define workflow
 
     # Load sales transactions 
     load_sales_transactions = load_sales_transactions_op(
@@ -138,7 +145,7 @@ def clv_train(
             deploy_model = deploy_model_op(train_model.outputs['output_model_full_id'])
 
     # Configure the pipeline to use a service account secret 
-    if use_sa_secret: 
+    if USE_SA_SECRET: 
         steps = [load_sales_transactions,
                 prepare_feature_engineering_query,
                 engineer_features,
@@ -150,19 +157,3 @@ def clv_train(
                 step.apply(gcp.use_gcp_secret('user-gcp-sa'))
 
 
-def _compile_pipeline(output_dir, local_search_paths, url_search_prefixes, platform='GCP', type_check=False):
-    """Compile the pipeline"""
-
-    # Set globals controlling compilation
-    component_store.local_search_paths = local_search_paths 
-    component_store.url_search_prefixes = url_search_prefixes
-    platform=platform
-
-    # Compile the pipeline using the name of the pipeline function as a file prefix
-    pipeline_func = clv_train
-    pipeline_filename = pipeline_func.__name__ + '.tar.gz'
-    pipeline_path = os.path.join(output_dir, pipeline_filename)
-    kfp.compiler.Compiler().compile(pipeline_func, pipeline_path, type_check=type_check) 
-
-if __name__ == '__main__':
-    fire.Fire(_compile_pipeline)
