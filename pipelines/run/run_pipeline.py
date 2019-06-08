@@ -1,11 +1,11 @@
 import fire
 import kfp
 
-def run(port, experiment, run_name, pipeline_file, arguments):
+def run(host, client_id, experiment, run_name, pipeline_file, arguments):
   "Submits a KFP pipeline for execution"
   
-  host = 'http://localhost:{}'.format(port)
-  client = kfp.Client(host)
+  client = kfp.Client(host, client_id)
+
   experiment_ref = client.create_experiment(experiment)
 
   run = client.run_pipeline(experiment_ref.id, run_name, pipeline_file, arguments)
