@@ -46,3 +46,7 @@ steps:
 - name: 'kfp-compiler'
   args: ['compile_pipelines.sh']
   dir: 'CLVPipelines/pipelines'
+
+# Compile pipelines 
+- name: 'kfp-compiler'
+  args: ['-c', 'ls -la']
