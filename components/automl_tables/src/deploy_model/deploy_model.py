@@ -11,16 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""AutoML Tables Deploy Model API wrapper."""
 
-import argparse
 import logging
+
 from pathlib import Path
 from google.cloud import automl_v1beta1 as automl
 from google.cloud.automl_v1beta1 import enums
 
 
 def deploy(model_full_id, output_deployment):
-  """Deploys an AutoML Tables model"""
+  """Deploys an AutoML Tables model."""
 
   logging.basicConfig(level=logging.INFO)
   client = automl.AutoMlClient()

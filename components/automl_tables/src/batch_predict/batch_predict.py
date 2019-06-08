@@ -14,17 +14,15 @@
 """Run Automl Tables Batch Predict."""
 
 import logging
-import time
-import json
-
-from pathlib import Path
-from google.cloud import automl_v1beta1 as automl
 
 from common import write_metadata_for_output_viewers
+from pathlib import Path
+
+from google.cloud import automl_v1beta1 as automl
 
 
 def prediction_metadata_to_markdown_metadata(response_metadata):
-  """Converts batch predict response metadat to markdown"""
+  """Converts batch predict response metadata to markdown."""
 
   markdown_template = (
       "**Batch predict results:**  \n"

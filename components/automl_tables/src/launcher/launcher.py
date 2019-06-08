@@ -11,23 +11,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Universal launcher for AutoML Tables component."""
+
+import importlib
+import logging
+import sys
 
 import fire
-import importlib
-import sys
-import logging
 
 
 def launch(module_path, args):
   """Launches a python file or module as a command entrypoint.
 
-    Args:
-        module: A module path.
-        args: The function to invoke and its args.
+  Args:
+      module_path: A module path.
+      args: The function to invoke and its args.
 
-    Returns:
-        The return value from the launched function.
-    """
+  Returns:
+      The return value from the launched function.
+  """
 
   try:
     module = importlib.import_module(module_path)

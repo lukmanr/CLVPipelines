@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""This module wraps AutoML Tables dataset import API"""
+"""AutoML Tables Dataset Import API wrapper."""
 
-import argparse
 import logging
+
 from pathlib import Path
 from google.cloud import automl_v1beta1 as automl
 
@@ -23,7 +23,7 @@ def import_dataset(project_id, region, dataset_name, description,
                    source_data_uri, target_column_name, weight_column_name,
                    ml_use_column_name, output_project_id, output_dataset_id,
                    output_location):
-  """Imports BQ table or GCS files into an AutoML dataset"""
+  """Imports BQ table or GCS files into an AutoML dataset."""
 
   logging.basicConfig(level=logging.INFO)
 
@@ -48,7 +48,7 @@ def import_dataset(project_id, region, dataset_name, description,
 
   logging.info('Starting import from: {}'.format(source_data_uri))
   response = client.import_data(dataset_ref.name, input_config)
-  response.result()  #Wait for completion
+  response.result()  # Wait for completion
   logging.info('Import completed')
 
   # Update column specs

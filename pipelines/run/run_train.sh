@@ -17,4 +17,5 @@ python3 run_pipeline.py \
 "threshold_date": "2011-08-08", \
 "max_monetary": 15000, \
 "query_template_uri": "gs://clv-testing/scripts/create_features_template.sql" \
+"skip_deployment": True \
 }'

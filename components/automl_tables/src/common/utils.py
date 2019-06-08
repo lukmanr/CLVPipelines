@@ -11,14 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+"""Commom utilities and helper functions."""
 import json
 
 from google.cloud import automl_v1beta1 as automl
 
 
 def get_latest_evaluation_metrics(model_full_id):
-  """Retrieves the latest evaluation metrics for an AutoML Tables model"""
+  """Retrieves the latest evaluation metrics for an AutoML Tables model."""
 
   client = automl.AutoMlClient()
   evaluations = list(client.list_model_evaluations(model_full_id))
@@ -38,7 +38,7 @@ def get_latest_evaluation_metrics(model_full_id):
 
 
 def write_metadata_for_output_viewers(*argv):
-  """Writes items to be rendered by KFP UI as artificats"""
+  """Writes items to be rendered by KFP UI as artificats."""
 
   metadata = {'version': 1, 'outputs': argv}
   with open('/mlpipeline-ui-metadata.json', 'w') as f:

@@ -11,16 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Batch Predict Pipeline."""
 
-import os
-import kfp
-import fire
+from config import LOCAL_SEARCH_PATHS, URL_SEARCH_PREFIXES, USE_SA_SECRET
 
-from kfp import gcp
-
-from config import (LOCAL_SEARCH_PATHS, URL_SEARCH_PREFIXES, USE_SA_SECRET)
 from helper_components import (load_sales_transactions,
                                prepare_feature_engineering_query)
+import kfp
+from kfp import gcp
+
 # Initialize component store
 component_store = kfp.components.ComponentStore(LOCAL_SEARCH_PATHS,
                                                 URL_SEARCH_PREFIXES)
@@ -55,9 +54,10 @@ def clv_batch_predict(
     aml_compute_region='us-central1',
     query_template_uri='gs://clv-pipelines/scripts/create_features_template.sql'
 ):
+  """Prepares and scores sales transactions dataset."""
 
   # Load sales transactions
-  load_sales_transactions = load_sales_transactions_op(
+  load_transactions = load_sales_transactions_op(
       project_id=project_id,
       source_gcs_path=source_gcs_path,
       source_bq_table=source_bq_table,
@@ -66,9 +66,9 @@ def clv_batch_predict(
       table_id=transactions_table_name)
 
   # Generate the feature engineering query
-  prepare_feature_engineering_query = prepare_feature_engineering_query_op(
+  prepare_query = prepare_feature_engineering_query_op(
       project_id=project_id,
-      source_table_id=load_sales_transactions.output,
+      source_table_id=load_transactions.output,
       destination_dataset=bq_dataset_name,
       features_table_name=features_table_name,
       threshold_date=threshold_date,
@@ -78,18 +78,18 @@ def clv_batch_predict(
 
   # Run the feature engineering query on BigQuery.
   engineer_features = engineer_features_op(
-      query=prepare_feature_engineering_query.outputs['query'],
+      query=prepare_query.outputs['query'],
       project_id=project_id,
-      dataset_id=prepare_feature_engineering_query.outputs['dataset_name'],
-      table_id=prepare_feature_engineering_query.outputs['table_name'],
+      dataset_id=prepare_query.outputs['dataset_name'],
+      table_id=prepare_query.outputs['table_name'],
       output_gcs_path='',
       dataset_location=dataset_location,
       job_config='')
 
   # Run the batch predict task on features in Big Query
   source_data_uri = 'bq://{}.{}.{}'.format(
-      project_id, prepare_feature_engineering_query.outputs['dataset_name'],
-      prepare_feature_engineering_query.outputs['table_name'])
+      project_id, prepare_query.outputs['dataset_name'],
+      prepare_query.outputs['table_name'])
 
   predict_batch = batch_predict_op(
       project_id=project_id,
@@ -102,9 +102,6 @@ def clv_batch_predict(
 
   # Configure the pipeline to use a service account secret
   if USE_SA_SECRET:
-    steps = [
-        load_sales_transactions, prepare_feature_engineering_query,
-        engineer_features, predict_batch
-    ]
+    steps = [load_transactions, prepare_query, engineer_features, predict_batch]
     for step in steps:
       step.apply(gcp.use_gcp_secret('user-gcp-sa'))

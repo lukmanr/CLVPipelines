@@ -11,13 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Wrapper around AutoML Tables Create Model API."""
 
-import re
 import logging
-import json
-from pathlib import Path
-from google.cloud import automl_v1beta1 as automl
+
 from common import get_latest_evaluation_metrics
+from pathlib import Path
+
+from google.cloud import automl_v1beta1 as automl
 
 
 def train(
@@ -33,7 +34,7 @@ def train(
     output_model_full_id,
     output_primary_metric_value,
 ):
-  """Train an AutoML Tables model"""
+  """Train an AutoML Tables model."""
 
   logging.basicConfig(level=logging.INFO)
 
@@ -60,8 +61,6 @@ def train(
         {'target_column_spec': column_specs_dict[target_name]})
   # Set features to use for training
   if features_to_exclude:
-    #to_exclude = features_to_exclude.split(',')
-    #to_exclude.append(target_name)
     to_exclude = features_to_exclude
     to_exclude.append(target_name)
     to_use = set(to_exclude).symmetric_difference(column_specs_dict.keys())
@@ -89,7 +88,7 @@ def train(
   model_full_id = response.result().name
   logging.info('Model training completed: {}'.format(model_full_id))
 
-  # Retrieve the latest evaluation metrics and output the model full id and primary metric
+  # Output the model's full id and the value of the primary metric
   metrics = get_latest_evaluation_metrics(model_full_id)
   primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
       metrics, primary_metric) else 'N/A'

@@ -16,13 +16,12 @@
 Currently only regression evaluation metrics are supported
 """
 
-from google.cloud import automl_v1beta1 as automl
-
 from common import get_latest_evaluation_metrics, write_metadata_for_output_viewers
+from google.cloud import automl_v1beta1 as automl
 
 
 def log_metrics(model_full_id):
-  """Retrieves and logs the latest evaluation metrics for an AutoML Tables  model"""
+  """Retrieves and logs the latest evaluation metrics for an AutoML Tables  model."""
 
   metrics = get_latest_evaluation_metrics(model_full_id)
 
@@ -38,7 +37,7 @@ def log_metrics(model_full_id):
 
 
 def regression_evaluation_metrics_to_markdown_metadata(metrics):
-  """Converts regression evaluation metrics to KFP Viewer markdown metadata"""
+  """Converts regression evaluation metrics to KFP Viewer markdown metadata."""
 
   regression_markdown_template = (
       "**Evaluation Metrics:**  \n"
@@ -61,7 +60,7 @@ def regression_evaluation_metrics_to_markdown_metadata(metrics):
 
 
 def classification_evaluation_metrics_to_markdown_metadata(metrics):
-  """Converts classification evaluation metrics to KFP Viewer markdown metadata"""
+  """Converts classification evaluation metrics to KFP Viewer markdown metadata."""
 
   markdown = "TBD"
 
