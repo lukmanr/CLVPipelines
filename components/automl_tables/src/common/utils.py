@@ -18,32 +18,28 @@ from google.cloud import automl_v1beta1 as automl
 
 
 def get_latest_evaluation_metrics(model_full_id):
-    """Retrieves the latest evaluation metrics for an AutoML Tables model"""
-    
-    client = automl.AutoMlClient()
-    evaluations = list(client.list_model_evaluations(model_full_id))
+  """Retrieves the latest evaluation metrics for an AutoML Tables model"""
 
-    create_seconds = 0
-    evaluation_metrics = None
-    for evaluation in evaluations:
-        if evaluation.create_time.seconds > create_seconds:
-          if evaluation.regression_evaluation_metrics.ListFields():
-            evaluation_metrics = evaluation.regression_evaluation_metrics
-            create_seconds = evaluation.create_time.seconds
-          elif evaluation.classification_evaluation_metrics.ListFields():
-            evaluation_metrics = evaluation.classification_evaluation_metrics
-            create_seconds = evaluation.create_time.seconds
+  client = automl.AutoMlClient()
+  evaluations = list(client.list_model_evaluations(model_full_id))
 
-    return evaluation_metrics
+  create_seconds = 0
+  evaluation_metrics = None
+  for evaluation in evaluations:
+    if evaluation.create_time.seconds > create_seconds:
+      if evaluation.regression_evaluation_metrics.ListFields():
+        evaluation_metrics = evaluation.regression_evaluation_metrics
+        create_seconds = evaluation.create_time.seconds
+      elif evaluation.classification_evaluation_metrics.ListFields():
+        evaluation_metrics = evaluation.classification_evaluation_metrics
+        create_seconds = evaluation.create_time.seconds
+
+  return evaluation_metrics
+
 
 def write_metadata_for_output_viewers(*argv):
-    """Writes items to be rendered by KFP UI as artificats"""
+  """Writes items to be rendered by KFP UI as artificats"""
 
-    metadata = {
-        "version": 1,
-        "outputs": argv 
-    }
-    with open('/mlpipeline-ui-metadata.json', 'w') as f:
-            json.dump(metadata, f)
-
-
+  metadata = {'version': 1, 'outputs': argv}
+  with open('/mlpipeline-ui-metadata.json', 'w') as f:
+    json.dump(metadata, f)

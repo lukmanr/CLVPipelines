@@ -20,25 +20,24 @@ from google.cloud.automl_v1beta1 import enums
 
 
 def deploy(model_full_id, output_deployment):
-    """Deploys an AutoML Tables model"""
+  """Deploys an AutoML Tables model"""
 
-    logging.basicConfig(level=logging.INFO)
-    client = automl.AutoMlClient()
+  logging.basicConfig(level=logging.INFO)
+  client = automl.AutoMlClient()
 
-    # Check if the model is already deployed
-    model = client.get_model(model_full_id)
-    if model.deployment_state != enums.Model.DeploymentState.DEPLOYED:
-        logging.info("Starting model deployment: {}".format(model_full_id))
-        response = client.deploy_model(model_full_id)
-        # Wait for operation to complete
-        response.result()
-        logging.info("Deployment completed")
-        result = "New deployment created"
-    else:
-       logging.info("Model already deployed") 
-       result = "Model already deployed"
+  # Check if the model is already deployed
+  model = client.get_model(model_full_id)
+  if model.deployment_state != enums.Model.DeploymentState.DEPLOYED:
+    logging.info("Starting model deployment: {}".format(model_full_id))
+    response = client.deploy_model(model_full_id)
+    # Wait for operation to complete
+    response.result()
+    logging.info("Deployment completed")
+    result = "New deployment created"
+  else:
+    logging.info("Model already deployed")
+    result = "Model already deployed"
 
-    # Save deployment outcome to output
-    Path(output_deployment).parent.mkdir(parents=True, exist_ok=True)
-    Path(output_deployment).write_text(result) 
-
+  # Save deployment outcome to output
+  Path(output_deployment).parent.mkdir(parents=True, exist_ok=True)
+  Path(output_deployment).write_text(result)

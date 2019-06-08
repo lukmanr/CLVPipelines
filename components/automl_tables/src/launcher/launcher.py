@@ -19,20 +19,20 @@ import logging
 
 
 def launch(module_path, args):
-    """Launches a python file or module as a command entrypoint.
+  """Launches a python file or module as a command entrypoint.
+
     Args:
         module: A module path.
         args: The function to invoke and its args.
+
     Returns:
         The return value from the launched function.
     """
 
-    try:
-        module = importlib.import_module(module_path)
-    except Exception:
-      logging.error('Failed to find the module: {}'.format(module_path))
-      sys.exit(1)
+  try:
+    module = importlib.import_module(module_path)
+  except Exception:
+    logging.error('Failed to find the module: {}'.format(module_path))
+    sys.exit(1)
 
-    return fire.Fire(module, command=args, name=module.__name__)
-
-
+  return fire.Fire(module, command=args, name=module.__name__)

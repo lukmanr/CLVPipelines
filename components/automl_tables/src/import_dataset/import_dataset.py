@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """This module wraps AutoML Tables dataset import API"""
 
 import argparse
@@ -49,7 +48,7 @@ def import_dataset(project_id, region, dataset_name, description,
 
   logging.info('Starting import from: {}'.format(source_data_uri))
   response = client.import_data(dataset_ref.name, input_config)
-  response.result() #Wait for completion
+  response.result()  #Wait for completion
   logging.info('Import completed')
 
   # Update column specs
@@ -79,7 +78,7 @@ def import_dataset(project_id, region, dataset_name, description,
         'name': dataset_ref.name,
         'tables_dataset_metadata': tables_dataset_metadata
     }
-    client.update_dataset(update_dataset_dict) 
+    client.update_dataset(update_dataset_dict)
     logging.info('Column specs updated')
 
   # Save project ID, dataset ID, and dataset location to output
@@ -89,7 +88,3 @@ def import_dataset(project_id, region, dataset_name, description,
   Path(output_dataset_id).write_text(dataset_id)
   Path(output_location).parent.mkdir(parents=True, exist_ok=True)
   Path(output_location).write_text(region)
-
-
-
-

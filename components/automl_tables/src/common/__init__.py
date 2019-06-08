@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from common.utils import  (get_latest_evaluation_metrics, 
-                           write_metadata_for_output_viewers)
+from common.utils import (get_latest_evaluation_metrics,
+                          write_metadata_for_output_viewers)
