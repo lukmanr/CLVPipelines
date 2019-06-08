@@ -40,6 +40,8 @@ steps:
 
 # Create a custom step - KFP compiler
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-f', 'CLVPipelines/build/kfp-compiler-builder/Dockerfile', '-t', 'gcr.io/$PROJECT_ID/kfp-compiler', '.']
+  args: ['build', '-f', 'CLVPipelines/cloud-build/kfp-compiler-builder/Dockerfile', '-t', 'kfp-compiler', '.']
 
-images: ['gcr.io/$PROJECT_ID/kfp-compiler']
+# Test custome step
+- name: 'kfp-compiler'
+  args: ['CLVPipelines/cloud-build/test.sh']
