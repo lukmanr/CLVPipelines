@@ -13,10 +13,13 @@
 # limitations under the License.
 """Configuration settings for DSL Compiler."""
 
+
 LOCAL_SEARCH_PATHS = [
-    "/usr/local/google/home/jarekk/projects/kfp/CLVPipelines/components/automl_tables/specs"
+    "../components/automl_tables/specs"
 ]
+
 URL_SEARCH_PREFIXES = [
     "https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/"
 ]
 USE_SA_SECRET = True
+
