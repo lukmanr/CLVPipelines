@@ -38,10 +38,11 @@ steps:
   - name: 'ssh'
     path: /root/.ssh
 
-# Create a custom step - KFP compiler
+# Create a custom step for  KFP compiler
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-f', 'CLVPipelines/cloud-build/kfp-compiler-builder/Dockerfile', '-t', 'kfp-compiler', '.']
 
-# Test custome step
+# Compile pipelines 
 - name: 'kfp-compiler'
-  args: ['CLVPipelines/cloud-build/test.sh']
+  args: ['compile_pipelines.sh']
+  dir: 'CLVPipelines/pipelines'
