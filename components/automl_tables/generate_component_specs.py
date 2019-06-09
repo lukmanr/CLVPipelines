@@ -30,7 +30,6 @@ def generate_specs(image_name, templates_folder='templates', specs_folder='specs
     Path(specs_folder).joinpath(template_path.stem).mkdir(parents=True, exist_ok=True)
     Path(specs_folder).joinpath(template_path.stem, 'component.yaml').write_text(spec)
 
-    
 
 if __name__ == "__main__":
   fire.Fire(generate_specs)

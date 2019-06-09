@@ -29,7 +29,7 @@ steps:
 - name: 'kfp-compiler'
   entrypoint: 'python'
   args: ['generate_component_specs.py', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
-  dir: 'clv_pipelines/components/automl_tables/specs'
+  dir: 'clv_pipelines/components/automl_tables'
 
 # Compile pipelines 
 - name: 'kfp-compiler'

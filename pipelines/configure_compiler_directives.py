@@ -11,15 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Configuration settings for DSL Compiler."""
+"""This module is a command line utility to generate component specs from jinja templates"""
+
+import fire
+
+from pathlib import Path
+from jinja2 import Template
 
 
-LOCAL_SEARCH_PATHS = [
-    "../components/automl_tables/specs"
-]
+def configure_compiler_directives(config_template, config_py, directives):
+  """Generates config.py that configures KFP compilation behaviour"""
 
-URL_SEARCH_PREFIXES = [
-    "https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/"
-]
-USE_SA_SECRET = True
+  template = Template(Path(config_template).read_text())
+  compiler_directives = template.render(directives)
+  Path(config_py).parent.mkdir(parents=True, exist_ok=True)
+  Path(config_py).write_text(compiler_directives)
 
+if __name__ == "__main__":
+  fire.Fire(configure_compiler_directives)
