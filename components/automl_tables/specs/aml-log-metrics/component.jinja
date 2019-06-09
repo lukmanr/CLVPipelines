@@ -22,8 +22,7 @@ inputs:
 
 implementation:
   container:
-    image: gcr.io/sandbox-235500/automl_components:latest
-
+    image: {{ image_name }}
     args: [
       log_evaluation_metrics, log_metrics,
       --model-full-id, {inputValue: model_full_id}

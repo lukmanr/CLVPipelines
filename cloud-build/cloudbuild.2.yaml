@@ -1,0 +1,60 @@
+# Decrypt the file containing the key
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - kms
+  - decrypt
+  - --ciphertext-file=jarekkalto.enc
+  - --plaintext-file=/root/.ssh/id_rsa
+  - --location=global
+  - --keyring=jarekkalto-keyring
+  - --key=github-key
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Set up git with key and domain.
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    chmod 600 /root/.ssh/id_rsa
+    cat <<EOF >/root/.ssh/config
+    Hostname github.com
+    IdentityFile /root/.ssh/id_rsa
+    EOF
+    mv known_hosts /root/.ssh/known_hosts
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Use git clone.
+- name: 'gcr.io/cloud-builders/git'
+  args:
+  - clone
+  - git@github.com:jarokaz/CLVPipelines
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Build a base image for lightweight components
+- name: 'gcr.io/cloud-builders/docker' 
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_BASE_IMAGE}', '.'] 
+  dir: 'CLVPipelines/components/lightweight_components_base_image'
+
+# Build the AutoML tables component
+- name: 'gcr.io/cloud-builders/docker' 
+  args: ['build',  '-t', 'gcr.io/$PROJECT_ID/${_AUTOML_IMAGE}', '.'] 
+  dir: 'CLVPipelines/components/automl_tables'
+
+# Create a custom builder with the KFP compiler
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'CLVPipelines/cloud-build/kfp-compiler-builder/Dockerfile', '-t', 'kfp-compiler', '.']
+
+# Compile pipelines 
+- name: 'kfp-compiler'
+  args: ['compile_pipelines.sh']
+  dir: 'CLVPipelines/pipelines'
+
+images: ['gcr.io/$PROJECT_ID/${_BASE_IMAGE}', 'gcr.io/$PROJECT_ID/${_AUTOML_IMAGE}']

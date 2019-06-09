@@ -1,52 +1,37 @@
-# Decrypt the file containing the key
 steps:
-- name: 'gcr.io/cloud-builders/gcloud'
-  args:
-  - kms
-  - decrypt
-  - --ciphertext-file=jarekkalto.enc
-  - --plaintext-file=/root/.ssh/id_rsa
-  - --location=global
-  - --keyring=jarekkalto-keyring
-  - --key=github-key
-  volumes:
-  - name: 'ssh'
-    path: /root/.ssh
 
-# Set up git with key and domain.
-- name: 'gcr.io/cloud-builders/git'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    chmod 600 /root/.ssh/id_rsa
-    cat <<EOF >/root/.ssh/config
-    Hostname github.com
-    IdentityFile /root/.ssh/id_rsa
-    EOF
-    mv known_hosts /root/.ssh/known_hosts
-  volumes:
-  - name: 'ssh'
-    path: /root/.ssh
-
-# Use git clone.
+# Clone CLV repo
 - name: 'gcr.io/cloud-builders/git'
   args:
   - clone
-  - git@github.com:jarokaz/CLVPipelines
-  volumes:
-  - name: 'ssh'
-    path: /root/.ssh
+  - --depth
+  - '1'
+  - --verbose
+  - https://github.com/${_CLV_REPO}
+  - clv_pipelines
 
-# Create a custom step for  KFP compiler
+# Build a base image for lightweight components
+- name: 'gcr.io/cloud-builders/docker' 
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_BASE_IMAGE}', '.'] 
+  dir: 'clv_pipelines/components/lightweight_components_base_image'
+
+# Build the AutoML Tables component image
+- name: 'gcr.io/cloud-builders/docker' 
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}', '.'] 
+  dir: 'clv_pipelines/components/automl_tables'
+
+# Create a custom builder with the KFP compiler
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-f', 'CLVPipelines/cloud-build/kfp-compiler-builder/Dockerfile', '-t', 'kfp-compiler', '.']
+  args: ['build', '-t', 'kfp-compiler', '.']
+  dir: 'clv_pipelines/cloud-build/kfp-compiler-builder'
 
-# Compile pipelines 
+# Create AutoML Tables component specs 
 - name: 'kfp-compiler'
-  args: ['compile_pipelines.sh']
-  dir: 'CLVPipelines/pipelines'
+  args: ['-c', 'python', 'generate_component_specs.py', '.', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
+  dir: 'clv_pipelines/components/automl_tables/specs'
 
 # Compile pipelines 
 - name: 'kfp-compiler'
   args: ['-c', 'ls -la']
+
+images: ['gcr.io/$PROJECT_ID/${_BASE_IMAGE}', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}']

@@ -12,19 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Log Metrics
+name: Deploy Model
 description: |
-  Retrieves and logs evaluation metrics an AutoML model
+  Deploy AutoML model
 inputs:
   - name: model_full_id
-    description: 'The full id of the model'
+    description: 'The full id of a model'
     type: String
-
+outputs:
+  - name: output_deployment
+    description: 'Deployment status'
+    type: String
 implementation:
   container:
-    image: gcr.io/sandbox-235500/automl_components:latest
-
+    image: {{ image_name }}
     args: [
-      log_evaluation_metrics, log_metrics,
-      --model-full-id, {inputValue: model_full_id}
+      deploy_model, deploy,
+      --model-full-id, {inputValue: model_full_id},
+      --output-deployment, {outputPath: output_deployment}
     ]
