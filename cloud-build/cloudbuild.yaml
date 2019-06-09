@@ -28,7 +28,7 @@ steps:
 # Create AutoML Tables component specs 
 - name: 'kfp-compiler'
   entrypoint: 'python'
-  args: ['generate_component_specs.py', '.', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
+  args: ['generate_component_specs.py', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
   dir: 'clv_pipelines/components/automl_tables/specs'
 
 # Compile pipelines 

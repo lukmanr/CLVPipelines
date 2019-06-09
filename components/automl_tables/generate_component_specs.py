@@ -19,15 +19,17 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 
-def generate_specs(image_name, templates_folder='.'):
+def generate_specs(image_name, templates_folder='templates', specs_folder='specs'):
   """Generates component specs from jinja templates."""
 
-  loader = FileSystemLoader('.')
+  loader = FileSystemLoader(templates_folder)
   env = Environment(loader=loader)
 
-  for template_path in Path(templates_folder).glob('aml-*/component.jinja'):
-    spec = env.get_template(str(template_path)).render(image_name=image_name)
-    Path(template_path.parent).joinpath('component.yaml').write_text(spec)
+  for template_path in Path(templates_folder).glob('*'):
+    spec = env.get_template(str(template_path.name)).render(image_name=image_name)
+    Path(specs_folder).joinpath(template_path.stem).mkdir(parents=True, exist_ok=True)
+    Path(specs_folder).joinpath(template_path.stem, 'component.yaml').write_text(spec)
+
     
 
 if __name__ == "__main__":
