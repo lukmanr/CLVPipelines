@@ -33,7 +33,12 @@ steps:
 
 # Compile pipelines 
 - name: 'kfp-compiler'
-  args: ['-c', 'cat component.yaml']
-  dir: 'clv_pipelines/components/automltables/specs/aml-batch-predict'
+  args: ['compile_pipelines.sh']
+  dir: 'clv_pipelines/pipelines'
+
+# Compile pipelines 
+- name: 'kfp-compiler'
+  args: ['-c', 'ls -la']
+  dir: 'clv_pipelines/pipelines'
 
 #images: ['gcr.io/$PROJECT_ID/${_BASE_IMAGE}', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}']

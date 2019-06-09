@@ -19,7 +19,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 
-def generate_specs(templates_folder, image_name):
+def generate_specs(image_name, templates_folder='.'):
   """Generates component specs from jinja templates."""
 
   loader = FileSystemLoader('.')
