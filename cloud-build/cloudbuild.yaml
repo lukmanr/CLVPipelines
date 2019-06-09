@@ -31,6 +31,12 @@ steps:
   args: ['generate_component_specs.py', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
   dir: 'clv_pipelines/components/automl_tables'
 
+# Configure KFP compilation 
+- name: 'kfp-compiler'
+  entrypoint: 'python'
+  args: ['configure_compiler_directives.py', '--url_search_prefixes', '["https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/"]']
+  dir: 'clv_pipelines/pipelines'
+
 # Compile pipelines 
 - name: 'kfp-compiler'
   args: ['compile_pipelines.sh']
