@@ -12,12 +12,12 @@ steps:
 
 # Build a base image for lightweight components
 - name: 'gcr.io/cloud-builders/docker' 
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_BASE_IMAGE}', '.'] 
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_BASE_IMAGE', '.'] 
   dir: 'clv_pipelines/components/lightweight_components_base_image'
 
 # Build the AutoML Tables component image
-- name: 'gcr.io/cloud-builders/docker' 
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}', '.'] 
+- name:  'gcr.io/cloud-builders/docker' 
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE', '.'] 
   dir: 'clv_pipelines/components/automl_tables'
 
 # Create a custom builder with the KFP compiler
@@ -34,17 +34,40 @@ steps:
 # Configure KFP compilation 
 - name: 'kfp-compiler'
   entrypoint: 'python'
-  args: ['configure_compiler_directives.py', '--url_search_prefixes', '["https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/"]']
+  args: ['configure_compiler_directives.py', '--url_search_prefixes', '$_URL_SEARCH_PREFIXES']
   dir: 'clv_pipelines/pipelines'
 
-# Compile pipelines 
+# Compile the pipelines 
 - name: 'kfp-compiler'
-  args: ['compile_pipelines.sh']
+  args:
+  - '-c'
+  - |
+    dsl-compile --py  src/train_pipeline.py --output $_TRAIN_PIPELINE --disable-type-check
   dir: 'clv_pipelines/pipelines'
 
-# Compile pipelines 
 - name: 'kfp-compiler'
-  args: ['-c', 'ls -la']
+  args:
+  - '-c'
+  - |
+    dsl-compile --py  src/batch_predict_pipeline.py --output $_PREDICT_PIPELINE --disable-type-check
   dir: 'clv_pipelines/pipelines'
 
-#images: ['gcr.io/$PROJECT_ID/${_BASE_IMAGE}', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}']
+# Deploy the compiled pipelines to GCS
+- name: 'gcr.io/cloud-builders/gsutil'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    gsutil mb -p $PROJECT_ID gs://$_BUCKET_NAME || exit 0
+
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', '*.tar.gz', 'gs://$_BUCKET_NAME']
+  dir: 'clv_pipelines/pipelines'
+
+# Deploy the SQL query template
+- name: 'gcr.io/cloud-builders/gsutil' 
+  args: ['cp', 'src/query_template_sql.jinja', 'gs://$_BUCKET_NAME']
+  dir: 'clv_pipelines/pipelines'
+
+# Push component images
+images: ['gcr.io/$PROJECT_ID/${_BASE_IMAGE}', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}']

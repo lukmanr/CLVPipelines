@@ -36,5 +36,6 @@ def configure_compiler_directives(
   Path(config_py).parent.mkdir(parents=True, exist_ok=True)
   Path(config_py).write_text(compiler_directives)
 
+
 if __name__ == "__main__":
   fire.Fire(configure_compiler_directives)
