@@ -27,12 +27,13 @@ steps:
 
 # Create AutoML Tables component specs 
 - name: 'kfp-compiler'
-  args: ['-c', 'python', 'generate_component_specs.py', '.', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
+  entrypoint: 'python'
+  args: ['generate_component_specs.py', '.', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
   dir: 'clv_pipelines/components/automl_tables/specs'
 
 # Compile pipelines 
 - name: 'kfp-compiler'
-  args: ['-c', 'cat component.yaml]
+  args: ['-c', 'cat component.yaml']
   dir: 'clv_pipelines/components/automltables/specs/aml-batch-predict'
 
 #images: ['gcr.io/$PROJECT_ID/${_BASE_IMAGE}', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}']
