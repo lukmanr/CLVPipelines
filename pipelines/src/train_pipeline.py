@@ -13,17 +13,26 @@
 # limitations under the License.
 """CLV training and deployment pipeline."""
 
-from config import LOCAL_SEARCH_PATHS, URL_SEARCH_PREFIXES, USE_SA_SECRET
-
 from helper_components import (load_sales_transactions,
                                prepare_feature_engineering_query)
+
+import yaml
+import pathlib 
 
 import kfp
 from kfp import gcp
 
+
+# Load pipeline settings
+SETTINGS_FILE = 'settings.yaml'
+settings = yaml.safe_load(pathlib.Path('settings.yaml').read_text())
+component_store_settings = settings['component_store']
+argument_defaults = settings['argument_defaults']
+compile_settings = settings['compile_settings']
+
 # Initialize component store
-component_store = kfp.components.ComponentStore(LOCAL_SEARCH_PATHS,
-                                                URL_SEARCH_PREFIXES)
+component_store = kfp.components.ComponentStore(component_store_settings['local_search_paths'],
+                                                component_store_settings['url_search_prefixes'])
 
 # Create component factories
 load_sales_transactions_op = kfp.components.func_to_container_op(
@@ -47,23 +56,23 @@ def clv_train(
     source_gcs_path,
     source_bq_table,
     bq_dataset_name,
-    transactions_table_name,
-    features_table_name,
     threshold_date,
     predict_end,
     max_monetary,
-    dataset_location='US',
-    aml_dataset_name='clv_features',
-    aml_model_name='clv_regression',
-    aml_compute_region='us-central1',
-    train_budget='1000',
-    target_column_name='target_monetary',
-    features_to_exclude='["customer_id"]',
-    optimization_objective='MINIMIZE_MAE',
-    primary_metric='mean_absolute_error',
-    deployment_threshold=900,
-    skip_deployment=False,
-    query_template_uri='gs://clv-pipelines/scripts/create_features_template.sql'
+    features_table_name=argument_defaults['transactions_table_name'],
+    transactions_table_name=argument_defaults['transactions_table_name'],
+    dataset_location=argument_defaults['dataset_location'],
+    aml_dataset_name=argument_defaults['aml_dataset_name'],
+    aml_model_name=argument_defaults['aml_model_name'],
+    aml_compute_region=argument_defaults['aml_compute_region'],
+    train_budget=argument_defaults['train_budget'],
+    target_column_name=argument_defaults['target_column_name'],
+    features_to_exclude=argument_defaults['features_to_exclude'],
+    optimization_objective=argument_defaults['optimization_objective'],
+    primary_metric=argument_defaults['primary_metric'],
+    deployment_threshold=argument_defaults['deployment_threshold'],
+    skip_deployment=argument_defaults['skip_deployment'],
+    query_template_uri=argument_defaults['query_template_uri']
 ):
   """Trains and optionally deploys a CLV Model."""
 
@@ -137,7 +146,7 @@ def clv_train(
           train_model.outputs['output_model_full_id'])
 
   # Configure the pipeline to use a service account secret
-  if USE_SA_SECRET:
+  if compile_settings['use_sa_secret']:
     steps = [
         load_transactions, prepare_query, engineer_features, import_dataset,
         train_model, log_metrics, deploy_model

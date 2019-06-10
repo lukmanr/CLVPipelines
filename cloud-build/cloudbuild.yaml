@@ -31,10 +31,13 @@ steps:
   args: ['generate_component_specs.py', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
   dir: 'clv_pipelines/components/automl_tables'
 
-# Configure KFP compilation 
+# Set configurations that control pipeline compilation
 - name: 'kfp-compiler'
   entrypoint: 'python'
-  args: ['configure_compiler_directives.py', '--url_search_prefixes', '$_URL_SEARCH_PREFIXES']
+  args: 
+  - set_configurations.py
+  - --url_search_prefixes
+  - $_URL_SEARCH_PREFIXES
   dir: 'clv_pipelines/pipelines'
 
 # Compile the pipelines 
@@ -52,7 +55,7 @@ steps:
     dsl-compile --py  src/batch_predict_pipeline.py --output $_PREDICT_PIPELINE --disable-type-check
   dir: 'clv_pipelines/pipelines'
 
-# Deploy the compiled pipelines to GCS
+# Deploy the compiled pipelines
 - name: 'gcr.io/cloud-builders/gsutil'
   entrypoint: 'bash'
   args:
@@ -66,7 +69,7 @@ steps:
 
 # Deploy the SQL query template
 - name: 'gcr.io/cloud-builders/gsutil' 
-  args: ['cp', 'src/query_template_sql.jinja', 'gs://$_BUCKET_NAME']
+  args: ['cp', 'src/query_template.sql.jinja', 'gs://$_BUCKET_NAME']
   dir: 'clv_pipelines/pipelines'
 
 # Push component images
