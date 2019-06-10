@@ -13,10 +13,16 @@ In the first part of the tutorial you:
   - The batch predict pipeline
 - Run the pipelines using Kubeflow Pipelines UI
 
-In the second pipeline of the tutorial you learn how to:
+In the second part of the tutorial you learn how to:
 - Customize the pipelines
 - Customize the deployment process
 - Trigger pipeline runs using Kubeflow Pipelines SDK
+
+## Installing Kubeflow Pipelines on Google Kubernetes Engine
+
+The runtime environment that you set up and use in the tutorial is depicted on the below diagram:
+
+![KFP Runtime](/images/architecture.jpg)
 
 
 
