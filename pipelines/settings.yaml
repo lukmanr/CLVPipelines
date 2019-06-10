@@ -8,7 +8,7 @@ settings:
   features_table_name: features
   features_to_exclude: '["customer_id"]'
   local_search_paths:
-  - ../components/automl_tables/specs
+  - ../component_specs/automl_tables/specs
   optimization_objective: MINIMIZE_MAE
   primary_metric: mean_absolute_error
   query_template_uri: ''
