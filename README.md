@@ -21,7 +21,6 @@ In the second part of the tutorial you learn how to:
 ## Installing Kubeflow Pipelines on Google Kubernetes Engine
 
 The runtime environment that you set up and use in the tutorial is depicted on the below diagram:
-
 ![KFP Runtime](/images/architecture.jpg)
 
 
