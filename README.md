@@ -1,12 +1,25 @@
-This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value (CLV) model training and deployment with Kubeflow Pipelines (KFP)**. The tutorial is the fifth part of the series [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
-The fifth part focuses on demonstrating how to operationalize model training, deployment, and inference using Kubeflow Pipelines on Google Kubernetes Engine (GKE). 
+This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value (CLV) model training and deployment with Kubeflow Pipelines (KFP)**. 
 
-Refer to the previous articles in the series for a more detailed overview of the techniques used in data preparation, feature engineering and modeling of Customer Lifetime Value scenarios.
+The tutorial is the fifth part of the series Predicting Customer Lifetime Value with AI Platform. It demonstrates how to operationalize Customer Lifetime Value model training, deployment and inference using Kubeflow Pipelines (KFP) on Google Kubernetes Engine (GKE). Refer to the previous articles in the series for more information on Customer Lifetime Value concepts and modeling techniques. 
 
-The repository includes two template Kubeflow Pipelines and an example Kubeflow Pipeline component:
-- A pipeline orchestrating traning and deployment of a Customer Lifetime Value prediction model
-- A pipeline orchestrating batch predictions using the model
-- A component that encapsulates AutoML Tables API 
+The pipelines used in the tutorial follow the data pre-processing, training and scoring flow that is similar to one described in [Part 4 of the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-automl-tables) :
+- BigQuery is used for data cleansing and feature engineering, and
+- AutoML Tables is used for model training, deployment, and scoring.
+
+In the first part of the tutorial you:
+- Install Kubeflow and Kubeflow Pipelines on Google Kubernetes Engine
+- Configure and deploy two template pipelines:
+  - The training and deploymnet pipeline
+  - The batch predict pipeline
+- Run the pipelines using Kubeflow Pipelines UI
+
+In the second pipeline of the tutorial you learn how to:
+- Customize the pipelines
+- Customize the deployment process
+- Trigger pipeline runs using Kubeflow Pipelines SDK
+
+
+
 
 ## Training and deploying a Customer Lifetime Value prediction model
 Training and deployment of a CLV model is orchestrated by a Kubeflow Pipeline that uses BigQuery for data preprocessing and feature engineering and AutoML Tables for model training and deployment. 
