@@ -82,7 +82,16 @@ For educational purposes, it is recommended to go through [Deploy using CLI](htt
 
 Note that it make take up to an hour to complete installation.
 
-## Compiling and deploying the Customer Lifetime Value pipelines
+## Building and deploying the Customer Lifetime Value pipelines
+Before the tutorial's pipelines can be run, they have to be configured, compiled, and deployed in your project.
+
+The building and deploying process have been automated using [GCP Cloud Build](https://cloud.google.com/cloud-build/docs/).  The build config file can be found in `/cloud-build` folder of this repo. The build process goes through the following steps:
+1. Copy this github repo into the Cloud Build runtime environment
+1. Create a docker image to support custom build steps
+1. Build a base image for the pipeline's helper components (refer to the later sections to understand the pipeline's design)
+1. Build an image that hosts components wrapping AutoML Tables API.
+1. Update the YAML specifications of the AutoML Tables components with the name of the image created in the previous step
+1. Update the settings that control the pipelines' compilation. The values for these settings are provided as part of the build configuration.
 
 
 
