@@ -163,11 +163,16 @@ The pipeline accepts the following runtime arguments
 Name | Type | Optional | Default | Description
 -----|------|----------|---------|------------
 project_id | GCProjectID | No | | The project to execute processing 
-source_gcs_path | GCSPath | No | The Cloud Storage path to the historical sales transaction data. Must be set to an empty string if source_bq_table is not empty.
+source_gcs_path | GCSPath | No | |The Cloud Storage path to the historical sales transaction data. Must be set to an empty string if source_bq_table is not empty.
 source_bq_table | String | No | | The full id of a BigQuery table with historical sales transaction data. Must be set to an empty string if source_gcs_path is not empty.
 bq_dataset_name | String | Yes | | The name of the persistent dataset to keep the sales transactions (if loaded from GCS) and feature tables. If the dataset does not exist, the pipeline will create a new one. If the dataset name not passed the pipeline will create a unique name. 
-transactions_table_name | String | Yes | transactions | 
-The name of the table to keep historical sales transactions data if loaded from GCS. Ignored if the source is BigQuery. If not passed the pipeline will create a unique name.
+transactions_table_name | String | Yes | transactions | The name of the table to keep historical sales transactions data if loaded from GCS. Ignored if the source is BigQuery. If not passed the pipeline will create a unique name.
+features_table_name | String | Yes | features | The name of the table to keep engineered features. If not passed the pipeline will create a unique name.
+dataset_location | String | Yes | US | The location to create the dataset. 
+threshold_date | Date (YYYY-MM-DD) | No | | The date that divides the input sales transactions into two groups. The transactions before the threshold are used to calculate the features. The transactions after the threshold and before the predict_end (inclusive) are used to calculate the monetary target. Refer to previous articles in the series for more information.
+predict_end | Date (YYYY-MM-DD) | No|| The transactions between the threshold_date and the predict_end are used to calculate the monetary target. The period between the threshold_end and the predict_end is a customer value prediction period.
+max_monetary | Integer |No||Customers with a calculated value higher than max_monetary are treated as outliers and not included in modeling.
+
 
 
 
