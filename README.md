@@ -21,7 +21,18 @@ In the second part of the tutorial you learn how to:
 - Customize the deployment process
 - Trigger pipeline runs using Kubeflow Pipelines SDK
 
-The rest of this document guides you 
+The tutorial assumes that you have a basic understanding of the following GCP concepts and services:
+- GCP Projects
+- Cloud Shell
+- Cloud Storage
+- BigQuery
+- Google Kubernetes Engine
+- AutoML Tables
+- Cloud Build
+
+In addition, you need to familiarize yourself with the key Kubeflow and Kubeflow Pipelines concepts as described on [www.kubeflow.org](http://www.kubeflow.org)
+
+
 ## Installing Kubeflow Pipelines on Google Kubernetes Engine
 
 The runtime environment that you set up and use in the tutorial is depicted on the below diagram:
