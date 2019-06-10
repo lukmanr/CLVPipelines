@@ -183,6 +183,12 @@ primary_metric|String|No|mean_absolute_error|The primary metric to use as a deci
 deployment_threshold|Float|No|900|The performance threshold for the primary metric. If the value of the primary metric is lower than the deployment threshold the model is deployed
 skip_deployment|Bool|No|True|The flag forcing skipping model deployment if set to True
 query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that converts historical transaction data to features. When deploying using Cloud Build the default value is set automatically
+#### Uploading and starting the pipeline
+To run the pipeline using Kubeflows Pipelines UI:
+- Connect to Kubeflow Pipelines UI. If you deployed Kubeflow using the Deployment Manager the Kubeflow Dashboard is available at `https:[DEPLOYMENT_NAME].endpoints.[YOUR_PROJECT_ID].cloud.goog`. The Kubeflow Pipelines UI is accessible from the Kubeflow Dashboard.
+- Upload the compile pipeline's `.tar.gz` file. The file can be found in a GCS path configured during the build process
+- Configure the experiment and run the pipeline following the procedure described in [Kubeflow Pipelines Quickstart](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart). Set the required parameters and if required change the default values.
+
 
 
 
