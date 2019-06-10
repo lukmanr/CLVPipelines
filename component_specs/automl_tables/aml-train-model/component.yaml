@@ -1,0 +1,67 @@
+description: 'Trains an AutoML model
+
+  '
+implementation:
+  container:
+    args:
+    - train_model
+    - train
+    - --project-id
+    - inputValue: project_id
+    - --region
+    - inputValue: region
+    - --dataset-id
+    - inputValue: dataset_id
+    - --model-name
+    - inputValue: model_name
+    - --train-budget
+    - inputValue: train_budget
+    - --optimization-objective
+    - inputValue: optimization_objective
+    - --primary-metric
+    - inputValue: primary_metric
+    - --target-name
+    - inputValue: target_name
+    - --features-to-exclude
+    - inputValue: features_to_exclude
+    - --output-model-full-id
+    - outputPath: output_model_full_id
+    - --output-primary-metric-value
+    - outputPath: output_primary_metric_value
+    image: gcr.io/test
+inputs:
+- description: The project_id for AutoML processing
+  name: project_id
+  type: GCPProjectID
+- description: AutoML compute region.
+  name: region
+  type: String
+- description: AutoML dataset id.
+  name: dataset_id
+  type: String
+- description: AutoML model display name
+  name: model_name
+  type: String
+- description: AutoML train budget
+  name: train_budget
+  type: Integer
+- description: AutoML optimization objective
+  name: optimization_objective
+  type: String
+- description: Primary metric to report through output
+  name: primary_metric
+  type: String
+- description: Target (Label) column in the training dataset
+  name: target_name
+  type: String
+- description: A list (literal) of features to exclude from training
+  name: features_to_exclude
+  type: String
+name: Train Model
+outputs:
+- description: AutoML model ID.
+  name: output_model_full_id
+  type: String
+- description: Primary metric value.
+  name: output_primary_metric_value
+  type: String

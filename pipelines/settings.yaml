@@ -1,23 +1,21 @@
-component_store:
-  local_search_paths: ['../components/automl_tables/specs']
-  url_search_prefixes: ["https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/"]
-
-argument_defaults:
-  query_template_uri: 'gs://clv-staging/query_template.sql.jinja'
-  dataset_location: US
-  transactions_table_name: transactions
-  features_table_name: features
+settings:
   aml_compute_region: us-central1
   aml_dataset_name: clv_features
   aml_model_name: clv_regression
-  train_budget: 1000
-  target_column_name: target_monetary
+  base_image: gcr.io
+  dataset_location: US
+  deployment_threshold: 900
+  features_table_name: features
   features_to_exclude: '["customer_id"]'
+  local_search_paths:
+  - ../components/automl_tables/specs
   optimization_objective: MINIMIZE_MAE
   primary_metric: mean_absolute_error
-  deployment_threshold: 900
-  skip_deployment: True
-
-compile_settings:
-  use_sa_secret: True
-  base_image: 'gcr.io/sandbox-235500/clv-base-image:latest'
+  query_template_uri: ''
+  skip_deployment: false
+  target_column_name: target_monetary
+  train_budget: 1000
+  transactions_table_name: transactions
+  url_search_prefixes:
+  - https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/
+  use_sa_secret: true

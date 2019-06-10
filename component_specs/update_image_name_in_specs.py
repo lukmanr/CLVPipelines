@@ -13,23 +13,19 @@
 # limitations under the License.
 """This module is a command line utility to generate component specs from jinja templates"""
 
+import pathlib
 import fire
-
-from pathlib import Path
-from jinja2 import Environment, FileSystemLoader
+import yaml
 
 
-def generate_specs(image_name, templates_folder='templates', specs_folder='specs'):
-  """Generates component specs from jinja templates."""
+def update_image_name(folder, image):
+  """Updates component specifications with a container image name."""
 
-  loader = FileSystemLoader(templates_folder)
-  env = Environment(loader=loader)
+  for spec_path in pathlib.Path(folder).glob('*'):
+    spec = pathlib.Path(spec_path).joinpath('component.yaml').read_text()
+    spec = yaml.safe_load(spec)
+    spec['implementation']['container']['image'] = image
+    pathlib.Path(spec_path).joinpath('component.yaml').write_text(yaml.dump(spec))
 
-  for template_path in Path(templates_folder).glob('*'):
-    spec = env.get_template(str(template_path.name)).render(image_name=image_name)
-    Path(specs_folder).joinpath(template_path.stem).mkdir(parents=True, exist_ok=True)
-    Path(specs_folder).joinpath(template_path.stem, 'component.yaml').write_text(spec)
-
-
-if __name__ == "__main__":
-  fire.Fire(generate_specs)
+if __name__ == '__main__':
+  fire.Fire(update_image_name)

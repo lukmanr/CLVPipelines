@@ -1,0 +1,67 @@
+description: 'Imports data from either BigQuery or GCS to AutoML Dataset
+
+  '
+implementation:
+  container:
+    args:
+    - import_dataset
+    - import_dataset
+    - --project-id
+    - inputValue: project_id
+    - --region
+    - inputValue: region
+    - --dataset-name
+    - inputValue: dataset_name
+    - --description
+    - inputValue: description
+    - --source-data-uri
+    - inputValue: source_data_uri
+    - --target-column-name
+    - inputValue: target_column_name
+    - --weight-column-name
+    - inputValue: weight_column_name
+    - --ml-use-column-name
+    - inputValue: ml_use_column_name
+    - --output-project-id
+    - outputPath: output_project_id
+    - --output-dataset-id
+    - outputPath: output_dataset_id
+    - --output-location
+    - outputPath: output_location
+    image: gcr.io/test
+inputs:
+- description: The project_id for AutoML processing
+  name: project_id
+  type: GCPProjectID
+- description: AutoML compute region.
+  name: region
+  type: String
+- description: AutoML dataset name.
+  name: dataset_name
+  type: String
+- description: AutoML dataset description.
+  name: description
+  type: String
+- description: Source data URI
+  name: source_data_uri
+  type: String
+- description: Target column name
+  name: target_column_name
+  type: String
+- description: Weight column name
+  name: weight_column_name
+  type: String
+- description: ML use column name
+  name: ml_use_column_name
+  type: String
+name: Import dataset
+outputs:
+- description: Project ID.
+  name: output_project_id
+  type: String
+- description: AutoML dataset ID.
+  name: output_dataset_id
+  type: String
+- description: AutoML dataset location.
+  name: output_location
+  type: String

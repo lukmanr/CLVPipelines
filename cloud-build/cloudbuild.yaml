@@ -1,3 +1,5 @@
+# Build and deploy CLV components and pipelines
+
 steps:
 
 # Clone CLV repo
@@ -20,16 +22,24 @@ steps:
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE', '.'] 
   dir: 'clv_pipelines/components/automl_tables'
 
-# Create a custom builder with the KFP compiler
+# Create the image for custom build steps 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'kfp-compiler', '.']
   dir: 'clv_pipelines/cloud-build/kfp-compiler-builder'
 
-# Create AutoML Tables component specs 
+# Update AutoML components specs with the container image name 
 - name: 'kfp-compiler'
   entrypoint: 'python'
-  args: ['generate_component_specs.py', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
-  dir: 'clv_pipelines/components/automl_tables'
+  args: ['update_component_specs.py', ,'automl_tables', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
+  dir: 'clv_pipelines/components'
+
+# Update pipeline settings
+- name: 'kfp-compiler'
+  entrypoint: 'python'
+  args: 
+  - update_pipeline_settings.py 
+  - settings.yaml
+  - --base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE
 
 # Compile the pipelines 
 - name: 'kfp-compiler'
@@ -55,12 +65,12 @@ steps:
     gsutil mb -p $PROJECT_ID gs://$_BUCKET_NAME || exit 0
 
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', '*.tar.gz', 'gs://$_BUCKET_NAME']
+  args: ['cp', '*.tar.gz', 'gs://$_BUCKET_NAME/$_PIPELINE_FOLDER']
   dir: 'clv_pipelines/pipelines'
 
 # Deploy the SQL query template
 - name: 'gcr.io/cloud-builders/gsutil' 
-  args: ['cp', 'src/query_template.sql.jinja', 'gs://$_BUCKET_NAME']
+  args: ['cp', 'src/query_template.sql.jinja', 'gs://$_BUCKET_NAME/$_TEMPLATE_FOLDER']
   dir: 'clv_pipelines/pipelines'
 
 # Push component images

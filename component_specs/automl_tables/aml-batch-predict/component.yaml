@@ -1,0 +1,42 @@
+description: 'Runs AutoML batch predict job
+
+  '
+implementation:
+  container:
+    args:
+    - batch_predict
+    - predict
+    - --project-id
+    - inputValue: project_id
+    - --region
+    - inputValue: region
+    - --model-id
+    - inputValue: model_id
+    - --datasource
+    - inputValue: datasource
+    - --destination-prefix
+    - inputValue: destination_prefix
+    - --output-destination
+    - outputPath: output_destination
+    image: gcr.io/test
+inputs:
+- description: The project_id for AutoML processing
+  name: project_id
+  type: GCPProjectID
+- description: AutoML compute tegion
+  name: region
+  type: String
+- description: AutoML model ID
+  name: model_id
+  type: String
+- description: Data source to score GCS or BigQuery
+  name: datasource
+  type: String
+- description: Destination for predictions
+  name: destination_prefix
+  type: String
+name: Batch Predict
+outputs:
+- description: Prediction output
+  name: output_destination
+  type: String

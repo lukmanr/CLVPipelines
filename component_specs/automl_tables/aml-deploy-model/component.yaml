@@ -1,0 +1,22 @@
+description: 'Deploy AutoML model
+
+  '
+implementation:
+  container:
+    args:
+    - deploy_model
+    - deploy
+    - --model-full-id
+    - inputValue: model_full_id
+    - --output-deployment
+    - outputPath: output_deployment
+    image: gcr.io/test
+inputs:
+- description: The full id of a model
+  name: model_full_id
+  type: String
+name: Deploy Model
+outputs:
+- description: Deployment status
+  name: output_deployment
+  type: String

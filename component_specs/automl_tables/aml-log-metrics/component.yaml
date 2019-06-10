@@ -1,0 +1,16 @@
+description: 'Retrieves and logs evaluation metrics an AutoML model
+
+  '
+implementation:
+  container:
+    args:
+    - log_evaluation_metrics
+    - log_metrics
+    - --model-full-id
+    - inputValue: model_full_id
+    image: gcr.io/test
+inputs:
+- description: The full id of the model
+  name: model_full_id
+  type: String
+name: Log Metrics
