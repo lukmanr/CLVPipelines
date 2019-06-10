@@ -66,7 +66,7 @@ steps:
     gsutil mb -p $PROJECT_ID gs://$_BUCKET_NAME || exit 0
 
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', '*.tar.gz', 'gs://$_BUCKET_NAME/$_PIPELINE_FOLDER']
+  args: ['cp', '*.tar.gz', 'gs://$_BUCKET_NAME/$_PIPELINES_FOLDER']
   dir: 'clv_pipelines/pipelines'
 
 # Deploy the SQL query template
@@ -74,7 +74,7 @@ steps:
   args: 
   - cp
   - src/query_template.sql.jinja
-  - gs://$_BUCKET_NAME/$_TEMPLATE_FOLDER/query_template.sql.jinja
+  - gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja
   dir: 'clv_pipelines/pipelines'
 
 # Deploy the sample dataset
