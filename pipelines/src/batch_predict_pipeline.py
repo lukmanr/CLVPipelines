@@ -38,7 +38,8 @@ component_store = kfp.components.ComponentStore(
 load_sales_transactions_op = kfp.components.func_to_container_op(
     load_sales_transactions, base_image=compile_settings['base_image'])
 prepare_feature_engineering_query_op = kfp.components.func_to_container_op(
-    prepare_feature_engineering_query, base_image=compile_settings['base_image'])
+    prepare_feature_engineering_query,
+    base_image=compile_settings['base_image'])
 engineer_features_op = component_store.load_component('bigquery/query')
 batch_predict_op = component_store.load_component('aml-batch-predict')
 
@@ -62,8 +63,7 @@ def clv_batch_predict(
     transactions_table_name=argument_defaults['transactions_table_name'],
     dataset_location=argument_defaults['dataset_location'],
     aml_compute_region=argument_defaults['aml_compute_region'],
-    query_template_uri=argument_defaults['query_template_uri'])'
-):
+    query_template_uri=argument_defaults['query_template_uri']):
   """Prepares and scores sales transactions dataset."""
 
   # Load sales transactions
