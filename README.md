@@ -148,6 +148,15 @@ The below diagram depicts the workflow implemented by training and deployment pi
 
 ![Train and deploy](/images/train.jpg)
 
+1. Load historical sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
+1. Execute a BigQuer query to create features that will be used for model training. The engineered features are stored in a BigQuery table.
+1. Import features to an AutoML dataset.
+1. Trigger AutoML model training.
+1. After training completes, retrieve model evaluation metrics.
+1. Compare the model performance (a value of the primary metric passed as the pipeline’s parameter) against the performance threshold.
+1. If the trained model meets or exceeds the performance threshold deploy the model for online predictions.
+
+
 
 
 ## Training and deploying a Customer Lifetime Value prediction model
