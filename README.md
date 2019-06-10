@@ -82,7 +82,7 @@ For educational purposes, it is recommended to go through [Deploy using CLI](htt
 
 Note that it make take up to an hour to complete installation.
 
-## Building and deploying the Customer Lifetime Value pipelines
+## Building and deploying the pipelines
 Before the tutorial's pipelines can be run, they have to be configured, compiled, and deployed in your project.
 
 The building and deploying process have been automated using [GCP Cloud Build](https://cloud.google.com/cloud-build/docs/).  The build config file can be found in `/cloud-build` folder of this repo. The build process goes through the following steps:
