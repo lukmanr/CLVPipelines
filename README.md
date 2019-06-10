@@ -50,7 +50,6 @@ You can use the Pricing Calculator to generate a cost estimate based on your pro
 
 ## Before you begin
 1. Select or create a GCP project.
-[GO TO THE MANAGE RESOURCES PAGE](https://pantheon.corp.google.com/cloud-resource-manager)
 1. Enable billing for you project
 1. Enable the following Cloud APIs:
 - Compute Engine
