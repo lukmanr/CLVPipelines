@@ -93,7 +93,7 @@ FROM
       customer_id,
       SUM(order_value) AS monetary,
       DATE_DIFF(MAX(order_date), MIN(order_date), DAY) AS recency,
-      DATE_DIFF(DATE('{threshold_date}'), MIN(order_date), DAY) AS T,
+      DATE_DIFF(DATE('{{ threshold_date }}'), MIN(order_date), DAY) AS T,
       COUNT(DISTINCT order_date) AS cnt_orders,
       AVG(order_qty_articles) avg_basket_size,
       AVG(order_value) avg_basket_value,
