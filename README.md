@@ -103,6 +103,7 @@ You can submit the build process using the `gcloud builds submit` command. The b
 
 
 
+
 Parameter | Description 
 -----------|-------------
 _CLV_REPO  | The name of the tutorial's github repository. 
@@ -116,15 +117,26 @@ _ARTIFACT_FOLDER | The name of the folder in _BUCKET_NAME to store artificats us
 _SAMPLE_DATASET_FOLDER | The name of the folder in _BUCKET_NAME to store the sample dataset used by the pipelines.
 
 
+The `/cloud-build/build.sh` demonstrates how to use `gcloud builds submit` to start the build process. 
 
 
-
-
-
-
-
-To start the build process:
+To build and deploy the pipelines:
 1. Open [Cloud Shell](https://cloud.google.com/shell/docs/) in your project.
+2. Create a working directory and download build configuration
+```
+cd
+mkdir [DIRECTORY_NAME]
+cd [DIRECTORY_NAME]
+wget https://raw.githubusercontent.com/jarokaz/CLVPipelines/master/cloud-build/cloudbuild.yaml
+wget https://raw.githubusercontent.com/jarokaz/CLVPipelines/master/cloud-build/build.sh
+```
+3. Update `build.sh` with your parameter values
+4. Start the build
+```
+chmod 755 build.sh
+./build.sh
+```
+
 
 
 
