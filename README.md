@@ -98,6 +98,14 @@ The building and deploying process have been automated using [GCP Cloud Build](h
 1. Deploy the component images to the Container Registry of your project. 
 1. Copy the sample dataset to a GCS folder in your project. The path to the folder is provided as a build parameter.
 
+You can submit the build process using the `gcloud builds submit` command. The build has been configured to accept as a set of configuration parameters. The values for these parameters can be set when submitting the build job using the `--substitutions` option of the `gcloud builds submit` command. The following parameters are required:
+
+|-----------|-------------|
+| Parameter | Description |
+|-----------|-------------|
+| 1 .       | .           |
+|-----------|-------------|
+
 
 To start the build process:
 1. Open [Cloud Shell](https://cloud.google.com/shell/docs/) in your project.
