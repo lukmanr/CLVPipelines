@@ -40,7 +40,7 @@ steps:
   - update_pipeline_settings.py 
   - settings.yaml
   - --base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE
-  - --query_template_uri=gs://$_BUCKET_NAME/$_TEMPLATE_FOLDER
+  - --query_template_uri=gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER
   dir: 'clv_pipelines/pipelines'
 
 # Compile the pipelines 
