@@ -30,7 +30,38 @@ The tutorial assumes that you have a basic understanding of the following GCP co
 - AutoML Tables
 - Cloud Build
 
-In addition, you need to familiarize yourself with the key Kubeflow and Kubeflow Pipelines concepts as described on [www.kubeflow.org](http://www.kubeflow.org)
+In addition, you need to familiarize yourself with the key Kubeflow and Kubeflow Pipelines concepts as described on [www.kubeflow.org](http://www.kubeflow.org).
+
+## Objectives
+- Gain hands-on experience with setting up Kubeflow Pipelines runtime environment on Google Kubernetes Engine
+- Understand how to architect KFP pipelines that orchestrate Google Cloud managed services.
+- Learn how to schedule and execute pipelines using both Kubeflow Pipelines UI and KFP SDK APIs.
+- Understand how to customize KFP pipelines
+
+## Costs
+This tutorial uses billable components of Google Cloud Platform, including:
+- Google Kubernetes Engine
+- Cloud Storage
+- BigQuery
+- AutoML Tables
+- Cloud Build
+
+You can use the Pricing Calculator to generate a cost estimate based on your projected usage.
+
+## Before you begin
+1. Select or create a GCP project.
+[GO TO THE MANAGE RESOURCES PAGE](https://pantheon.corp.google.com/cloud-resource-manager)
+1. Enable billing for you project
+1. Enable the following Cloud APIs:
+- Compute Engine
+- Cloud Storage
+- Container Registry
+- BigQuery
+- Kubernetes Engine
+- Cloud Build
+- Deployment Manager
+- Identity and Access Management
+- AutoML
 
 
 ## Installing Kubeflow Pipelines on Google Kubernetes Engine
