@@ -48,7 +48,7 @@ log_metrics_op = component_store.load_component('aml-log-metrics')
 
 # Pipeline definition
 @kfp.dsl.pipeline(
-    name='CLV Training BigQuery AutoML',
+    name='CLV Training',
     description='CLV Training Pipeline using BigQuery for feature engineering and Automl Tables for model training'
 )
 def clv_train(
