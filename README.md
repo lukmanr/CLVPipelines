@@ -253,30 +253,7 @@ To run the pipeline using Kubeflows Pipelines UI:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Running the pipelines using KFP SDK API
 
 
 
