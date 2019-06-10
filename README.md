@@ -73,10 +73,16 @@ The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** runni
 
 **NOTE**. *The below installation procedure installs a full Kubeflow configuration that includes Kubeflow Pipelines and other components. By the end of June, a lightweight configuration that only includes Kubeflow Pipeline components will be supported. At that time the tutorial will be updated to support the lightweight configuration.*
 
+### Using Deployment Manager to install Kubeflow on GCP
 To install Kubeflow, including Kubeflow Pipelines on Google Kubernetes Engine follow the instructions on [www.kubeflow.org](https://www.kubeflow.org/docs/gke/deploy/).
 
 Make sure to configure Identity Aware Proxy (IAP). Deploy [v0.5.1](https://github.com/kubeflow/kubeflow/releases) of Kubeflow.
 
+For educational purposes, it is recommended to go through [Deploy using CLI](https://www.kubeflow.org/docs/gke/deploy/deploy-cli/).
+
+Note that it make take up to an hour to complete installation.
+
+## Compiling and deploying the Customer Lifetime Value pipelines
 
 
 
