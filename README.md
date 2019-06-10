@@ -255,4 +255,11 @@ To run the pipeline using Kubeflows Pipelines UI:
 
 ## Running the pipelines using KFP SDK API
 
+In the previous section of the tutorial, you run the pipelines using Kubeflow Pipelines UI. In this part, you submit the pipelines for execution using `kfp.Client()` API from the Kubeflow Pipelines SDK.
+
+`kfp.Client()` is a programmatic interface to the Kubeflow Pipelines runtime.
+
+To be continued ...
+
+
 
