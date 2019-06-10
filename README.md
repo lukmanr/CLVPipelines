@@ -1,6 +1,6 @@
 This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value (CLV) model training and deployment with Kubeflow Pipelines (KFP)**. 
 
-The tutorial is the fifth part of the series Predicting Customer Lifetime Value with AI Platform. It demonstrates how to operationalize Customer Lifetime Value model training, deployment and inference using Kubeflow Pipelines (KFP) on Google Kubernetes Engine (GKE). Refer to the previous articles in the series for more information on Customer Lifetime Value concepts and modeling techniques. 
+The tutorial is the fifth part of the series Predicting Customer Lifetime Value with AI Platform. It demonstrates how to operationalize Customer Lifetime Value model training, deployment and inference using Kubeflow Pipelines (KFP) on Google Kubernetes Engine (GKE). Refer to the [previous articles](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) in the series for more information on Customer Lifetime Value concepts and modeling techniques. 
 
 The pipelines used in the tutorial follow the data pre-processing, training and scoring flow that is similar to one described in [Part 4 of the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-automl-tables) :
 - BigQuery is used for data cleansing and feature engineering, and
