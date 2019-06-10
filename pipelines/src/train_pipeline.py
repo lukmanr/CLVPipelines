@@ -17,11 +17,10 @@ from helper_components import (load_sales_transactions,
                                prepare_feature_engineering_query)
 
 import yaml
-import pathlib 
+import pathlib
 
 import kfp
 from kfp import gcp
-
 
 # Load pipeline settings
 SETTINGS_FILE = 'settings.yaml'
@@ -31,14 +30,15 @@ argument_defaults = settings['argument_defaults']
 compile_settings = settings['compile_settings']
 
 # Initialize component store
-component_store = kfp.components.ComponentStore(component_store_settings['local_search_paths'],
-                                                component_store_settings['url_search_prefixes'])
+component_store = kfp.components.ComponentStore(
+    component_store_settings['local_search_paths'],
+    component_store_settings['url_search_prefixes'])
 
 # Create component factories
 load_sales_transactions_op = kfp.components.func_to_container_op(
-    load_sales_transactions)
+    load_sales_transactions, base_image=compile_settings['base_image'])
 prepare_feature_engineering_query_op = kfp.components.func_to_container_op(
-    prepare_feature_engineering_query)
+    prepare_feature_engineering_query, base_image=compile_settings['base_image'])
 engineer_features_op = component_store.load_component('bigquery/query')
 import_dataset_op = component_store.load_component('aml-import-dataset')
 train_model_op = component_store.load_component('aml-train-model')
@@ -72,8 +72,7 @@ def clv_train(
     primary_metric=argument_defaults['primary_metric'],
     deployment_threshold=argument_defaults['deployment_threshold'],
     skip_deployment=argument_defaults['skip_deployment'],
-    query_template_uri=argument_defaults['query_template_uri']
-):
+    query_template_uri=argument_defaults['query_template_uri']):
   """Trains and optionally deploys a CLV Model."""
 
   # Load sales transactions

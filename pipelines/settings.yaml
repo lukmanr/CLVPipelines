@@ -3,7 +3,7 @@ component_store:
   url_search_prefixes: ["https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/"]
 
 argument_defaults:
-  query_template_uri: ''
+  query_template_uri: 'gs://clv-staging/query_template.sql.jinja'
   dataset_location: US
   transactions_table_name: transactions
   features_table_name: features
@@ -20,3 +20,4 @@ argument_defaults:
 
 compile_settings:
   use_sa_secret: True
+  base_image: 'gcr.io/sandbox-235500/clv-base-image:latest'

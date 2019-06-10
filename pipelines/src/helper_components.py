@@ -13,14 +13,13 @@
 # limitations under the License.
 """Helper Lightweight Python components."""
 
+from jinja2 import Template
+
 import kfp
 from kfp import dsl
 from typing import NamedTuple
 
-BASE_IMAGE = 'gcr.io/clv-pipelines/base-image:latest'
-
-
-@kfp.dsl.python_component(name='Load transactions', base_image=BASE_IMAGE)
+@kfp.dsl.python_component(name='Load transactions')
 def load_sales_transactions(project_id: str, source_gcs_path: str,
                             source_bq_table: str, dataset_location: str,
                             dataset_name: str, table_id: str) -> str:
@@ -76,7 +75,7 @@ def load_sales_transactions(project_id: str, source_gcs_path: str,
   return output
 
 
-@kfp.dsl.python_component(name='Prepare query', base_image=BASE_IMAGE)
+@kfp.dsl.python_component(name='Prepare query')
 def prepare_feature_engineering_query(
     project_id: str, source_table_id: str, destination_dataset: str,
     features_table_name: str, threshold_date: str, predict_end: str,
@@ -101,10 +100,10 @@ def prepare_feature_engineering_query(
   # Read a query template from GCS
   _, bucket, blob_name = re.split('gs://|/', query_template_uri, 2)
   blob = storage.Client(project_id).get_bucket(bucket).blob(blob_name)
-  query_template = blob.download_as_string().decode('utf-8')
+  template = Template(blob.download_as_string().decode('utf-8'))
 
   # Substitute placeholders in the query template
-  query = query_template.format(
+  query = template.render(
       data_source_id=source_table_id,
       threshold_date=threshold_date,
       predict_end=predict_end,

@@ -16,12 +16,12 @@ WITH
           SELECT
             MAX(order_date)
           FROM
-            `{data_source_id}` tl
+            `{{ data_source_id }}` tl
           WHERE
             tl.customer_id = t.customer_id
         ) latest_order
       FROM
-        `{data_source_id}` t
+        `{{ data_source_id }}` t
       GROUP BY
           customer_id,
           order_date
@@ -46,9 +46,9 @@ WITH
                 ELSE 0
               END ) positive_value
           FROM
-            `{data_source_id}`
+            `{{ data_source_id }}`
           WHERE
-            order_date < DATE("{threshold_date}")
+            order_date < DATE("{{ threshold_date }}")
           GROUP BY
             customer_id,
             order_date)
@@ -62,7 +62,7 @@ WITH
     --[START common_clean]
     WHERE
       -- Bought in the past 3 months
-      DATE_DIFF(DATE("{predict_end}"), latest_order, DAY) <= 90
+      DATE_DIFF(DATE("{{ predict_end }}"), latest_order, DAY) <= 90
       -- Make sure returns are consistent.
       AND (
         (order_qty_articles > 0 and order_Value > 0) OR
@@ -114,10 +114,10 @@ FROM
       SUM(order_value) target_monetary
     FROM
       order_summaries
-      WHERE order_date > DATE('{threshold_date}')
+      WHERE order_date > DATE('{{ threshold_date }}')
     GROUP BY
       customer_id) tt
 WHERE
   tf.customer_id = tt.customer_id
   AND tf.monetary > 0
-  AND tf.monetary <= {max_monetary}
+  AND tf.monetary <= {{ max_monetary }}
