@@ -11,21 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""This module is a command line utility to generate component specs from jinja templates"""
+"""This module is a command line utility to update image name in automl component specs"""
 
 import pathlib
 import fire
 import yaml
 
 
-def update_image_name(folder, image):
-  """Updates component specifications with a container image name."""
+def update_image_name(image_name):
+  """Updates component specifications with a new container image name."""
 
-  for spec_path in pathlib.Path(folder).glob('*'):
-    spec = pathlib.Path(spec_path).joinpath('component.yaml').read_text()
-    spec = yaml.safe_load(spec)
-    spec['implementation']['container']['image'] = image
-    pathlib.Path(spec_path).joinpath('component.yaml').write_text(yaml.dump(spec))
+  for spec_path in pathlib.Path('.').glob('*/component.yaml'):
+    spec = yaml.safe_load(pathlib.Path(spec_path).read_text())
+    spec['implementation']['container']['image'] = image_name
+    pathlib.Path(spec_path).write_text(yaml.dump(spec))
+
 
 if __name__ == '__main__':
   fire.Fire(update_image_name)

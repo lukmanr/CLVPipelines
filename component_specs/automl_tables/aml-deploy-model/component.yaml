@@ -10,7 +10,7 @@ implementation:
     - inputValue: model_full_id
     - --output-deployment
     - outputPath: output_deployment
-    image: gcr.io/test
+    image: gcr.io
 inputs:
 - description: The full id of a model
   name: model_full_id

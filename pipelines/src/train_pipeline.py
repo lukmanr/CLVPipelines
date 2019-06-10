@@ -23,22 +23,17 @@ import kfp
 from kfp import gcp
 
 # Load pipeline settings
-SETTINGS_FILE = 'settings.yaml'
-settings = yaml.safe_load(pathlib.Path('settings.yaml').read_text())
-component_store_settings = settings['component_store']
-argument_defaults = settings['argument_defaults']
-compile_settings = settings['compile_settings']
+settings = yaml.safe_load(pathlib.Path('settings.yaml').read_text())['settings']
 
 # Initialize component store
-component_store = kfp.components.ComponentStore(
-    component_store_settings['local_search_paths'],
-    component_store_settings['url_search_prefixes'])
+component_store = kfp.components.ComponentStore(settings['local_search_paths'],
+                                                settings['url_search_prefixes'])
 
 # Create component factories
 load_sales_transactions_op = kfp.components.func_to_container_op(
-    load_sales_transactions, base_image=compile_settings['base_image'])
+    load_sales_transactions, base_image=settings['base_image'])
 prepare_feature_engineering_query_op = kfp.components.func_to_container_op(
-    prepare_feature_engineering_query, base_image=compile_settings['base_image'])
+    prepare_feature_engineering_query, base_image=settings['base_image'])
 engineer_features_op = component_store.load_component('bigquery/query')
 import_dataset_op = component_store.load_component('aml-import-dataset')
 train_model_op = component_store.load_component('aml-train-model')
@@ -51,28 +46,27 @@ log_metrics_op = component_store.load_component('aml-log-metrics')
     name='CLV Training',
     description='CLV Training Pipeline using BigQuery for feature engineering and Automl Tables for model training'
 )
-def clv_train(
-    project_id,
-    source_gcs_path,
-    source_bq_table,
-    bq_dataset_name,
-    threshold_date,
-    predict_end,
-    max_monetary,
-    features_table_name=argument_defaults['transactions_table_name'],
-    transactions_table_name=argument_defaults['transactions_table_name'],
-    dataset_location=argument_defaults['dataset_location'],
-    aml_dataset_name=argument_defaults['aml_dataset_name'],
-    aml_model_name=argument_defaults['aml_model_name'],
-    aml_compute_region=argument_defaults['aml_compute_region'],
-    train_budget=argument_defaults['train_budget'],
-    target_column_name=argument_defaults['target_column_name'],
-    features_to_exclude=argument_defaults['features_to_exclude'],
-    optimization_objective=argument_defaults['optimization_objective'],
-    primary_metric=argument_defaults['primary_metric'],
-    deployment_threshold=argument_defaults['deployment_threshold'],
-    skip_deployment=argument_defaults['skip_deployment'],
-    query_template_uri=argument_defaults['query_template_uri']):
+def clv_train(project_id,
+              source_gcs_path,
+              source_bq_table,
+              bq_dataset_name,
+              threshold_date,
+              predict_end,
+              max_monetary,
+              features_table_name=settings['transactions_table_name'],
+              transactions_table_name=settings['transactions_table_name'],
+              dataset_location=settings['dataset_location'],
+              aml_dataset_name=settings['aml_dataset_name'],
+              aml_model_name=settings['aml_model_name'],
+              aml_compute_region=settings['aml_compute_region'],
+              train_budget=settings['train_budget'],
+              target_column_name=settings['target_column_name'],
+              features_to_exclude=settings['features_to_exclude'],
+              optimization_objective=settings['optimization_objective'],
+              primary_metric=settings['primary_metric'],
+              deployment_threshold=settings['deployment_threshold'],
+              skip_deployment=settings['skip_deployment'],
+              query_template_uri=settings['query_template_uri']):
   """Trains and optionally deploys a CLV Model."""
 
   # Load sales transactions
@@ -145,7 +139,7 @@ def clv_train(
           train_model.outputs['output_model_full_id'])
 
   # Configure the pipeline to use a service account secret
-  if compile_settings['use_sa_secret']:
+  if settings['use_sa_secret']:
     steps = [
         load_transactions, prepare_query, engineer_features, import_dataset,
         train_model, log_metrics, deploy_model

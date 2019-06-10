@@ -1,4 +1,4 @@
-description: 'Retrieves and logs evaluation metrics an AutoML model
+description: 'Retrieves and logs evaluation metrics for an AutoML model
 
   '
 implementation:
@@ -8,7 +8,7 @@ implementation:
     - log_metrics
     - --model-full-id
     - inputValue: model_full_id
-    image: gcr.io/test
+    image: gcr.io
 inputs:
 - description: The full id of the model
   name: model_full_id

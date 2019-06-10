@@ -28,7 +28,7 @@ implementation:
     - outputPath: output_model_full_id
     - --output-primary-metric-value
     - outputPath: output_primary_metric_value
-    image: gcr.io/test
+    image: gcr.io
 inputs:
 - description: The project_id for AutoML processing
   name: project_id
