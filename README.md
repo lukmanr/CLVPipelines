@@ -35,6 +35,7 @@ In addition, you need to familiarize yourself with the key Kubeflow and Kubeflow
 ## Objectives
 - Gain hands-on experience with setting up Kubeflow Pipelines runtime environment on Google Kubernetes Engine
 - Understand how to architect KFP pipelines that orchestrate Google Cloud managed services.
+- Learn how to automate deployment of pipelines, pipeline components, and pipeline artifacts.
 - Learn how to schedule and execute pipelines using both Kubeflow Pipelines UI and KFP SDK APIs.
 - Understand how to customize KFP pipelines
 
@@ -69,6 +70,8 @@ The runtime environment that you set up and use in the tutorial is depicted on t
 ![KFP Runtime](/images/architecture.jpg)
 
 The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through KFP components that wrap Cloud APIs. The container images for the components are managed in **Container Registry**.
+
+**NOTE**. *The below installation procedure installs a full Kubeflow configuration that includes Kubeflow Pipelines and other components. By the end of June, a lightweight configuration that only includes Kubeflow Pipeline components will be supported. At that time the tutorial will be updated to support the lightweight configuration.*
 
 
 
