@@ -48,13 +48,13 @@ steps:
   args:
   - '-c'
   - |
-    dsl-compile --py  src/train_pipeline.py --output $_TRAIN_PIPELINE --disable-type-check
+    dsl-compile --py  src/train_pipeline.py --output ${_TRAIN_PIPELINE}.tar.gz --disable-type-check
   dir: 'clv_pipelines/pipelines'
 - name: 'kfp-compiler'
   args:
   - '-c'
   - |
-    dsl-compile --py  src/batch_predict_pipeline.py --output $_PREDICT_PIPELINE --disable-type-check
+    dsl-compile --py  src/batch_predict_pipeline.py --output ${_PREDICT_PIPELINE}.tar.gz --disable-type-check
   dir: 'clv_pipelines/pipelines'
 
 # Deploy the compiled pipelines
