@@ -163,10 +163,8 @@ The pipeline accepts the following runtime arguments
 Name | Type | Optional | Default | Description
 -----|------|----------|---------|------------
 project_id | GCProjectID | No | | The project to execute processing 
-source_gcs_path | GCSPath | No | 
-The Cloud Storage path to the historical sales transaction data. Must be set to an empty string if source_bq_table is not empty.
-source_bq_table | String | No | | 
-The full id of a BigQuery table with historical sales transaction data. Must be set to an empty string if source_gcs_path is not empty.
+source_gcs_path | GCSPath | No | The Cloud Storage path to the historical sales transaction data. Must be set to an empty string if source_bq_table is not empty.
+source_bq_table | String | No | | The full id of a BigQuery table with historical sales transaction data. Must be set to an empty string if source_gcs_path is not empty.
 bq_dataset_name | String | Yes | | The name of the persistent dataset to keep the sales transactions (if loaded from GCS) and feature tables. If the dataset does not exist, the pipeline will create a new one. If the dataset name not passed the pipeline will create a unique name. 
 transactions_table_name | String | Yes | transactions | 
 The name of the table to keep historical sales transactions data if loaded from GCS. Ignored if the source is BigQuery. If not passed the pipeline will create a unique name.
