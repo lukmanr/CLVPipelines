@@ -103,7 +103,7 @@ FROM
     FROM
       order_summaries a
     WHERE
-      order_date <= DATE('{threshold_date}')
+      order_date <= DATE('{{ threshold_date }}')
     GROUP BY
       customer_id) tf,
 
