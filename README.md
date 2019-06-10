@@ -218,12 +218,9 @@ The below diagram depicts the workflow implemented by the batch predict pipeline
 ![Batch predict](/images/predict.jpg)
 
 1. Load historical sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
-1. Execute a BigQuer query to create features that will be used for model training. The engineered features are stored in a BigQuery table.
-1. Import features to an AutoML dataset.
-1. Trigger AutoML model training.
-1. After training completes, retrieve model evaluation metrics.
-1. Compare the model performance (a value of the primary metric passed as the pipeline’s parameter) against the performance threshold.
-1. If the trained model meets or exceeds the performance threshold deploy the model for online predictions.
+1. Execute a BigQuery query to create features that will be used by the model. The engineered features are stored in a BigQuery table.
+1. Invoke AutoML Tables Batch Predict.
+1. AutoML Tables Batch Predict stores predictions in either GCS or BigQuery
 
 The pipeline accepts the following runtime arguments
 
