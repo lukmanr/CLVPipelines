@@ -182,6 +182,8 @@ optimization_objective|String|No|MINIMIZE_MAE| AutoML Tables optimization object
 primary_metric|String|No|mean_absolute_error|The primary metric to use as a decision for model deployment
 deployment_threshold|Float|No|900|The performance threshold for the primary metric. If the value of the primary metric is lower than the deployment threshold the model is deployed
 skip_deployment|Bool|No|True|The flag forcing skipping model deployment if set to True
+query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that converts historical transaction data to features. When deploying using Cloud Build the default value is set automatically
+
 
 
 
