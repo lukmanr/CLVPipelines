@@ -10,7 +10,7 @@ The pipelines used in the tutorial follow the data pre-processing, training and 
 - AutoML Tables is used for model training, deployment, and scoring.
 
 In the first part of the tutorial you:
-- Install Kubeflow and Kubeflow Pipelines on Google Kubernetes Engine
+- Install Kubeflow Pipelines on Google Kubernetes Engine
 - Configure and deploy two template pipelines:
   - The training and deploymnet pipeline
   - The batch predict pipeline
