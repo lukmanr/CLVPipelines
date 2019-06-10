@@ -172,7 +172,16 @@ dataset_location | String | Yes | US | The location to create the dataset.
 threshold_date | Date (YYYY-MM-DD) | No | | The date that divides the input sales transactions into two groups. The transactions before the threshold are used to calculate the features. The transactions after the threshold and before the predict_end (inclusive) are used to calculate the monetary target. Refer to previous articles in the series for more information.
 predict_end | Date (YYYY-MM-DD) | No|| The transactions between the threshold_date and the predict_end are used to calculate the monetary target. The period between the threshold_end and the predict_end is a customer value prediction period.
 max_monetary | Integer |No||Customers with a calculated value higher than max_monetary are treated as outliers and not included in modeling.
-
+aml_compute_region|String|Yes|us-central1|Compute region for Automl Tables. Currently, the only supported region is us-central1 and it is a default value of the argument.
+aml_dataset_name|String|No|clv_features|The name of the AutoML Tables dataset where features are imported.
+aml_model_name|String|No|clv_regression|The name of the AutoML Tables model
+train_budget|Integer|Yes|1000|AutoML Tables train budget in millihours
+target_column_name|String|No|target_monetary|The name of the column in the features dataset that will be used as a training label
+features_to_exclude|List|Yes|[customer_id]| The list of features to exclude from training
+optimization_objective|String|No|MINIMIZE_MAE| AutoML Tables optimization objective
+primary_metric|String|No|mean_absolute_error|The primary metric to use as a decision for model deployment
+deployment_threshold|Float|No|900|The performance threshold for the primary metric. If the value of the primary metric is lower than the deployment threshold the model is deployed
+skip_deployment|Bool|No|True|The flag forcing skipping model deployment if set to True
 
 
 
