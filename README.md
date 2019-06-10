@@ -183,6 +183,23 @@ primary_metric|String|No|mean_absolute_error|The primary metric to use as a deci
 deployment_threshold|Float|No|900|The performance threshold for the primary metric. If the value of the primary metric is lower than the deployment threshold the model is deployed
 skip_deployment|Bool|No|True|The flag forcing skipping model deployment if set to True
 query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that converts historical transaction data to features. When deploying using Cloud Build the default value is set automatically
+
+#### Input schema
+The pipeline requires the input data (historical sales transactions) to conform to the following schema. In the second part of the tutorial you learn how to customize the pipeline to digest data in other schemas.
+
+
+| Field | Type |
+|-------|------|
+| customer_id | string |
+| order_date | date (yyyy-MM-dd) |
+| quantity | integer |
+| unit_price | float |
+
+The sample dataset used in the tutorial is based on the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. 
+
+The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. The build script copies this file to a GCS folder in your project.
+
+
 #### Uploading and starting the pipeline
 To run the pipeline using Kubeflows Pipelines UI:
 - Connect to Kubeflow Pipelines UI. If you deployed Kubeflow using the Deployment Manager the Kubeflow Dashboard is available at `https:[DEPLOYMENT_NAME].endpoints.[YOUR_PROJECT_ID].cloud.goog`. The Kubeflow Pipelines UI is accessible from the Kubeflow Dashboard.
@@ -192,13 +209,13 @@ To run the pipeline using Kubeflows Pipelines UI:
 
 ### Running the CLV Batch Predict pipeline
 
-The CLV training and deployment pipeline uses historical sales transactions data to train and optionally deploy a machine learning regression model. The model is trained to predict a total value of future purchases in a given timeframe, based on a history of previous purchases. For more information about modeling for customer lifetime value prediction refer to previous articles in [the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
+Like the training pipeline, the batch predict pipeline uses historical sales transactions data as its input. The pipeline applies a trained CLV regression model to generate customer lifetime value predictions.
 
-The below diagram depicts the workflow implemented by training and deployment pipeline.
+The below diagram depicts the workflow implemented by the batch predict pipeline.
 
-#### Training and deployment workflow
+#### Batch predict workflow
 
-![Train and deploy](/images/train.jpg)
+![Batch predict](/images/predict.jpg)
 
 1. Load historical sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
 1. Execute a BigQuer query to create features that will be used for model training. The engineered features are stored in a BigQuery table.
@@ -235,9 +252,6 @@ primary_metric|String|No|mean_absolute_error|The primary metric to use as a deci
 deployment_threshold|Float|No|900|The performance threshold for the primary metric. If the value of the primary metric is lower than the deployment threshold the model is deployed
 skip_deployment|Bool|No|True|The flag forcing skipping model deployment if set to True
 query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that converts historical transaction data to features. When deploying using Cloud Build the default value is set automatically
-
-#### Input schema
-The pipeline requires the input data (historical sales transactions) to conform to the following schema. In the second part of the tutorial you learn how to customize the pipeline to digest data in other schemas.
 
 
 
