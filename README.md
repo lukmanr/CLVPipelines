@@ -93,12 +93,14 @@ The building and deploying process have been automated using [GCP Cloud Build](h
 1. Update the YAML specifications of the AutoML Tables components with the name of the image created in the previous step
 1. Update the settings that control the pipelines' compilation. The values for these settings are provided as build parameters.
 1. Compile the pipelines. 
-1. Deploy the compiled pipelines to a GCS folder your project. The path to the folder is provided as a build parameter.
+1. Deploy the compiled pipelines to a GCS folder in your project. The path to the folder is provided as a build parameter.
 1. Deploy the artifacts used by the pipelines at runtime to a GCS folder in your project. The path to the folder is provided as a build parameter.
 1. Deploy the component images to the Container Registry of your project. 
 1. Copy the sample dataset to a GCS folder in your project. The path to the folder is provided as a build parameter.
 
 
+To start the build process:
+1. Open [Cloud Shell](https://cloud.google.com/shell/docs/) in your project.
 
 
 
