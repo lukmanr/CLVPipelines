@@ -103,7 +103,7 @@ You can submit the build process using the `gcloud builds submit` command. The b
 
 Parameter | Description 
 -----------|-------------
-_CLV_REPO  | The name of this repository (jarokaz/CLVPipelines
+_CLV_REPO  | The name of the tutorial's github repository. 
 _BASE_IMAGE | The name of the image that is used by lightweight Python compoments. Specify the image name only. The image will be pushed to `gcr.io/[YOUR_PROJECT_ID]/[_BASE_IMAGE]`
 _AUTOML_TABLES_IMAGE | The name of the image that hosts AutoML Tables components
 _TRAIN_PIPELINE | The name for the compiled training pipeline. The compiled pipeline will be saved as `[_TRAIN_PIPELINE].tar.gz`
