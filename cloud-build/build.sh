@@ -11,7 +11,7 @@ _PIPELINES_FOLDER=[COMPILED_PIPELINES_FOLDER],\
 _ARTIFACTS_FOLDER=[ARTIFACTS_FOLDER],\
 _SAMPLE_DATASET_FOLDER=[SAMPLE_DATASET_FOLDER]
 
-gcloud builds submit --no-source --config ../CLVPipelines/cloud-build/cloudbuild.yaml \
+gcloud builds submit --no-source --config cloudbuild.yaml \
 --substitutions $SUBSTITUTIONS
 
 
