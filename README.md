@@ -80,7 +80,7 @@ To install Kubeflow, including Kubeflow Pipelines on Google Kubernetes Engine fo
 
 For educational purposes, it is recommended to go through [Deploy using CLI](https://www.kubeflow.org/docs/gke/deploy/deploy-cli/).
 
-Note that it make take up to an hour to complete installation.
+Note that it make take up to an hour to complete the installation.
 
 ## Building and deploying the pipelines
 Before the tutorial's pipelines can be run, they have to be configured, compiled, and deployed in your project.
