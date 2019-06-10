@@ -100,11 +100,12 @@ The building and deploying process have been automated using [GCP Cloud Build](h
 
 You can submit the build process using the `gcloud builds submit` command. The build has been configured to accept as a set of configuration parameters. The values for these parameters can be set when submitting the build job using the `--substitutions` option of the `gcloud builds submit` command. The following parameters are required:
 
-|-----------|-------------|
-| Parameter | Description |
-|-----------|-------------|
-| 1 .       | .           |
-|-----------|-------------|
+
+Parameter | Description 
+-----------|-------------
+_CLV_REPO  | The name of repository
+
+
 
 
 To start the build process:
