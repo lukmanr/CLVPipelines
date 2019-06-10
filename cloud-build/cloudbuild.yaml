@@ -40,6 +40,7 @@ steps:
   - update_pipeline_settings.py 
   - settings.yaml
   - --base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE
+  - --query_template_uri=gs://$_BUCKET_NAME/$_TEMPLATE_FOLDER
   dir: 'clv_pipelines/pipelines'
 
 # Compile the pipelines 
@@ -49,7 +50,6 @@ steps:
   - |
     dsl-compile --py  src/train_pipeline.py --output $_TRAIN_PIPELINE --disable-type-check
   dir: 'clv_pipelines/pipelines'
-
 - name: 'kfp-compiler'
   args:
   - '-c'
@@ -71,7 +71,18 @@ steps:
 
 # Deploy the SQL query template
 - name: 'gcr.io/cloud-builders/gsutil' 
-  args: ['cp', 'src/query_template.sql.jinja', 'gs://$_BUCKET_NAME/$_TEMPLATE_FOLDER']
+  args: 
+  - cp
+  - src/query_template.sql.jinja
+  - gs://$_BUCKET_NAME/$_TEMPLATE_FOLDER/query_template.sql.jinja
+  dir: 'clv_pipelines/pipelines'
+
+# Deploy the sample dataset
+- name: 'gcr.io/cloud-builders/gsutil' 
+  args: 
+  - cp
+  - gs://clv-pipelines/transactions/transactions.csv
+  - gs://$_BUCKET_NAME/$_SAMPLE_DATASET_FOLDER/transactions.csv
   dir: 'clv_pipelines/pipelines'
 
 # Push component images
