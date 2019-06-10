@@ -23,6 +23,8 @@ In the second part of the tutorial you learn how to:
 The runtime environment that you set up and use in the tutorial is depicted on the below diagram:
 ![KFP Runtime](/images/architecture.jpg)
 
+The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through KFP components that wrap Cloud APIs. The container images for the components are managed in **Container Registry**.
+
 
 
 
