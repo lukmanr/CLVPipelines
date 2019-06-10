@@ -56,11 +56,11 @@ def clv_batch_predict(
     max_monetary,
     aml_model_id,
     destination_prefix,
-    features_table_name=settings'transactions_table_name'],
-    transactions_table_name=settings'transactions_table_name'],
-    dataset_location=settings'dataset_location'],
-    aml_compute_region=settings'aml_compute_region'],
-    query_template_uri=settings'query_template_uri']):
+    features_table_name=settings['features_table_name'],
+    transactions_table_name=settings['transactions_table_name'],
+    dataset_location=settings['dataset_location'],
+    aml_compute_region=settings['aml_compute_region'],
+    query_template_uri=settings['query_template_uri']):
   """Prepares and scores sales transactions dataset."""
 
   # Load sales transactions
