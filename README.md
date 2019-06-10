@@ -103,7 +103,10 @@ You can submit the build process using the `gcloud builds submit` command. The b
 
 Parameter | Description 
 -----------|-------------
-_CLV_REPO  | The name of repository
+_CLV_REPO  | The name of this repository (jarokaz/CLVPipelines
+_BASE_IMAGE | The name of the image that will be used as the base image for lightweight Python compoments. Specify the image name only. The image will be pushed to `gcr.io/[YOUR_PROJECT_ID]/[_BASE_IMAGE]
+
+
 
 
 
