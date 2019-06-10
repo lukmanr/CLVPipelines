@@ -261,5 +261,10 @@ In the previous section of the tutorial, you run the pipelines using Kubeflow Pi
 
 To be continued ...
 
+## Customizing the CLV pipelines
+### Customizing compilation settings
+### Customizing data pre-processing scripts
+### Customizing the workflows
+
 
 
