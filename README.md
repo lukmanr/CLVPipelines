@@ -138,7 +138,7 @@ The solution contains two pipelines:
 
 The training and deployment pipeline uses historical sales transactions data to train and optionally deploy a machine learning regression model. The model is trained to predict a total value of future purchases in a given timeframe, based on a history of previous purchases. For more information about modeling for customer lifetime value prediction refer to previous articles in [the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
 
-The below diagram depicts the workflow implemented by training and deployment pipeline.
+The below diagram depicts the workflow implemented by the training and deployment pipeline.
 
 #### Training and deployment workflow
 
