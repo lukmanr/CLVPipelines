@@ -18,10 +18,10 @@ import fire
 import yaml
 
 
-def update_image_name(image_name):
+def update_image_name(spec_folder, image_name):
   """Updates component specifications with a new container image name."""
 
-  for spec_path in pathlib.Path('.').glob('*/component.yaml'):
+  for spec_path in pathlib.Path(spec_folder).glob('*/component.yaml'):
     spec = yaml.safe_load(pathlib.Path(spec_path).read_text())
     spec['implementation']['container']['image'] = image_name
     pathlib.Path(spec_path).write_text(yaml.dump(spec))

@@ -30,18 +30,21 @@ steps:
 # Update AutoML components specs with the container image name 
 - name: 'kfp-compiler'
   entrypoint: 'python'
-  args: ['update_image_name_in_specs.py', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE']
-  dir: 'clv_pipelines/component_specs/automl_tables'
+  args: 
+  - update_image_name_in_specs.py
+  - 
+  - gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE
+  dir: 'clv_pipelines/cloud-build-helpers'
 
 # Update pipeline settings
 - name: 'kfp-compiler'
   entrypoint: 'python'
   args: 
   - update_pipeline_settings.py 
-  - settings.yaml
+  - ../../pipelines/settings.yaml
   - --base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE
   - --query_template_uri=gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja
-  dir: 'clv_pipelines/pipelines'
+  dir: 'clv_pipelines/cloud-build-helpers'
 
 # Compile the pipelines 
 - name: 'kfp-compiler'
