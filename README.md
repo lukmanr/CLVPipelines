@@ -76,6 +76,21 @@ The tutorial has been developed using Kubeflow v5.0
 
 Note that it make take in excess of 30 minutes to complete the installation.
 
+### Updating Kubeflow service account permissions
+The Kubelfow deployment process creates 3 service accounts:
+`<your deployment name>-admin@<your project id>.iam.gserviceaccount.com`
+`<your deployment name>-user@<your project id>.iam.gserviceaccount.com`
+`<your deployment name>-vm@<your project id>.iam.gserviceaccount.com`
+  
+By default, the tutorial's pipelines run using `<your deployment name>-user@<your project id>.iam.gserviceaccount.com` account. This account does not have access to AutoML Tables service.
+  
+To grant AutoML access use GCP Console or `gcloud`.
+```
+gcloud projects add-iam-policy-binding [YOUR_PROJECT_ID] \
+   --member="serviceAccount:<your deployment name>-user@<your project id>.iam.gserviceaccount.com" \
+   --role="roles/automl.admin"
+```
+
 ## Building and deploying the pipelines
 Before the tutorial's pipelines can be run, they have to be configured, compiled, and deployed in your project.
 
