@@ -243,7 +243,7 @@ query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that co
 
 #### Uploading and starting the pipeline
 To run the pipeline using Kubeflows Pipelines UI:
-- Connect to Kubeflow Pipelines UI. If you deployed Kubeflow using the Deployment Manager the Kubeflow Dashboard is available at `https:[DEPLOYMENT_NAME].endpoints.[YOUR_PROJECT_ID].cloud.goog`. The Kubeflow Pipelines UI is accessible from the Kubeflow Dashboard.
+- Connect to Kubeflow Pipelines UI. If you deployed Kubeflow using the Deployment Manager the Kubeflow Dashboard is available at `https://[DEPLOYMENT_NAME].endpoints.[YOUR_PROJECT_ID].cloud.goog`. The Kubeflow Pipelines UI is accessible from the Kubeflow Dashboard.
 - Upload the compile pipeline's `.tar.gz` file. The file can be found in a GCS path configured during the build process
 - Configure the experiment and run the pipeline following the procedure described in [Kubeflow Pipelines Quickstart](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart). Set the required parameters and if required change the default values.
 
