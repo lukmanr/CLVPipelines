@@ -77,7 +77,7 @@ Note that it make take up to an hour to complete the installation.
 ## Building and deploying the pipelines
 Before the tutorial's pipelines can be run, they have to be configured, compiled, and deployed in your project.
 
-The building and deploying process have been automated using [GCP Cloud Build](https://cloud.google.com/cloud-build/docs/).  The build config file can be found in the `/cloud-build` folder of this repo. The build process goes through the following steps:
+The building and deploying of the pipelines have been automated using [GCP Cloud Build](https://cloud.google.com/cloud-build/docs/).  The build config file can be found in the `/cloud-build` folder of this repo. The build process goes through the following steps:
 1. Copy the solution's github repo into the Cloud Build runtime environment
 1. Create a docker image to support custom build steps
 1. Build a base image for the pipeline's helper components (refer to the later sections to understand the pipeline's design). The name of the image is provided as a build parameter.
