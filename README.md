@@ -65,9 +65,9 @@ The runtime environment that you set up and use in the tutorial is depicted on t
 
 The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through KFP components that wrap respective Cloud APIs. The container images for the components are managed in **Container Registry**.
 
+### Using Deployment Manager to install Kubeflow on GCP
 **NOTE**. *The below installation procedure installs a full Kubeflow configuration that includes Kubeflow Pipelines and other components. When a lightweight configuration that only includes Kubeflow Pipeline components is supported the tutorial will be updated.*
 
-### Using Deployment Manager to install Kubeflow on GCP
 To install Kubeflow, including Kubeflow Pipelines on Google Kubernetes Engine follow the instructions on [www.kubeflow.org](https://www.kubeflow.org/docs/gke/deploy/).
 
 **Make sure to configure Identity Aware Proxy (IAP)**. Deploy [v0.5.1](https://github.com/kubeflow/kubeflow/releases) of Kubeflow.
