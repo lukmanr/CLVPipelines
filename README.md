@@ -256,6 +256,24 @@ In the previous section of the tutorial, you run the pipelines using Kubeflow Pi
 
 The scripts in `/run` folder demonstrate how to use `kfp.Client()` to connect to the Kubeflow Pipelines runtime, create experiments and submit runs.
 
+`run_pipeline.py` implements a CLI wrapper around `kfp.Client()`. `run_train.sh` and `run_batch_predict.sh` are example scripts that utilize `run_pipeline.py` to submit pipeline runs.
+
+To submit a run using `run_pipeline.py`
+
+```
+python run_pipeline.py --host [HOST_URL] 
+                       --experiment [EXPERIMENT_NAME]
+                       --run_name [RUN_NAME]
+                       --pipeline_file [COMPILED_PIPELINE_FILE]
+                       --arguments [DICTIONARY_OF_PIPELINE_ARGUMENTS]
+```
+
+
+
+
+
+
+
 
 
 
