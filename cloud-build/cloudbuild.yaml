@@ -36,7 +36,7 @@ steps:
   - gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE
   dir: 'clv_pipelines/cloud-build/helpers'
 
-# Update pipeline settings
+# Update pipeline settings 
 - name: 'kfp-compiler'
   entrypoint: 'python'
   args: 
