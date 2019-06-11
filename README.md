@@ -63,7 +63,7 @@ You can use the Pricing Calculator to generate a cost estimate based on your pro
 The runtime environment that you set up and use in the tutorial is depicted on the below diagram:
 ![KFP Runtime](/images/architecture.jpg)
 
-The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through KFP components that wrap Cloud APIs. The container images for the components are managed in **Container Registry**.
+The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through KFP components that wrap respective Cloud APIs. The container images for the components are managed in **Container Registry**.
 
 **NOTE**. *The below installation procedure installs a full Kubeflow configuration that includes Kubeflow Pipelines and other components. When a lightweight configuration that only includes Kubeflow Pipeline components is supported the tutorial will be updated.*
 
