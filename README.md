@@ -70,7 +70,7 @@ The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** runni
 
 To install Kubeflow, including Kubeflow Pipelines on Google Kubernetes Engine follow the instructions on [www.kubeflow.org](https://www.kubeflow.org/docs/gke/deploy/).
 
-**Make sure to configure Identity Aware Proxy (IAP)**. 
+**Make sure to configure Identity Aware Proxy (IAP) and Create Permanent Storage**.
 
 The tutorial has been developed using Kubeflow v5.0
 
