@@ -312,7 +312,7 @@ A dictionary literal with the pipeline's runtime arguments.
 
 ### Installing Kubeflow Pipelines SDK
 
-To use `kfp.Client()` you need a Python 3.5+ environment with KFP SDK installed. It highly recommended to install KFP SDK into a dedicated Python or Conda environment.
+To use `kfp.Client()` you need a Python 3.5+ environment with KFP SDK installed. It is highly recommended to install KFP SDK into a dedicated Python or Conda environment.
 
 The code in this tutorial was tested with KFP SDK version 0.1.20. 
 
