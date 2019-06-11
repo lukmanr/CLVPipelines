@@ -268,6 +268,27 @@ python run_pipeline.py --host [HOST_URL]
                        --arguments [DICTIONARY_OF_PIPELINE_ARGUMENTS]
 ```
 
+**ARGUMENTS**
+
+`--host`
+The URL to use to interface with Kubeflow Pipelines. For an IAP enabled cluster set it to:
+`https://[YOUR_DEPLOYMENT_NAME].endpoints.[YOUR_PROJECT_ID].[CLIENT_ID]`, where
+[CLIENT_ID] is the client ID used by Identity-Aware Proxy.
+
+`--experiment`
+The name of experiment. If the experiment under this name does not exist it is created.
+
+`--run_name`
+The name of the run.
+
+`--pipeline_file`
+The path to a compiled pipeline package. The package can be in one of the formats:
+`.tar.gz`, `.tgz`, `.zip`a, `.yaml`.
+
+`--arguments`
+A dictionary literal with the pipeline's arguments.
+
+
 
 
 
