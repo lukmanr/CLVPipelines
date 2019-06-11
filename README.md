@@ -265,11 +265,13 @@ Follow the same procedure as for the training and deployment pipeline to configu
 
 ## Running the pipelines using KFP SDK API
 
-In the previous section of the tutorial, you run the pipelines using Kubeflow Pipelines UI. In this part, you submit the pipelines for execution using `kfp.Client()` API from the Kubeflow Pipelines SDK.
+In the previous section of the tutorial, you run the pipelines using Kubeflow Pipelines UI. 
 
-`kfp.Client()` is a programmatic interface to the Kubeflow Pipelines runtime. It can be used to integrate Kubeflow Pipelines with other CI/CD and data management processes.
+You can also interface with Kubeflow Pipelines programatically using  `kfp.Client()` API from the Kubeflow Pipelines SDK.
 
-The scripts in `/run` folder demonstrate how to use `kfp.Client()` to connect to the Kubeflow Pipelines runtime, create experiments and submit runs.
+`kfp.Client()` is a programmatic interface to the Kubeflow Pipelines service. 
+
+The scripts in `/run` folder demonstrate how to use `kfp.Client()` to connect to the Kubeflow Pipelines service, create experiments and submit runs.
 
 `run_pipeline.py` implements a CLI wrapper around `kfp.Client()`. `run_train.sh` and `run_batch_predict.sh` are example scripts that utilize `run_pipeline.py` to submit pipeline runs.
 
@@ -307,6 +309,23 @@ The path to a compiled pipeline package. The package can be in one of the format
 `--arguments`
 
 A dictionary literal with the pipeline's runtime arguments.
+
+### Installing Kubeflow Pipelines SDK
+
+To use `kfp.Client()` you need a Python 3.5+ environment with KFP SDK installed. It highly recommended to install KFP SDK into a dedicated Python or Conda environment.
+
+The code in this tutorial was tested with KFP SDK version 0.1.20. 
+
+```
+SDK_VERSION=0.1.20
+pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
+```
+
+To use `run_pipeline.py` utility you also need [Python Fire package](https://google.github.io/python-fire/guide/). 
+```
+pip install fire
+```
+
 
 
 
