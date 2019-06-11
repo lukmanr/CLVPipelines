@@ -330,7 +330,7 @@ pip install fire
 
 
 ## Customizing the CLV pipelines
-There are three primary ways you can customize the pipelines:
+There are three primary ways you can customize the tutorial's pipelines:
 - Modifying the settings that affect compilation
 - Modifying or replacing data preprocessing SQL script
 - Modifying orchestration
