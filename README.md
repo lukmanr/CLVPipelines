@@ -1,25 +1,19 @@
-This repository maintains code samples for the tutorial **Operationalizing Customer Lifetime Value (CLV) model training and deployment with Kubeflow Pipelines (KFP)**. 
+This repository maintains code samples for the tutorial **Operationalizing Predictive Customer Lifetime Value (CLV) modeling with Kubeflow Pipelines (KFP)**. 
 
 **NOTE**. *The reminder of this README is a draft of the tutorial article that will be published into the solutions section on google.com. After the article is published, the README will be edited to remove duplicate information*
 
 
-The tutorial is the fifth part of the series Predicting Customer Lifetime Value with AI Platform. It demonstrates how to operationalize Customer Lifetime Value model training, deployment and inference using Kubeflow Pipelines (KFP) on Google Kubernetes Engine (GKE). Refer to the [previous articles](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) in the series for more information on Customer Lifetime Value concepts and modeling techniques. 
+The tutorial is the fifth part of the series Predicting Customer Lifetime Value with AI Platform. It demonstrates how to operationalize Customer Lifetime Value modeling workflows using Kubeflow Pipelines (KFP) on Google Kubernetes Engine (GKE). Refer to the [previous articles](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) in the series for more information on Customer Lifetime Value concepts and modeling techniques. 
 
-The pipelines used in the tutorial follow the data pre-processing, training and scoring flow that is similar to one described in [Part 4 of the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-automl-tables) :
+The pipelines used in the tutorial follow the data pre-processing, training and scoring approches that are similar to one described in [Part 4 of the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-automl-tables) :
 - BigQuery is used for data cleansing and feature engineering, and
 - AutoML Tables is used for model training, deployment, and scoring.
 
-In the first part of the tutorial you:
+In the the tutorial you:
 - Install Kubeflow Pipelines on Google Kubernetes Engine
-- Configure and deploy two template pipelines:
-  - The training and deploymnet pipeline
-  - The batch predict pipeline
-- Run the pipelines using Kubeflow Pipelines UI
-
-In the second part of the tutorial you learn how to:
+- Configure, compile and deploy KFP pipelines orchestrating training, deployment and inference workflows 
+- Run the pipelines using Kubeflow Pipelines UI and Kubeflow Pipelines SDK
 - Customize the pipelines
-- Customize the deployment process
-- Trigger pipeline runs using Kubeflow Pipelines SDK
 
 The tutorial assumes that you have a basic understanding of the following GCP concepts and services:
 - GCP Projects
@@ -35,9 +29,9 @@ In addition, you need to familiarize yourself with the key Kubeflow and Kubeflow
 ## Objectives
 - Gain hands-on experience with setting up Kubeflow Pipelines runtime environment on Google Kubernetes Engine
 - Understand how to architect KFP pipelines that orchestrate Google Cloud managed services.
-- Learn how to automate deployment of pipelines, pipeline components, and pipeline artifacts.
+- Learn how to automate building and deployment of pipelines, pipeline components, and pipeline artifacts.
 - Learn how to schedule and execute pipelines using both Kubeflow Pipelines UI and KFP SDK APIs.
-- Understand how to customize KFP pipelines
+- Understand how to customize template KFP pipelines
 
 ## Costs
 This tutorial uses billable components of Google Cloud Platform, including:
@@ -71,21 +65,19 @@ The runtime environment that you set up and use in the tutorial is depicted on t
 
 The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through KFP components that wrap Cloud APIs. The container images for the components are managed in **Container Registry**.
 
-**NOTE**. *The below installation procedure installs a full Kubeflow configuration that includes Kubeflow Pipelines and other components. By the end of June, a lightweight configuration that only includes Kubeflow Pipeline components will be supported. At that time the tutorial will be updated to support the lightweight configuration.*
+**NOTE**. *The below installation procedure installs a full Kubeflow configuration that includes Kubeflow Pipelines and other components. When a lightweight configuration that only includes Kubeflow Pipeline components is supported the tutorial will be updated.*
 
 ### Using Deployment Manager to install Kubeflow on GCP
 To install Kubeflow, including Kubeflow Pipelines on Google Kubernetes Engine follow the instructions on [www.kubeflow.org](https://www.kubeflow.org/docs/gke/deploy/).
 
 **Make sure to configure Identity Aware Proxy (IAP)**. Deploy [v0.5.1](https://github.com/kubeflow/kubeflow/releases) of Kubeflow.
 
-For educational purposes, it is recommended to go through [Deploy using CLI](https://www.kubeflow.org/docs/gke/deploy/deploy-cli/).
-
 Note that it make take up to an hour to complete the installation.
 
 ## Building and deploying the pipelines
 Before the tutorial's pipelines can be run, they have to be configured, compiled, and deployed in your project.
 
-The building and deploying process have been automated using [GCP Cloud Build](https://cloud.google.com/cloud-build/docs/).  The build config file can be found in `/cloud-build` folder of this repo. The build process goes through the following steps:
+The building and deploying process have been automated using [GCP Cloud Build](https://cloud.google.com/cloud-build/docs/).  The build config file can be found in the `/cloud-build` folder of this repo. The build process goes through the following steps:
 1. Copy the solution's github repo into the Cloud Build runtime environment
 1. Create a docker image to support custom build steps
 1. Build a base image for the pipeline's helper components (refer to the later sections to understand the pipeline's design). The name of the image is provided as a build parameter.
@@ -98,7 +90,7 @@ The building and deploying process have been automated using [GCP Cloud Build](h
 1. Deploy the component images to the Container Registry of your project. 
 1. Copy the sample dataset to a GCS folder in your project. The path to the folder is provided as a build parameter.
 
-You can submit the build process using the `gcloud builds submit` command. The build has been configured to accept as a set of configuration parameters. The values for these parameters can be set when submitting the build job using the `--substitutions` option of the `gcloud builds submit` command. The following parameters are required:
+You can submit the build process using the `gcloud builds submit` command. The build has been configured to accept a set of runtime arguments. The values for these arguments are set when submitting the build job using the `--substitutions` option of the `gcloud builds submit` command. The following arguments are required:
 
 
 
@@ -130,7 +122,7 @@ cd [DIRECTORY_NAME]
 wget https://raw.githubusercontent.com/jarokaz/CLVPipelines/master/cloud-build/cloudbuild.yaml
 wget https://raw.githubusercontent.com/jarokaz/CLVPipelines/master/cloud-build/build.sh
 ```
-3. Update `build.sh` with your parameter values
+3. Update `build.sh` with your argument values
 4. Start the build
 ```
 chmod 755 build.sh
@@ -138,9 +130,14 @@ chmod 755 build.sh
 ```
 
 ## Running the pipelines using Kubeflow Pipelines UI
-### Running the CLV Training and Deployment pipeline
+The solution contains two pipelines:
+- The pipeline that orchestrates training and deployment of a Customer Lifetime Value regression model
+- The pipeline that executes batch scoring using a trained Customer Lifetime Value regression model
 
-The CLV training and deployment pipeline uses historical sales transactions data to train and optionally deploy a machine learning regression model. The model is trained to predict a total value of future purchases in a given timeframe, based on a history of previous purchases. For more information about modeling for customer lifetime value prediction refer to previous articles in [the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
+
+### Running the training and deployment pipeline
+
+The training and deployment pipeline uses historical sales transactions data to train and optionally deploy a machine learning regression model. The model is trained to predict a total value of future purchases in a given timeframe, based on a history of previous purchases. For more information about modeling for customer lifetime value prediction refer to previous articles in [the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
 
 The below diagram depicts the workflow implemented by training and deployment pipeline.
 
@@ -149,12 +146,12 @@ The below diagram depicts the workflow implemented by training and deployment pi
 ![Train and deploy](/images/train.jpg)
 
 1. Load historical sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
-1. Execute a BigQuer query to create features that will be used for model training. The engineered features are stored in a BigQuery table.
+1. Execute a BigQuery query to create features from the historical sales transactions. The engineered features are stored in a BigQuery table.
 1. Import features to an AutoML dataset.
 1. Trigger AutoML model training.
-1. After training completes, retrieve model evaluation metrics.
-1. Compare the model performance (a value of the primary metric passed as the pipeline’s parameter) against the performance threshold.
-1. If the trained model meets or exceeds the performance threshold deploy the model for online predictions.
+1. After training completes, retrieve the model's evaluation metrics.
+1. Compare the model's performance against the performance threshold.
+1. If the model meets or exceeds the performance threshold deploy the model for online predictions.
 
 The pipeline accepts the following runtime arguments
 
@@ -207,9 +204,9 @@ To run the pipeline using Kubeflows Pipelines UI:
 - Configure the experiment and run the pipeline following the procedure described in [Kubeflow Pipelines Quickstart](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart). Set the required parameters and if required change the default values.
 
 
-### Running the CLV Batch Predict pipeline
+### Running the batch predict pipeline
 
-Like the training pipeline, the batch predict pipeline uses historical sales transactions data as its input. The pipeline applies a trained CLV regression model to generate customer lifetime value predictions.
+Like the training pipeline, the batch predict pipeline uses historical sales transactions data as its input. The pipeline applies the trained CLV  model to generate customer lifetime value predictions.
 
 The below diagram depicts the workflow implemented by the batch predict pipeline.
 
@@ -217,10 +214,10 @@ The below diagram depicts the workflow implemented by the batch predict pipeline
 
 ![Batch predict](/images/predict.jpg)
 
-1. Load historical sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
-1. Execute a BigQuery query to create features that will be used by the model. The engineered features are stored in a BigQuery table.
-1. Invoke AutoML Tables Batch Predict.
-1. AutoML Tables Batch Predict stores predictions in either GCS or BigQuery
+1. Load sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
+1. Execute a BigQuery query to create features from the sales transactions. The engineered features are stored in a BigQuery table.
+1. Invoke AutoML Tables Batch Predict service to score the data.
+1. AutoML Tables Batch Predict stores resulting predictions in either GCS or BigQuery
 
 The pipeline accepts the following runtime arguments
 
@@ -257,9 +254,9 @@ To run the pipeline using Kubeflows Pipelines UI:
 
 In the previous section of the tutorial, you run the pipelines using Kubeflow Pipelines UI. In this part, you submit the pipelines for execution using `kfp.Client()` API from the Kubeflow Pipelines SDK.
 
-`kfp.Client()` is a programmatic interface to the Kubeflow Pipelines runtime.
+`kfp.Client()` is a programmatic interface to the Kubeflow Pipelines runtime. It can be used to integrate Kubeflow Pipelines with other CI/CD and data management processes.
 
-To be continued ...
+
 
 ## Customizing the CLV pipelines
 ### Customizing compilation settings
