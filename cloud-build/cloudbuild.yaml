@@ -15,12 +15,12 @@ steps:
 # Build a base image for lightweight components
 - name: 'gcr.io/cloud-builders/docker' 
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_BASE_IMAGE', '.'] 
-  dir: 'clv_pipelines/component_images/lightweight_components_base_image'
+  dir: 'clv_pipelines/components/lightweight_components_base_image'
 
 # Build the AutoML Tables component image
 - name:  'gcr.io/cloud-builders/docker' 
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE', '.'] 
-  dir: 'clv_pipelines/component_images/automl_tables'
+  dir: 'clv_pipelines/components/automl_tables'
 
 # Create the image for custom build steps 
 - name: 'gcr.io/cloud-builders/docker'
@@ -32,9 +32,9 @@ steps:
   entrypoint: 'python'
   args: 
   - update_image_name_in_specs.py
-  - 
+  - ../../components_specs/automl_tables 
   - gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE
-  dir: 'clv_pipelines/cloud-build-helpers'
+  dir: 'clv_pipelines/cloud-build/helpers'
 
 # Update pipeline settings
 - name: 'kfp-compiler'
