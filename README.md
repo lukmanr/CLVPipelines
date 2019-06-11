@@ -72,12 +72,9 @@ To install Kubeflow, including Kubeflow Pipelines on Google Kubernetes Engine fo
 
 **Make sure to configure Identity Aware Proxy (IAP)**. 
 
-Use this link to deploy a version of Kubeflow that has been used for the tutorial.
+The tutorial has been developed using Kubeflow v5.0
 
-https://deploy.kubeflow.cloud/#/deploy?version=336eeb6637b38ae474f00657c4e9b9550397e03d
-
-
-Note that it make take up to an hour to complete the installation.
+Note that it make take in excess of 30 minutes to complete the installation.
 
 ## Building and deploying the pipelines
 Before the tutorial's pipelines can be run, they have to be configured, compiled, and deployed in your project.
@@ -256,6 +253,10 @@ Follow the same procedure as for the training and deployment pipeline to configu
 In the previous section of the tutorial, you run the pipelines using Kubeflow Pipelines UI. In this part, you submit the pipelines for execution using `kfp.Client()` API from the Kubeflow Pipelines SDK.
 
 `kfp.Client()` is a programmatic interface to the Kubeflow Pipelines runtime. It can be used to integrate Kubeflow Pipelines with other CI/CD and data management processes.
+
+The scripts in `/run` folder demonstrate how to use `kfp.Client()` to connect to the Kubeflow Pipelines runtime, create experiments and submit runs.
+
+
 
 
 
