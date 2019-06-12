@@ -23,7 +23,8 @@ def update_pipeline_settings(settings_file, **new_settings):
 
   settings = yaml.safe_load(pathlib.Path(settings_file).read_text())
   for key, value in new_settings.items():
-    settings['settings'][key] = value
+    section, setting = key.split('.')
+    settings[section][setting] = value
   pathlib.Path(settings_file).write_text(yaml.dump(settings))
 
 if __name__ == '__main__':
