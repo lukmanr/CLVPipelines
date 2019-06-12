@@ -24,19 +24,19 @@ from kfp import gcp
 
 
 # Load pipeline settings
-settings = yaml.safe_load(pathlib.Path('settings.yaml').read_text())['settings']
+compiler_settings = yaml.safe_load(pathlib.Path('settings.yaml').read_text())['compiler_settings']
+argument_defaults = yaml.safe_load(pathlib.Path('settings.yaml').read_text())['argument_defaults']
 
 # Initialize component store
-component_store = kfp.components.ComponentStore(settings['local_search_paths'],
-                                                settings['url_search_prefixes'])
-
+component_store = kfp.components.ComponentStore(compiler_settings['local_search_paths'],
+                                                compiler_settings['url_search_prefixes'])
 
 # Create component factories
 load_sales_transactions_op = kfp.components.func_to_container_op(
-    load_sales_transactions, base_image=settings['base_image'])
+    load_sales_transactions, base_image=compiler_settings['lightweight_components_base_image'])
 prepare_feature_engineering_query_op = kfp.components.func_to_container_op(
     prepare_feature_engineering_query,
-    base_image=settings['base_image'])
+    base_image=compiler_settings['lightweight_components_base_image'])
 engineer_features_op = component_store.load_component('bigquery/query')
 batch_predict_op = component_store.load_component('aml-batch-predict')
 
@@ -56,11 +56,11 @@ def clv_batch_predict(
     max_monetary,
     aml_model_id,
     destination_prefix,
-    features_table_name=settings['features_table_name'],
-    transactions_table_name=settings['transactions_table_name'],
-    dataset_location=settings['dataset_location'],
-    aml_compute_region=settings['aml_compute_region'],
-    query_template_uri=settings['query_template_uri']):
+    features_table_name=argument_defaults['features_table_name'],
+    transactions_table_name=argument_defaults['transactions_table_name'],
+    dataset_location=argument_defaults['dataset_location'],
+    aml_compute_region=argument_defaults['aml_compute_region'],
+    query_template_uri=argument_defaults['query_template_uri']):
   """Prepares and scores sales transactions dataset."""
 
   # Load sales transactions
@@ -108,7 +108,7 @@ def clv_batch_predict(
   predict_batch.after(engineer_features)
 
   # Configure the pipeline to use a service account secret
-  if settings['use_sa_secret']:
+  if compiler_settings['use_sa_secret']:
     steps = [load_transactions, prepare_query, engineer_features, predict_batch]
     for step in steps:
       step.apply(gcp.use_gcp_secret('user-gcp-sa'))
