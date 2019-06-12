@@ -13,7 +13,7 @@
 # limitations under the License.
 """CLV training and deployment pipeline."""
 
-from helper_components import (load_sales_transactions,
+from helpers import (load_sales_transactions,
                                prepare_feature_engineering_query)
 
 import yaml
