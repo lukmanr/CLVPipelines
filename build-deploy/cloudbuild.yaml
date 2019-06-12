@@ -15,7 +15,7 @@ steps:
 # Build a base image for lightweight components
 - name: 'gcr.io/cloud-builders/docker' 
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_BASE_IMAGE', '.'] 
-  dir: 'clv_pipelines/pipelines/src/helpers'
+  dir: 'clv_pipelines/pipelines/helpers'
 
 # Build the AutoML Tables component image
 - name:  'gcr.io/cloud-builders/docker' 
