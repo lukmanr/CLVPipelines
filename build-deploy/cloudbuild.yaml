@@ -42,7 +42,7 @@ steps:
   args: 
   - update_pipeline_settings.py 
   - ../../pipelines/settings.yaml
-  - --compiler_settings.base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE
+  - --compiler_settings.lightweight_components_base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE
   - --argument_defaults.query_template_uri=gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja
   dir: 'clv_pipelines/build-deploy/helpers'
 
