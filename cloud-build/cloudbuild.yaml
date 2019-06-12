@@ -84,7 +84,7 @@ steps:
 - name: 'gcr.io/cloud-builders/gsutil' 
   args: 
   - cp
-  - gs://clv-pipelines/transactions/transactions.csv
+  - gs://clv-datasets/transactions/transactions.csv
   - gs://$_BUCKET_NAME/$_SAMPLE_DATASET_FOLDER/transactions.csv
   dir: 'clv_pipelines/pipelines'
 
