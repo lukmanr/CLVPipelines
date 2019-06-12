@@ -25,7 +25,7 @@ steps:
 # Create the image for custom build steps 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'kfp-compiler', '.']
-  dir: 'clv_pipelines/cloud-build/kfp-compiler-builder'
+  dir: 'clv_pipelines/build-deploy/kfp-compiler-builder'
 
 # Update AutoML components specs with the container image name 
 - name: 'kfp-compiler'
@@ -34,7 +34,7 @@ steps:
   - update_image_name_in_specs.py
   - ../../components/automl_tables/specs 
   - gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE
-  dir: 'clv_pipelines/cloud-build/helpers'
+  dir: 'clv_pipelines/build-deploy/helpers'
 
 # Update pipeline settings 
 - name: 'kfp-compiler'
@@ -44,7 +44,7 @@ steps:
   - ../../pipelines/settings.yaml
   - --base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE
   - --query_template_uri=gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja
-  dir: 'clv_pipelines/cloud-build/helpers'
+  dir: 'clv_pipelines/build-deploy/helpers'
 
 # Compile the pipelines 
 - name: 'kfp-compiler'
