@@ -61,7 +61,7 @@ The pipeline requires the input data (historical sales transactions) to conform 
 | Field | Type | Description |
 |-------|------|-------------|
 | customer_id | string | A unique customer ID |
-| order_date | date (yyyy-MM-dd) | The date of a transaction. Transactiona (potentially from multiple invoices) are grouped by day |
+| order_date | date (yyyy-MM-dd) | The date of a transaction. Transactions (potentially from multiple invoices) are grouped by day |
 | quantity | integer | A number of items of a single SKU in a transaction |
 | unit_price | float | A unit price of a SKU |
 
@@ -69,8 +69,21 @@ The pipeline requires the input data (historical sales transactions) to conform 
 
 The feature engineering phase of the pipeline generates a BigQuery table with the following schema.
 
+The timeline before the threshold date is refered to as *features period*.
+The timeline between the threshold date and the predict end is refered to as *predict period*.
+
+
 | Field | Type | Description |
-| customer_id | String |
+| customer_id | String | A unique customer ID |
+| monetary | Float | The total spend by a customer in the features period|
+| frequency | Integer | The number of transactions placed by a customer in the features period |
+| recency | Integer |  The time (in days) between the first and the last orders in the features period |
+| T | Integer | The time between the first order placed and in the features period |
+| time_between | Float |  The average time betwee orders in the features period |
+| avg_basket_value | Float |  The averate monetary value of the customer's basket in the features period |
+| avg_basket_size | Float |  The average number of items in a basket in the features perio|
+| cnt_returns | Integer |  The number of returns in the features period|
+| target_monetary | Float | The total amount spent in the predict period. This is the label for predictions|
 
 ## Batch predict pipeline
 Like the training pipeline, the batch predict pipeline uses historical sales transactions data as its input. The pipeline applies the trained CLV  model to generate customer lifetime value predictions.
