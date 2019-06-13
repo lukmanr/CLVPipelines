@@ -1,4 +1,4 @@
-# Customer Lifetime Value Pipelines
+# Customer Lifetime Value Training and Inference Pipelines
 
 This folder contains source code for two KFP Pipelines:
 - Train and deploy
