@@ -153,7 +153,7 @@ The pipeline uses the same data preprocessing and feature engineering flow as th
 
 Both the training and the batch predict pipelines can be customized at three levels:
 - Fine tuning of the YAML settings file
-- Modyfing data preprocess and feature engineering steps
+- Modyfing data preprocessing and feature engineering logic
 - Recoding the workflow
 
 ### Modifying the YAML settings file
@@ -168,6 +168,15 @@ In the `argument_defaults` section, you can define the default values for the pi
 - `use_sa_secret` - If set to True the pipelines will be compiled to use the KFP user service account to access external resources. Otherwise the pipelines will be compiled to use the default GCE service account of GKE nodes to access external resources.
 
 To take effect, the `settings.yaml` file must be located in the directory from which the KFP `dsl-compiler` is invoked. 
+
+### Modyfing data preprocessing and featuring engineering logic
+
+The data preprocessing and feature engineering logic is encapsulated in a SQL query template. As described in the previous section, during a pipeline's run the template is converted into a BigQuery SQL query and submitted for execution by the **Prepare query** and **BigQuery** components. 
+
+If a different logic needs to be implemented - for example new input columns, new features or a different logic for existing features - the SQL template and **Prepare query** components can be modified.
+
+The pipelines use a very flexible approach when passing features to the training steps of the workflow. The AutoML Tables Import Dataset component can import any schema as long a label feature has the `Float` data type. Furthermore, the AutoML Tables Train Model component can be instructuted (through a runtime parameter) what features to use for training. As such no modifications to the training and deployment or batch predict part of the workflow are required when fine tuning the data preprocessing and feature engineering query template.
+
 
 ### Modifying the workflow
 
