@@ -55,7 +55,7 @@ deployment_threshold|Float|No|900|A performance threshold for the primary metric
 skip_deployment|Bool|No|True|Mode deployment is skipped if set to True
 query_template_uri|GCSPath|No||A GCS path to a BigQuery query template that converts historical transaction data to features. When deploying using Cloud Build the default value is set automatically
 
-### Input schema
+### Sales transactions input schema
 The pipeline requires the input data (historical sales transactions) to conform to the following schema. 
 
 | Field | Type | Description |
@@ -65,7 +65,7 @@ The pipeline requires the input data (historical sales transactions) to conform 
 | quantity | integer | A number of items of a single SKU in a transaction |
 | unit_price | float | A unit price of a SKU |
 
-### Output schema
+### Features schema
 
 The feature engineering phase of the pipeline generates a BigQuery table with the following schema.
 
