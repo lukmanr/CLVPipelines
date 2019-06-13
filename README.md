@@ -43,7 +43,7 @@ The solution accelerator has been developed and tested on Kubeflow Pipelines on 
 The runtime environment required by the solution accelerator is depicted on the below diagram:
 ![KFP Runtime](/images/architecture.jpg)
 
-The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services  The container images for the components utilized by the pipelines are managed in **Container Registry**.
+The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services. The container images for the components utilized by the pipelines are managed in **Container Registry**.
 
 ### Building a runtime environment
 
