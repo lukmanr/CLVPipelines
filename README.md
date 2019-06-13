@@ -24,9 +24,9 @@ Refer to `/pipelines/README.md` for more information on the pipelines' design an
 
 ### AutoML Tables KFP components
 
-The pipelines utilize a number of KFP components including a custom KFP component that wraps AutoML Tables API. The source code for the component can be found in the `components/automl_tables` folder.
+The pipelines utilize a number of KFP components including custom KFP components that wrap selected AutoML Tables APIs. The source code for the components can be found in the `components/automl_tables` folder.
 
-Refer to `/components/automl_tables/README.md` for more information on the component's design and usage.
+Refer to `/components/automl_tables/README.md` for more information on the components' design and usage.
 
 ### Build and deployment automation
 
