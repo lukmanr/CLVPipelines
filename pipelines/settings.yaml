@@ -12,6 +12,7 @@ argument_defaults:
   target_column_name: target_monetary
   train_budget: 1000
   transactions_table_name: transactions
+  query_template_uri: 
 compiler_settings:
   base_image: gcr.io
   lightweight_components_base_image: gcr.io

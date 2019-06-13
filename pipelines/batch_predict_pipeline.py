@@ -13,7 +13,7 @@
 # limitations under the License.
 """Batch Predict Pipeline."""
 
-from helpers import (load_sales_transactions,
+from helper_components import (load_sales_transactions,
                                prepare_feature_engineering_query)
 
 import yaml
