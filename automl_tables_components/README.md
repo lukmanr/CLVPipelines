@@ -10,38 +10,11 @@ There are five components:
 - Log Evaluation Metrics - retrieves and logs (as an KFP Markdown artifact) the  evaluation metrics for an AutoML model
 
 
-## Import Dataset
-### Intended use
-### Runtime arguments
-### Output
-### Cautions & requirements
-### Implementation Details
-
-## Train Model
-### Intended use
-### Runtime arguments
-### Output
-### Cautions & requirements
-### Implementation Details
-
-## Batch Predict
-### Intended use
-### Runtime arguments
-### Output
-### Cautions & requirements
-### Implementation Details
-
-## Log Evaluation Metrics
-### Intended use
-### Runtime arguments
-### Output
-### Cautions & requirements
-### Implementation Details
 
 ## Folder content
 
 The folder structure:
 - `./Dockerfile` - All components are packaged into a single Docker image
-- `src` - Source code for the components
-- `specs` - YAML specifications of the components
+- `src` - Source code and docs for the components
+- `specs` - YAML specifications for the components in the `kfp.ComponentStore` compatible folder structure
 - `tests` - Scripts to help with testing.
