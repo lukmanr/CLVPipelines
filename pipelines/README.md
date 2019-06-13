@@ -133,7 +133,7 @@ predict_end | Date (YYYY-MM-DD) | No|| The transactions between the threshold_da
 max_monetary | Integer |No||Customers with a calculated value higher than max_monetary are treated as outliers and not included in modeling.
 aml_compute_region|String|Yes|us-central1|A compute region for Automl Tables. Currently, the only supported region is us-central1 and it is a default value of the argument.
 aml_model_id|String|No||The full ID  of the AutoML Tables model to use for inference.
-destination_prefix|String|No||The URI prefix of the destination for predictions. `gs://[BUCKET]/[FOLDER]` for GCS destination. `bq://[YOUR_PROJECT_ID]` for BigQuery destination
+destination_prefix|String|No||The URI prefix of the destination for predictions. `gs://[BUCKET]/[FOLDER]` for GCS destination. `bq://[PROJECT_ID]` for BigQuery destination
 query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that converts historical transaction data to features. When deploying using Cloud Build the default value is set automatically
 
 
