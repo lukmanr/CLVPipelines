@@ -58,6 +58,21 @@ A dictionary literal with the pipeline's runtime arguments.
 
 
 
+### Installing Kubeflow Pipelines SDK
+
+To use `kfp.Client()` you need a Python 3.5+ environment with KFP SDK installed. It is highly recommended to install KFP SDK into a dedicated Python or Conda environment.
+
+The code in this tutorial was tested with KFP SDK version 0.1.20. 
+
+```
+SDK_VERSION=0.1.20
+pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
+```
+
+To use `run_pipeline.py` utility you also need [Python Fire package](https://google.github.io/python-fire/guide/). 
+```
+pip install fire
+```
 
 
 
