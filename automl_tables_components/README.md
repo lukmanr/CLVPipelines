@@ -11,15 +11,37 @@ There are five components:
 
 
 ## Import Dataset
+### Intended use
+### Runtime arguments
+### Output
+### Cautions & requirements
+### Implementation Details
+
 ## Train Model
+### Intended use
+### Runtime arguments
+### Output
+### Cautions & requirements
+### Implementation Details
+
 ## Batch Predict
+### Intended use
+### Runtime arguments
+### Output
+### Cautions & requirements
+### Implementation Details
+
 ## Log Evaluation Metrics
+### Intended use
+### Runtime arguments
+### Output
+### Cautions & requirements
+### Implementation Details
 
-## Implementatation details
-
-All components are packaged into a single Docker image described by the `Dockerfile` in `/automl_tables_components
+## Folder content
 
 The folder structure:
+- `./Dockerfile` - All components are packaged into a single Docker image
 - `src` - Source code for the components
 - `specs` - YAML specifications of the components
 - `tests` - Scripts to help with testing.
