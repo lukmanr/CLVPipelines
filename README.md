@@ -146,43 +146,11 @@ chmod 755 build.sh
 ```
 
 ## Running the pipelines using Kubeflow Pipelines UI
-The solution contains two pipelines:
-- The pipeline that orchestrates training and deployment of a Customer Lifetime Value regression model
-- The pipeline that executes batch scoring using a trained Customer Lifetime Value regression model
 
-
-### Running the training and deployment pipeline
-
-The training and deployment pipeline uses historical sales transactions data to train and optionally deploy a machine learning regression model. The model is trained to predict a total value of future purchases in a given timeframe, based on a history of previous purchases. For more information about modeling for customer lifetime value prediction refer to previous articles in [the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
-
-The below diagram depicts the workflow implemented by the training and deployment pipeline.
-
-#### Training and deployment workflow
-
-
-
-
-#### Uploading and starting the pipeline
-To run the pipeline using Kubeflows Pipelines UI:
+To run the pipelines using Kubeflows Pipelines UI:
 - Connect to Kubeflow Pipelines UI. If you deployed Kubeflow using the Deployment Manager the Kubeflow Dashboard is available at `https:[DEPLOYMENT_NAME].endpoints.[YOUR_PROJECT_ID].cloud.goog`. The Kubeflow Pipelines UI is accessible from the Kubeflow Dashboard.
 - Locate the `tar.gz` file containing the compiled pipeline in the GCS location configured in the build.
-- Upload the compile pipeline, configure an experiment and start a run following the procedure described in [Kubeflow Pipelines Quickstart](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart). Set the required parameters and if required change the default values.
-
-
-### Running the batch predict pipeline
-
-Like the training pipeline, the batch predict pipeline uses historical sales transactions data as its input. The pipeline applies the trained CLV  model to generate customer lifetime value predictions.
-
-
-
-#### Batch predict workflow
-
-
-
-
-#### Running the pipeline
-Follow the same procedure as for the training and deployment pipeline to configure and start a run.
-
+- Upload the compiled pipeline, configure an experiment and start a run following the procedure described in [Kubeflow Pipelines Quickstart](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart). Set the required parameters and if required change the default values.
 
 
 ## Running the pipelines using KFP SDK API
