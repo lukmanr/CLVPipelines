@@ -1,4 +1,4 @@
-This repository maintains code samples for the tutorial **Operationalizing Predictive Customer Lifetime Value (CLV) modeling with Kubeflow Pipelines (KFP)**. 
+This repository maintains the **Operationalizing Predictive Customer Lifetime Value (CLV) model training, deployment, and inference and  with Kubeflow Pipelines (KFP)** solution accelerator.
 
 **NOTE**. *The reminder of this README is a draft of the tutorial article that will be published into the solutions section on google.com. After the article is published, the README will be edited to remove duplicate information*
 
