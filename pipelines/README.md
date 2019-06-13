@@ -58,16 +58,19 @@ query_template_uri|GCSPath|No||A GCS path to a BigQuery query template that conv
 ### Input schema
 The pipeline requires the input data (historical sales transactions) to conform to the following schema. 
 
-| Field | Type |
+| Field | Type | Description |
 |-------|------|
-| customer_id | string |
-| order_date | date (yyyy-MM-dd) |
-| quantity | integer |
-| unit_price | float |
+| customer_id | string | A unique customer ID |
+| order_date | date (yyyy-MM-dd) | The date of a transaction. Transactiona (potentially from multiple invoices) are grouped by day |
+| quantity | integer | A number of items of a single SKU in a transaction |
+| unit_price | float | A unit price of a SKU |
 
 ### Output schema
 
 The feature engineering phase of the pipeline generates a BigQuery table with the following schema.
+
+| Field | Type | Description |
+| customer_id | String |
 
 ## Batch predict pipeline
 Like the training pipeline, the batch predict pipeline uses historical sales transactions data as its input. The pipeline applies the trained CLV  model to generate customer lifetime value predictions.
