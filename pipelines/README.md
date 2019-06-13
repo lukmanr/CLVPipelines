@@ -74,6 +74,7 @@ The timeline between the threshold date and the predict end is refered to as *pr
 
 
 | Field | Type | Description |
+|-------|------|-------------|
 | customer_id | String | A unique customer ID |
 | monetary | Float | The total spend by a customer in the features period|
 | frequency | Integer | The number of transactions placed by a customer in the features period |
