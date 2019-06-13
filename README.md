@@ -70,41 +70,19 @@ gcloud projects add-iam-policy-binding [YOUR_PROJECT_ID] \
    --role="roles/automl.admin"
 ```
 
+### Kubeflow Pipelines installation automation
+
+TBD
+
+`/kfp-installation`
 
 
 
 
-### Installing Kubeflow Pipelines SDK
 
-To use `kfp.Client()` you need a Python 3.5+ environment with KFP SDK installed. It is highly recommended to install KFP SDK into a dedicated Python or Conda environment.
+## Acknowledgements
 
-The code in this tutorial was tested with KFP SDK version 0.1.20. 
+The sample dataset used in the solution accelrator is based on the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. 
 
-```
-SDK_VERSION=0.1.20
-pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
-```
-
-To use `run_pipeline.py` utility you also need [Python Fire package](https://google.github.io/python-fire/guide/). 
-```
-pip install fire
-```
-
-
-
-
-## Customizing the CLV pipelines
-There are three primary ways you can customize the tutorial's pipelines:
-- Modifying the settings that affect compilation
-- Modifying or replacing data preprocessing SQL script
-- Modifying orchestration
-### Customizing compilation settings
-### Customizing feature engineering
-### Customizing orchestration
-
-
-
-he sample dataset used in the tutorial is based on the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. 
-
-The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. The build script copies this file to a GCS folder in your project.
+The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. 
 
