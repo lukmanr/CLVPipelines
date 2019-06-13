@@ -57,11 +57,11 @@ The solution accelerator has been developed using Kubeflow v5.0 and Kubeflow Pip
 
 ### Updating Kubeflow service account permissions
 The Kubelfow deployment process creates 3 service accounts:
-`<your deployment name>-admin@<your project id>.iam.gserviceaccount.com`
-`<your deployment name>-user@<your project id>.iam.gserviceaccount.com`
-`<your deployment name>-vm@<your project id>.iam.gserviceaccount.com`
+- `<your deployment name>-admin@<your project id>.iam.gserviceaccount.com`
+- `<your deployment name>-user@<your project id>.iam.gserviceaccount.com`
+- `<your deployment name>-vm@<your project id>.iam.gserviceaccount.com`
   
-By default, the tutorial's pipelines run using `<your deployment name>-user@<your project id>.iam.gserviceaccount.com` account. This account does not have access to AutoML Tables service.
+By default, the pipelines run using `<your deployment name>-user@<your project id>.iam.gserviceaccount.com` account. This account does not have access to AutoML Tables service.
   
 To grant AutoML access use GCP Console or `gcloud`.
 ```
