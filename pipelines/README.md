@@ -4,7 +4,7 @@ This folder contains source code for two KFP Pipelines:
 
 Folder content
 
-- `train_pipeline.oy` - The training and deployment pipeline DSL
+- `train_pipeline.py` - The training and deployment pipeline DSL
 - `batch_predict.py` - The batch predict pipeline DSL
 - `helper_components/helper_components.py` - Utility components used by the pipelines. Implemented as KFP Lightweight Python components
 - `helper_components/Dockerfile` - A base image for utility components
