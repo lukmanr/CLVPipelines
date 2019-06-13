@@ -7,8 +7,8 @@ This repository maintains the **Operationalizing Predictive Customer Lifetime Va
 The **Operationalizing Predictive Customer Lifetime Value (CLV) modeling with Kubeflow Pipelines (KFP)** solution accelerator provides automation of CLV modeling techniques described in the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series of articles.
 
 The solution accelerater includes the following components:
-- Training and inference KFP pipelines - `/pipelines`
-- AutoML Tables KFP components - `/components`
+- Training and inference KFP pipelines - `/clv_pipelines`
+- AutoML Tables KFP components - `/automl_tables_components`
 - Build and deployment automation - `/build-deploy`
 - Sample integration code - `/run`
 
@@ -20,13 +20,13 @@ The solution accelerator includes two template KFP Pipelines:
 
 Both pipelines use BigQuery for data preprocessing and feature engineering and AutoML Tables for model training, deployment and inference.
 
-Refer to `/pipelines/README.md` for more information on the pipelines' design and usage.
+Refer to `/clv_pipelines/README.md` for more information on the pipelines' design and usage.
 
 ### AutoML Tables KFP components
 
 The pipelines utilize a number of KFP components including custom KFP components that wrap selected AutoML Tables APIs. The source code for the components can be found in the `components/automl_tables` folder.
 
-Refer to `/components/automl_tables/README.md` for more information on the components' design and usage.
+Refer to `/automl_tables_components/README.md` for more information on the components' design and usage.
 
 ### Build and deployment automation
 
