@@ -164,6 +164,12 @@ In the `argument_defaults` section, you can define the default values for the pi
 - `lightweight_components_base_image` - the full name of a container image used to run helper lightweight Python components
 - `local_search_path` - a (YAML encoded) list of local file system paths that the DSL compiler searches to find component specfications
 - `url_search_prefixes` - a (YAML encoded ) list of URL prefixes that the DSL compiler searches to find component specifications
-- `use_sa_secret` - If set to True the pipelines will be compiled to use KFP user service account to access external resources. Otherwise the pipelines will be compiled to use a default GCE service account of GKE nodes to access external resources.
+- `use_sa_secret` - If set to True the pipelines will be compiled to use the KFP user service account to access external resources. Otherwise the pipelines will be compiled to use the default GCE service account of GKE nodes to access external resources.
 
 To take effect, the `settings.yaml` file must be located in the directory from which the KFP `dsl-compiler` is invoked. 
+
+### Modifying the workflow
+
+If a workflow implemented by a pipeline needs to be modified - for example, the expression used to decided whether and when to deploy a trained model needs to be fine tuned  - the pipeline's DSL can be re-coded.
+
+
