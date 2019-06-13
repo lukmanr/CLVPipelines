@@ -11,6 +11,7 @@ All components are packaged into a single Docker image described by `Dockerfile`
 
 The folder structure:
 - `src` - Source code for the components
+- `specs` - YAML specifications of the components
 - `tests` - TBD. Currently some helper scripts.
 
 
