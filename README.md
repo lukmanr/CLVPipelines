@@ -1,4 +1,4 @@
-# Operationalizing Predictive Customer Lifetime Value (CLV) modeling  with Kubeflow Pipelines (KFP)
+# Solution Accelerator - Operationalizing Predictive Customer Lifetime Value (CLV) modeling  with Kubeflow Pipelines (KFP)
 
 ## Overview
 
