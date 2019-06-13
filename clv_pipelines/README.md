@@ -96,7 +96,7 @@ The pipeline utilizes the following components:
   
 #### BigQuery component
 
-[BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) is a standard GCP component published with Kubeflow Pipelines distribution. The component is used to convert input sales transactions data in [*input schema*](##heading). 
+[BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) is a standard GCP component published with Kubeflow Pipelines distribution. The component is used to convert input sales transactions data in [*input schema*](#heading). 
 
 #### AutoML Tables components
 
