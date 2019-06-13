@@ -1,8 +1,8 @@
 # Customer Lifetime Value Training and Inference Pipelines
 
 This folder contains source code for two KFP Pipelines:
-- Customer lifetime value training and deployment pipeline
-- Customer lifetime value batch prediction pipeline
+- The CLV training and deployment pipeline
+- The CLV batch prediction pipeline
 
 
 ## CLV training and deployment pipeline
