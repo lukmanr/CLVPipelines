@@ -1,25 +1,17 @@
 # Customer Lifetime Value Training and Inference Pipelines
 
 This folder contains source code for two KFP Pipelines:
-- Train and deploy
-- Batch predict
+- Customer lifetime value training and deployment pipeline
+- Customer lifetime value batch prediction pipeline
 
-Folder content
 
-- `train_pipeline.py` - The training and deployment pipeline DSL
-- `batch_predict.py` - The batch predict pipeline DSL
-- `helper_components/helper_components.py` - Utility components used by the pipelines. Implemented as KFP Lightweight Python components
-- `helper_components/Dockerfile` - A base image for utility components
-- `artificats/query_template.sql.jinja` - The template for BigQuery SQL query used for data preprocessing
-- `settings.yaml` - Default values for the pipelines parameters and compiler pragmas
-
-## Training and deployment pipeline
+## CLV training and deployment pipeline
 The training and deployment pipeline uses historical sales transactions data to train and optionally deploy a machine learning regression model. The model is trained to predict a total value of future purchases in a given timeframe, based on a history of previous purchases. For more information about modeling for customer lifetime value prediction refer to previous articles in [the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
 
-
 ### Pipeline design
-The below diagram depicts the workflow implemented by the training and deployment pipeline
+The pipeline uses BigQuery for data preprocessing and feature engineering and AutoML Tables for model training and deployment.
 
+The below diagram depicts the workflow implemented by the pipeline:
 ![Train and deploy](/images/train.jpg)
 
 1. Load historical sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
@@ -60,9 +52,8 @@ deployment_threshold|Float|No|900|The performance threshold for the primary metr
 skip_deployment|Bool|No|True|The flag forcing skipping model deployment if set to True
 query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that converts historical transaction data to features. When deploying using Cloud Build the default value is set automatically
 
-#### Input schema
-The pipeline requires the input data (historical sales transactions) to conform to the following schema. In the second part of the tutorial you learn how to customize the pipeline to digest data in other schemas.
-
+### Input schema
+The pipeline requires the input data (historical sales transactions) to conform to the following schema. 
 
 | Field | Type |
 |-------|------|
@@ -71,9 +62,9 @@ The pipeline requires the input data (historical sales transactions) to conform 
 | quantity | integer |
 | unit_price | float |
 
-The sample dataset used in the tutorial is based on the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. 
+### Output schema
 
-The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. The build script copies this file to a GCS folder in your project.
+The feature engineering phase of the pipeline generates a BigQuery table with the following schema.
 
 ## Batch predict pipeline
 Like the training pipeline, the batch predict pipeline uses historical sales transactions data as its input. The pipeline applies the trained CLV  model to generate customer lifetime value predictions.
@@ -110,3 +101,12 @@ destination_prefix|String|No||The URI prefix of the destination for predictions.
 query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that converts historical transaction data to features. When deploying using Cloud Build the default value is set automatically
 
 
+
+
+## Folder content
+- `train_pipeline.py` - The training and deployment pipeline DSL
+- `batch_predict.py` - The batch predict pipeline DSL
+- `helper_components/helper_components.py` - Utility components used by the pipelines. Implemented as KFP Lightweight Python components
+- `helper_components/Dockerfile` - A base image for utility components
+- `artificats/query_template.sql.jinja` - The template for BigQuery SQL query used for data preprocessing
+- `settings.yaml` - Default values for the pipelines parameters and compiler pragmas
