@@ -86,6 +86,14 @@ The timeline between the threshold date and the predict end is refered to as *pr
 | cnt_returns | Integer |  The number of returns in the features period|
 | target_monetary | Float | The total amount spent in the predict period. This is the label for predictions|
 
+### Implementation details
+The pipeline utilizes the following components:
+- [**BigQuery component**](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433). This is a standard GCP component published with Kubeflow Pipelines distribution.
+- **AutoML Tables component**. This is a custom KFP component developed as part of the CLV solution. The **AutoML Tables** component is a wrapper around selected AutoML Tables APIs. The source code for the component can be found in `/components/automl_tables` in this repo.
+- **Load transactions** and **Prepare query** components. These are helper components implemented as KFP Lightweight Python components. The source code for the components is in `helper_components\helper_components.py`.
+  - **Load transactions** loads a CSV file with sales transactions in a staging GCS table.
+  - **Prepare query** generates the feature engineering BigQuery query by substituting placeholders in the query template with the values passed as the pipeline's runtime arguments.
+
 ## Batch predict pipeline
 Like the training pipeline, the batch predict pipeline uses historical sales transactions data as its input. The pipeline applies the trained CLV  model to generate customer lifetime value predictions.
 
