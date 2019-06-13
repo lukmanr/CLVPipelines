@@ -100,7 +100,6 @@ The next steps in the pipeline use the custom AutoML Tables components (refer to
 
 #### Model deployment
 After the training step completes, the pipeline retrieves the trained model's evaluation metrics and compares the value of the primary metric to the threshold value. Both the primary metric name and the threshold value are passed as the pipeline's runtime arguments. If the performance of the trained model exceeds the threshold value the model is deployed as an AutoML Tables deployment.
-  
 
 ## CLV Batch predict pipeline
 
@@ -152,4 +151,19 @@ The pipeline uses the same data preprocessing and feature engineering flow as th
 
 ## Customizing the pipelines
 
+Both the training and the batch predict pipelines can be customized at two levels:
+- Through fine tuning of the YAML settings file
+- By recoding the workflow
 
+### Modifying the YAML settings file
+The pipelines have been designed to minimize hard-coded values. Most pipeline settings are centralized in a single settings file - `settings.yaml`. The file uses the YAML format and has two sections:
+- `argument_defaults`
+- `compiler_settings`
+
+In the `argument_defaults` section, you can define the default values for the pipelines' runtime arguments. In the `compiler_settings` section you define the settings that control how the KFP `dsl-compiler` converts Python DSL into the resulting YAML. Currently, the following `compiler_settings` are supported:
+- `lightweight_components_base_image` - the location of a container image used to run helper lightweight Python components
+- `local_search_path` - a (YAML encoded) list of local file system paths that the DSL compiler searches to find component specfications
+- `url_search_prefixes` - a (YAML encoded ) list of URL prefixes that the DSL compiler searches to find component specifications
+- `use_sa_secret` - If set to True the pipelines will be compiled to use KFP user service account to access external resources. Otherwise the pipelines will be compiled to use a default GCE service account of GKE nodes to access external resources.
+
+To take effect, the `settings.yaml` file must be located in the directory from which the KFP `dsl-compiler` is invoked. 
