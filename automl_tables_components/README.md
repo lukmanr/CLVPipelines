@@ -18,3 +18,4 @@ The folder structure:
 - `src` - Source code and docs for the components
 - `specs` - YAML specifications for the components in the `kfp.ComponentStore` compatible folder structure
 - `tests` - Scripts to help with testing.
+- `docs` - Documentation formatted in AI Hub convention.
