@@ -14,6 +14,9 @@ Folder content
 - `settings.yaml` - Default values for the pipelines parameters and compiler pragmas
 
 ## Training and deployment pipeline
+The training and deployment pipeline uses historical sales transactions data to train and optionally deploy a machine learning regression model. The model is trained to predict a total value of future purchases in a given timeframe, based on a history of previous purchases. For more information about modeling for customer lifetime value prediction refer to previous articles in [the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro).
+
+
 ### Pipeline design
 The below diagram depicts the workflow implemented by the training and deployment pipeline
 
@@ -73,6 +76,8 @@ The sample dataset used in the tutorial is based on the publicly available [Onli
 The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. The build script copies this file to a GCS folder in your project.
 
 ## Batch predict pipeline
+Like the training pipeline, the batch predict pipeline uses historical sales transactions data as its input. The pipeline applies the trained CLV  model to generate customer lifetime value predictions.
+
 ### Pipeline design
 The below diagram depicts the workflow implemented by the batch predict pipeline.
 ![Batch predict](/images/predict.jpg)
