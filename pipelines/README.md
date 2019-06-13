@@ -14,7 +14,7 @@ Folder content
 - `settings.yaml` - Default values for the pipelines parameters and compiler pragmas
 
 ## Training and deployment pipeline
-### Pipline design
+### Pipeline design
 The below diagram depicts the workflow implemented by the training and deployment pipeline
 
 ![Train and deploy](/images/train.jpg)
