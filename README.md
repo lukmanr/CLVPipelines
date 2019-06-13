@@ -1,34 +1,60 @@
+# Operationalizing Predictive Customer Lifetime Value (CLV) modeling  with Kubeflow Pipelines (KFP)
+
+## Overview
+
 This repository maintains the **Operationalizing Predictive Customer Lifetime Value (CLV) modeling  with Kubeflow Pipelines (KFP)** solution accelerator.
 
 The **Operationalizing Predictive Customer Lifetime Value (CLV) modeling with Kubeflow Pipelines (KFP)** solution accelerator provides automation of CLV modeling techniques described in the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series of articles.
 
 The solution accelerater includes the following components:
-- Training and Inference KFP Pipelines - `/pipelines`
+- Training and inference KFP pipelines - `/pipelines`
 - AutoML Tables KFP components - `/components`
-- Build and Deployment Automation - `/build-deploy`
+- Build and deployment automation - `/build-deploy`
 - Sample integration code - `/run`
 
+### Training and inference KFP pipelines
 
+The solution accelerator includes two template KFP Pipelines:
+- The pipeline that automates CLV model training and deployment
+- The pipeline that automates batch inference using a trained CLV model
 
+Both pipelines use BigQuery for data preprocessing and feature engineering and AutoML Tables for model training, deployment and inference.
 
+Refer to `/pipelines/README.md` for more information on the pipelines' design and usage.
 
-## Installing Kubeflow Pipelines on Google Kubernetes Engine
+### AutoML Tables KFP components
 
-The runtime environment that you set up and use in the tutorial is depicted on the below diagram:
+The pipelines utilize a number of KFP components including a custom KFP component that wraps AutoML Tables API. The source code for the component can be found in the `components/automl_tables` folder.
+
+Refer to `/components/automl_tables/README.md` for more information on the component's design and usage.
+
+### Build and deployment automation
+
+The process of customizing, compiling and deploying the pipelines and the AutoML Tables component has been automated using Google Cloud Build service. The automation script and its documentation are in the `/build-deploy` folder.
+
+### Sample integration code
+
+The pipelines can be run using Kubeflow Pipelines UI but they can also be integrated with other systems by using `kfp.Client()` programmatic interface. The `/run` folder contains codes samples demonstrating how to use `kfp.Client()` interface.
+
+## Target runtime environment
+
+The solution accelerator has been developed and tested on Kubeflow Pipelines on Google Cloud Platform Kubernetes Engine (GKE). 
+
+The runtime environment required by the solution accelerator is depicted on the below diagram:
 ![KFP Runtime](/images/architecture.jpg)
 
-The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through KFP components that wrap respective Cloud APIs. The container images for the components are managed in **Container Registry**.
+The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services  The container images for the components utilized by the pipelines are managed in **Container Registry**.
 
-### Using Deployment Manager to install Kubeflow on GCP
-**NOTE**. *The below installation procedure installs a full Kubeflow configuration that includes Kubeflow Pipelines and other components. When a lightweight configuration that only includes Kubeflow Pipeline components is supported the tutorial will be updated.*
+### Building a runtime environment
+
+**NOTE**. *The below installation procedure installs a full Kubeflow configuration that includes Kubeflow Pipelines and other components. When a lightweight configuration that only includes Kubeflow Pipeline components is supported this reference will be updated*
 
 To install Kubeflow, including Kubeflow Pipelines on Google Kubernetes Engine follow the instructions on [www.kubeflow.org](https://www.kubeflow.org/docs/gke/deploy/).
 
 **Make sure to configure Identity Aware Proxy (IAP) and Create Permanent Storage**.
 
-The tutorial has been developed using Kubeflow v5.0
+The solution accelerator has been developed using Kubeflow v5.0 and Kubeflow Pipelines v0.1.20
 
-Note that it make take in excess of 30 minutes to complete the installation.
 
 ### Updating Kubeflow service account permissions
 The Kubelfow deployment process creates 3 service accounts:
