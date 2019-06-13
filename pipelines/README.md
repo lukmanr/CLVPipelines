@@ -29,7 +29,7 @@ The below diagram depicts the workflow implemented by the training and deploymen
 
 The pipeline accepts the following runtime arguments
 
-#### Runtime arguments
+### Runtime arguments
 
 Name | Type | Optional | Default | Description
 -----|------|----------|---------|------------
@@ -69,4 +69,35 @@ The pipeline requires the input data (historical sales transactions) to conform 
 The sample dataset used in the tutorial is based on the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. 
 
 The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. The build script copies this file to a GCS folder in your project.
+
+## Batch predict pipeline
+### Pipeline design
+The below diagram depicts the workflow implemented by the batch predict pipeline.
+![Batch predict](/images/predict.jpg)
+
+1. Load sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
+1. Execute a BigQuery query to create features from the sales transactions. The engineered features are stored in a BigQuery table.
+1. Invoke AutoML Tables Batch Predict service to score the data.
+1. AutoML Tables Batch Predict stores resulting predictions in either GCS or BigQuery
+
+The pipeline accepts the following runtime arguments
+### Runtime arguments
+
+Name | Type | Optional | Default | Description
+-----|------|----------|---------|------------
+project_id | GCProjectID | No | | The project to execute processing 
+source_gcs_path | GCSPath | No | |The Cloud Storage path to the historical sales transaction data. Must be set to an empty string if source_bq_table is not empty.
+source_bq_table | String | No | | The full id of a BigQuery table with historical sales transaction data. Must be set to an empty string if source_gcs_path is not empty.
+bq_dataset_name | String | Yes | | The name of the persistent dataset to keep the sales transactions (if loaded from GCS) and feature tables. If the dataset does not exist, the pipeline will create a new one. If the dataset name not passed the pipeline will create a unique name. 
+transactions_table_name | String | Yes | transactions | The name of the table to keep historical sales transactions data if loaded from GCS. Ignored if the source is BigQuery. If not passed the pipeline will create a unique name.
+features_table_name | String | Yes | features | The name of the table to keep engineered features. If not passed the pipeline will create a unique name.
+dataset_location | String | Yes | US | The location to create the dataset. 
+threshold_date | Date (YYYY-MM-DD) | No | | The date that divides the input sales transactions into two groups. The transactions before the threshold are used to calculate the features. The transactions after the threshold and before the predict_end (inclusive) are used to calculate the monetary target. Refer to previous articles in the series for more information.
+predict_end | Date (YYYY-MM-DD) | No|| The transactions between the threshold_date and the predict_end are used to calculate the monetary target. The period between the threshold_end and the predict_end is a customer value prediction period.
+max_monetary | Integer |No||Customers with a calculated value higher than max_monetary are treated as outliers and not included in modeling.
+aml_compute_region|String|Yes|us-central1|Compute region for Automl Tables. Currently, the only supported region is us-central1 and it is a default value of the argument.
+aml_model_id|String|No||The full ID  of the AutoML Tables model to use for inference.
+destination_prefix|String|No||The URI prefix of the destination for predictions. `gs://[BUCKET]/[FOLDER]` for GCS destination. `bq://[YOUR_PROJECT_ID]` for BigQuery destination
+query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that converts historical transaction data to features. When deploying using Cloud Build the default value is set automatically
+
 
