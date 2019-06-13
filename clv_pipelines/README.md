@@ -161,7 +161,7 @@ The pipelines have been designed to minimize hard-coded values. Most pipeline se
 - `compiler_settings`
 
 In the `argument_defaults` section, you can define the default values for the pipelines' runtime arguments. In the `compiler_settings` section you define the settings that control how the KFP `dsl-compiler` converts Python DSL into the resulting YAML. Currently, the following `compiler_settings` are supported:
-- `lightweight_components_base_image` - the location of a container image used to run helper lightweight Python components
+- `lightweight_components_base_image` - the full name of a container image used to run helper lightweight Python components
 - `local_search_path` - a (YAML encoded) list of local file system paths that the DSL compiler searches to find component specfications
 - `url_search_prefixes` - a (YAML encoded ) list of URL prefixes that the DSL compiler searches to find component specifications
 - `use_sa_secret` - If set to True the pipelines will be compiled to use KFP user service account to access external resources. Otherwise the pipelines will be compiled to use a default GCE service account of GKE nodes to access external resources.
