@@ -27,9 +27,11 @@ The below diagram depicts the workflow implemented by the training and deploymen
 1. Compare the model's performance against the performance threshold.
 1. If the model meets or exceeds the performance threshold deploy the model for online predictions.
 
-The pipeline accepts the following runtime arguments
 
 ### Runtime arguments
+
+The pipeline accepts the following runtime arguments
+
 
 Name | Type | Optional | Default | Description
 -----|------|----------|---------|------------
@@ -80,8 +82,10 @@ The below diagram depicts the workflow implemented by the batch predict pipeline
 1. Invoke AutoML Tables Batch Predict service to score the data.
 1. AutoML Tables Batch Predict stores resulting predictions in either GCS or BigQuery
 
-The pipeline accepts the following runtime arguments
 ### Runtime arguments
+
+The pipeline accepts the following runtime arguments
+
 
 Name | Type | Optional | Default | Description
 -----|------|----------|---------|------------
