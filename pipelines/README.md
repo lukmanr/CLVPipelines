@@ -143,3 +143,6 @@ query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that co
 The pipeline uses the same components as the training pipeline.
 
 
+## Customizing the pipelines
+
+
