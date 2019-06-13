@@ -1,30 +1,9 @@
 This repository maintains the **Operationalizing Predictive Customer Lifetime Value (CLV) model training, deployment, and inference and  with Kubeflow Pipelines (KFP)** solution accelerator.
 
-**NOTE**. *The reminder of this README is a draft of the tutorial article that will be published into the solutions section on google.com. After the article is published, the README will be edited to remove duplicate information*
+The **Operationalizing Predictive Customer Lifetime Value (CLV) model training, deployment, and inference and  with Kubeflow Pipelines (KFP)** solution accelerator provides automation of CLV modeling techniques described in the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series of articles.
 
+The solution accelerater includes the following components:
 
-The tutorial is the fifth part of the series Predicting Customer Lifetime Value with AI Platform. It demonstrates how to operationalize Customer Lifetime Value modeling workflows using Kubeflow Pipelines (KFP) on Google Kubernetes Engine (GKE). Refer to the [previous articles](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) in the series for more information on Customer Lifetime Value concepts and modeling techniques. 
-
-The pipelines used in the tutorial follow the data pre-processing, training and scoring approches that are similar to one described in [Part 4 of the series](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-automl-tables) :
-- BigQuery is used for data cleansing and feature engineering, and
-- AutoML Tables is used for model training, deployment, and scoring.
-
-In the the tutorial you:
-- Install Kubeflow Pipelines on Google Kubernetes Engine
-- Configure, compile and deploy KFP pipelines orchestrating training, deployment and inference workflows 
-- Run the pipelines using Kubeflow Pipelines UI and Kubeflow Pipelines SDK
-- Customize the pipelines
-
-The tutorial assumes that you have a basic understanding of the following GCP concepts and services:
-- GCP Projects
-- Cloud Shell
-- Cloud Storage
-- BigQuery
-- Google Kubernetes Engine
-- AutoML Tables
-- Cloud Build
-
-In addition, you need to familiarize yourself with the key Kubeflow and Kubeflow Pipelines concepts as described on [www.kubeflow.org](http://www.kubeflow.org).
 
 ## Objectives
 - Gain hands-on experience with setting up Kubeflow Pipelines runtime environment on Google Kubernetes Engine
