@@ -94,8 +94,15 @@ The pipeline utilizes the following components:
   - **Load transactions** loads a CSV file with sales transactions in a staging GCS table.
   - **Prepare query** generates the feature engineering BigQuery query by substituting placeholders in the query template with the values passed as the pipeline's runtime arguments.
 
-## Batch predict pipeline
-Like the training pipeline, the batch predict pipeline uses historical sales transactions data as its input. The pipeline applies the trained CLV  model to generate customer lifetime value predictions.
+## CLV Batch predict pipeline
+
+### Pipeline design
+
+The pipeline uses the same pre-processing and feature engineering steps as the training pipeline. AutoML Tables Predict is used for batch predictions.
+
+The below diagram depicts the workflow implemented by the pipeline:
+
+
 
 ### Pipeline design
 The below diagram depicts the workflow implemented by the batch predict pipeline.
