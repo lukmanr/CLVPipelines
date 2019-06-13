@@ -17,7 +17,7 @@ The below diagram depicts the workflow implemented by the pipeline:
 ![Train and deploy](/images/train.jpg)
 
 1. Load historical sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
-1. Prepare a BigQuery query. The query is generated from a query template using runtime arguments (like a location of source data) passed to the pipeline.
+1. Prepare a BigQuery query. The query is generated from a query template and runtime arguments passed to the pipeline.
 1. Execute a BigQuery query to create features from the historical sales transactions. The engineered features are stored in a BigQuery table.
 1. Import features to an AutoML dataset.
 1. Trigger AutoML model training.
