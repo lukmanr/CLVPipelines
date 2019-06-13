@@ -55,7 +55,7 @@ deployment_threshold|Float|No|900|A performance threshold for the primary metric
 skip_deployment|Bool|No|True|Mode deployment is skipped if set to True
 query_template_uri|GCSPath|No||A GCS path to a BigQuery query template that converts historical transaction data to features. When deploying using Cloud Build the default value is set automatically
 
-###Input schema
+### Input schema
 The pipeline requires the input data (historical sales transactions) to conform to the following schema. 
 
 | Field | Type | Description |
@@ -65,7 +65,7 @@ The pipeline requires the input data (historical sales transactions) to conform 
 | quantity | integer | A number of items of a single SKU in a transaction |
 | unit_price | float | A unit price of a SKU |
 
-###Output-schema
+### Output schema
 
 The feature engineering phase of the pipeline generates a BigQuery table with the following schema.
 
@@ -86,6 +86,8 @@ The timeline between the threshold date and the predict end is refered to as *pr
 | cnt_returns | Integer |  The number of returns in the features period|
 | target_monetary | Float | The total amount spent in the predict period. This is the label for predictions|
 
+# heading
+
 ### Implementation details
 The pipeline utilizes the following components:
 - **BigQuery component**]
@@ -94,7 +96,7 @@ The pipeline utilizes the following components:
   
 #### BigQuery component
 
-[BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) is a standard GCP component published with Kubeflow Pipelines distribution. The component is used to convert input sales transactions data in [*input schema*]( to features in *output schema*. 
+[BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) is a standard GCP component published with Kubeflow Pipelines distribution. The component is used to convert input sales transactions data in [*input schema*](#heading). 
 
 #### AutoML Tables components
 
