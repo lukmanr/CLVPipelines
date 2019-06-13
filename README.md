@@ -30,7 +30,7 @@ Refer to `/components/automl_tables/README.md` for more information on the compo
 
 ### Build and deployment automation
 
-The process of customizing, compiling and deploying the pipelines and the AutoML Tables component has been automated using Google Cloud Build service. The automation script and its documentation are in the `/build-deploy` folder.
+The process of customizing, compiling and deploying the pipelines and the AutoML Tables components has been automated using Google Cloud Build service. The automation script and its documentation are in the `/build-deploy` folder.
 
 ### Sample integration code
 
