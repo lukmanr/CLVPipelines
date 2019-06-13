@@ -59,7 +59,7 @@ query_template_uri|GCSPath|No||A GCS path to a BigQuery query template that conv
 The pipeline requires the input data (historical sales transactions) to conform to the following schema. 
 
 | Field | Type | Description |
-|-------|------|
+|-------|------|-------------|
 | customer_id | string | A unique customer ID |
 | order_date | date (yyyy-MM-dd) | The date of a transaction. Transactiona (potentially from multiple invoices) are grouped by day |
 | quantity | integer | A number of items of a single SKU in a transaction |
