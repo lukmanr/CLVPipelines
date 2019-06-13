@@ -12,6 +12,8 @@ The training and deployment pipeline uses historical sales transactions data to 
 The pipeline uses BigQuery for data preprocessing and feature engineering and AutoML Tables for model training and deployment.
 
 The below diagram depicts the workflow implemented by the pipeline:
+
+
 ![Train and deploy](/images/train.jpg)
 
 1. Load historical sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
