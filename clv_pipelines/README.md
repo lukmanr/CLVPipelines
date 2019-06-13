@@ -91,11 +91,9 @@ The timeline between the threshold date and the predict end is refered to as *pr
 #### Data preprocessing and feature engineering
 The pipeline uses the custom **Load transactions** component - implemented as a [ligthweight Python compoment](https://www.kubeflow.org/docs/pipelines/sdk/lightweight-python-components/) - to check for the location of an input dataset with sales transactions. If the input dataset is in GCS, **Load transactions** moves the data to a staging table in BigQuery. If the input dataset is already in BigQuery **Load transactions** moves on.
 
-Another [ligthweight Python compoment](https://www.kubeflow.org/docs/pipelines/sdk/lightweight-python-components/) - **Prepare query** - loads a sql query template and substitutes placeholders in the template with the values passed to it as runtime parameters. The template location is also passed as a runtime parameter. The automated build process using Cloud Build automatically sets the template location to the proper URL. The template is encoded using [Jinja2](http://jinja.pocoo.org/).
+Another [ligthweight Python compoment](https://www.kubeflow.org/docs/pipelines/sdk/lightweight-python-components/) - **Prepare query** - loads a sql query template and substitutes placeholders in the template with the values passed to it as runtime parameters. The template location is also passed as a runtime parameter. The automated build process automatically sets the default value of the template location to the GCS URL where the template was deployed. The template is encoded using [Jinja2](http://jinja.pocoo.org/) format and **Prepare query** uses **Jinja2** library to substitue placeholders.
 
-
-
-The pipeline utilizes the standard [BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) for data preprocessing and feature engineering. The component converts input sales transactions in [input schema](#sales-transactions-input-schema) to features in [output schema](#features-schema).
+The finalized query is passed to the standard [BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) component that converts input sales transactions in [input schema](#sales-transactions-input-schema) to features in [output schema](#features-schema).
 
 
 #### Model training
