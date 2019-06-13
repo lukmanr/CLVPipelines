@@ -14,7 +14,6 @@ argument_defaults:
   transactions_table_name: transactions
   query_template_uri: 
 compiler_settings:
-  base_image: gcr.io
   lightweight_components_base_image: gcr.io
   local_search_paths:
   - ../automl_tables_components/specs
