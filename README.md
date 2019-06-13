@@ -45,7 +45,7 @@ The runtime environment required by the solution accelerator is depicted on the 
 
 The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services. The container images for the components utilized by the pipelines are managed in **Container Registry**.
 
-### Building a runtime environment
+### Building runtime environment
 
 **NOTE**. *The below installation procedure installs a full Kubeflow configuration that includes Kubeflow Pipelines and other components. When a lightweight configuration that only includes Kubeflow Pipeline components is supported this reference will be updated*
 
