@@ -76,7 +76,7 @@ steps:
 - name: 'gcr.io/cloud-builders/gsutil' 
   args: 
   - cp
-  - src/artifacts/query_template.sql.jinja
+  - artifacts/query_template.sql.jinja
   - gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja
   dir: 'clv_pipelines/pipelines'
 
