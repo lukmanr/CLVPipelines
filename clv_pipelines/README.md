@@ -146,14 +146,15 @@ query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that co
 
 
 ### Implementation details
-The pipeline uses the same data preprocessing and feature engineering flow as the training pipeline. After the features are generated and stored in a BigQuery table the pipeline triggers batch scoring by invoking AutoML Batch Predict service the custom AutoML tables component. The output - predictions - is stored in GCS or BigQuery. The output destination is passed as the pipeline's runtime parameter.
+The pipeline uses the same data preprocessing and feature engineering flow as the training pipeline. After the features are generated and stored in a BigQuery table, the pipeline triggers batch scoring by invoking AutoML Batch Predict component. The output - CLV predictions - is stored in GCS or BigQuery. The output destination is passed as the pipeline's runtime parameter.
 
 
 ## Customizing the pipelines
 
-Both the training and the batch predict pipelines can be customized at two levels:
-- Through fine tuning of the YAML settings file
-- By recoding the workflow
+Both the training and the batch predict pipelines can be customized at three levels:
+- Fine tuning of the YAML settings file
+- Modyfing data preprocess and feature engineering steps
+- Recoding the workflow
 
 ### Modifying the YAML settings file
 The pipelines have been designed to minimize hard-coded values. Most pipeline settings are centralized in a single settings file - `settings.yaml`. The file uses the YAML format and has two sections:
