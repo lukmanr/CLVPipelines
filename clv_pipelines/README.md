@@ -93,25 +93,14 @@ The pipeline uses a custom **Load transactions** component - implemented as a [l
 
 Another [ligthweight Python compoment](https://www.kubeflow.org/docs/pipelines/sdk/lightweight-python-components/) - **Prepare query** - loads a sql query template and substitutes placeholders in the template with the values passed to it as runtime parameters. The template location is also passed as a runtime parameter. The automated build process automatically sets the default value of the template location to the GCS URL where the template was deployed. The template is encoded using [Jinja2](http://jinja.pocoo.org/) format and **Prepare query** uses **Jinja2** library to substitue placeholders.
 
-The finalized query is passed to the standard [BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) component that converts input sales transactions in [input schema](#sales-transactions-input-schema) to features in [output schema](#features-schema).
-
+The finalized query is passed to the standard [BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) component that converts input sales transactions in [input schema](#sales-transactions-input-schema) to features in [output schema](#features-schema) and stores the engineered features into a BigQuery table.
 
 #### Model training
+The next steps in the pipeline use the custom AutoML Tables components (refer to `/automl-tables-components for implementation details) to import the features table to AutoML Tables, configure the resulting AutoML Tables dataset, and trigger model training. The CLV Prediction is a regression task so the AutoML Tables regression model is trained.
+
 #### Model deployment
+After the training step completes, the pipeline retrieves the trained model's evaluation metrics and compares the value of the primary metric to the threshold value. Both the primary metric name and the threshold value are passed as the pipeline's runtime arguments. If the performance of the trained model exceeds the threshold value the model is deployed as an AutoML Tables deployment.
   
-#### BigQuery component
-
- is a standard GCP component published with Kubeflow Pipelines distribution. The component is used to convert input sales transactions data in  to features in [output schema](#output-schema). 
-
-#### AutoML Tables components
-
-The **AutoML Tables components** components are part of the CLV solution. The **AutoML Tables** components wrapp selected AutoML Tables APIs. The source code for the components can be found in the `/automl_tables-components` in this repo.
-
-#### Lightweight Python components
-
-These are helper components implemented as KFP Lightweight Python components. The source code for the components is in `helper_components\helper_components.py`.
-  - **Load transactions** loads a CSV file with sales transactions in a staging GCS table.
-  - **Prepare query** generates the feature engineering BigQuery query by substituting placeholders in the query template with the values passed as the pipeline's runtime arguments.
 
 ## CLV Batch predict pipeline
 
@@ -120,7 +109,6 @@ These are helper components implemented as KFP Lightweight Python components. Th
 The pipeline uses the same pre-processing and feature engineering steps as the training pipeline. AutoML Tables Predict is used for batch predictions.
 
 The below diagram depicts the workflow implemented by the pipeline:
-
 
 
 ### Pipeline design
@@ -159,7 +147,7 @@ query_template_uri|GCSPath|No||The GCS path to a BigQuery query template that co
 
 
 ### Implementation details
-The pipeline uses the same components as the training pipeline.
+The pipeline uses the same data preprocessing and feature engineering flow as the training pipeline. After the features are generated and stored in a BigQuery table the pipeline triggers batch scoring by invoking AutoML Batch Predict service the custom AutoML tables component. The output - predictions - is stored in GCS or BigQuery. The output destination is passed as the pipeline's runtime parameter.
 
 
 ## Customizing the pipelines
