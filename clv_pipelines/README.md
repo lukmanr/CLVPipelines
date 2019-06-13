@@ -86,7 +86,6 @@ The timeline between the threshold date and the predict end is refered to as *pr
 | cnt_returns | Integer |  The number of returns in the features period|
 | target_monetary | Float | The total amount spent in the predict period. This is the label for predictions|
 
-## heading
 
 ### Implementation details
 The pipeline utilizes the following components:
@@ -96,7 +95,7 @@ The pipeline utilizes the following components:
   
 #### BigQuery component
 
-[BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) is a standard GCP component published with Kubeflow Pipelines distribution. The component is used to convert input sales transactions data in [*input schema*](#heading). 
+[BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) is a standard GCP component published with Kubeflow Pipelines distribution. The component is used to convert input sales transactions data in [input schema](#input-schema). 
 
 #### AutoML Tables components
 
