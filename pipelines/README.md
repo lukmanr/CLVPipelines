@@ -6,7 +6,7 @@ This folder contains source code for two KFP Pipelines:
 
 
 ## CLV training and deployment pipeline
-The training and deployment pipeline uses historical sales transactions data to train and optionally deploy a machine learning regression model. The model is trained to predict a total value of future purchases in a given timeframe, based on a history of previous purchases. For more information about modeling for customer lifetime value prediction refer to the  articles in  the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series.
+The training and deployment pipeline uses historical sales transactions data to train and optionally deploy a machine learning regression model. The model is trained to predict a value of future purchases for a customer, based on a history of previous purchases by this customer. For more information about modeling for customer lifetime value prediction refer to the  articles in  the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series.
 
 ### Pipeline design
 The pipeline uses BigQuery for data preprocessing and feature engineering and AutoML Tables for model training and deployment.
