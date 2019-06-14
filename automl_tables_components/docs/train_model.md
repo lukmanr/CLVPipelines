@@ -13,7 +13,7 @@ Use the component to trigger training of an AutoML Tables model.
 |optimization_objective|AutoML Tables [optimization objective](https://cloud.google.com/automl-tables/docs/models).|String|Yes||
 |primary_metric|The name of the primary [performance metric](https://cloud.google.com/automl-tables/docs/evaluate) to retrieve after the training completes and to return as an output|String|No|
 |target_name|The name of the column to be used as the training label. If set it overwrites the value set during dataset import|Yes||
-|features_to_exclude|The list of features to exclude from this training run. Should be passed as a list literal. E.g. `"[feature1, feature2]"`|Yes|No|
+|features_to_exclude|The list of features to exclude from this training run. Should be passed as a list literal string. E.g. `"[feature1, feature2]"`|Yes|No|
 
 
 ### Output
