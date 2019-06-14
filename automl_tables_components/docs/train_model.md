@@ -20,9 +20,8 @@ Use the component to trigger training of an AutoML Tables model.
 
 |Name|Description|Type|
 |----|-----------|----|
-|project_id|GCP Project ID. This is a pass-through of the input project_id|GCPProjectID|
-|output_dataset_id|The ID of the created AutoML Tables Dataset|String|
-|output_location|The region where the AutoML Tables Dataset was created.|String|
+|output_model_full_id|The full ID of the created AutoML Tables Model|String|
+|output_primary_metric_value|The value of the primary performance metric.|Float|
 
 ### Description
 The component is a wrapper around `AutoMlClient.create_dataset()` API. Currently, the component does not allow you to configure the schema of the target AutoML Tables Dataset. The component uses schema auto-detection.
