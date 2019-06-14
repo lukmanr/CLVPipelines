@@ -37,7 +37,7 @@ _SAMPLE_DATASET_FOLDER | The name of the folder in _BUCKET_NAME to store the sam
 The `/cloud-build/build.sh` demonstrates how to use `gcloud builds submit` to start the build process. 
 
 
-To build and deploy the pipelines:
+To build and deploy the solution:
 1. Open [Cloud Shell](https://cloud.google.com/shell/docs/) in your project.
 2. Create a working directory and download build configuration
 ```
