@@ -96,7 +96,7 @@ Another [ligthweight Python compoment](https://www.kubeflow.org/docs/pipelines/s
 The finalized query is passed to the standard [BigQuery component](https://aihub.cloud.google.com/u/0/p/products%2F4700cd7e-2826-4ce9-a1ad-33f4a5bf7433) component that converts input sales transactions in [input schema](#sales-transactions-input-schema) to features in [output schema](#features-schema) and stores the engineered features into a BigQuery table.
 
 #### Model training
-The next steps in the pipeline use the custom AutoML Tables components (refer to `/automl-tables-components for implementation details) to import the features table to AutoML Tables, configure the resulting AutoML Tables dataset, and trigger model training. The CLV Prediction is a regression task so the AutoML Tables regression model is trained.
+The next steps in the pipeline use the AutoML Tables components (refer to `/automl-tables-components for implementation details) to import the features table to AutoML Tables, configure the resulting AutoML Tables dataset, and trigger model training. The CLV Prediction is a regression task so the AutoML Tables regression model is trained.
 
 #### Model deployment
 After the training step completes, the pipeline retrieves the trained model's evaluation metrics and compares the value of the primary metric to the threshold value. Both the primary metric name and the threshold value are passed as the pipeline's runtime arguments. If the performance of the trained model exceeds the threshold value the model is deployed as an AutoML Tables deployment.
