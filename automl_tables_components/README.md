@@ -15,7 +15,7 @@ There are five components:
 
 The folder structure:
 - `./Dockerfile` - All components are packaged into a single Docker image
-- `src` - Source code and docs for the components
+- `src` - Source code for the components
 - `specs` - YAML specifications for the components in the `kfp.ComponentStore` compatible folder structure
 - `tests` - Scripts to help with testing.
 - `docs` - Documentation formatted in the AI Hub convention.
