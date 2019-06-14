@@ -10,15 +10,16 @@ The building and deploying of the solution accelerator's pipelines and component
 1. Update the YAML specifications of the AutoML Tables components with the names of the created images in the previous step
 1. Update the settings that control the pipelines' compilation. The values for these settings are provided as build parameters.
 1. Compile the pipelines. 
-1. Deploy the compiled pipelines to a GCS folder in your project. The path to the folder is provided as a build parameter.
-1. Deploy the artifacts used by the pipelines at runtime to a GCS folder in your project. The path to the folder is provided as a build parameter.
+1. Deploy the compiled pipelines to a GCS location. The path to the locatoin is provided as a build parameter.
+1. Deploy the artifacts used by the pipelines to a GCS location. The path to the location is provided as a build parameter.
 1. Deploy the component images to the Container Registry of your project. 
-1. Copy the sample dataset to a GCS folder in your project. The path to the folder is provided as a build parameter.
+1. Copy the sample dataset to a GCS location. The path to the location is provided as a build parameter.
 
-You can start the build using the `gcloud builds submit` command. The build config file containg the above instructions is in the `cloud-build` folder of this repo. The build execution is controlled by a set of parameters that are set when the build is submitted for execution. The following arguments are required:
+You can start the build using the `gcloud builds submit` command or by setting a [build trigger.](https://cloud.google.com/cloud-build/docs/running-builds/automate-builds) 
 
 
-
+### Build parameters
+You can use the `gcloud builds submit` command's `--substitutions` option to set the parameters of the build.
 
 Parameter | Description 
 -----------|-------------
