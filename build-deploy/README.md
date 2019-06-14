@@ -5,8 +5,8 @@
 The building and deploying of the solution accelerator's pipelines and components have been automated using [GCP Cloud Build](https://cloud.google.com/cloud-build/docs/).  The build process goes through the following steps:
 1. Copy the solution's github repo into the Cloud Build runtime environment
 1. Create a docker image to support custom build steps
-1. Build a base image for the pipeline's helper components. The name of the image is provided as a build parameter.
-1. Build an image that hosts components wrapping AutoML Tables API. The name of the image is provided as a build parameter.
+1. Build the base image for the lightweigh Python helper components. The name of the image is provided as a build parameter.
+1. Build the image that hosts AutoML Tables components The name of the image is provided as a build parameter.
 1. Update the YAML specifications of the AutoML Tables components with the name of the image created in the previous step
 1. Update the settings that control the pipelines' compilation. The values for these settings are provided as build parameters.
 1. Compile the pipelines. 
