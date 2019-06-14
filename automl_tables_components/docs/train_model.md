@@ -11,7 +11,7 @@ Use the component to trigger training of an AutoML Tables model.
 |model_name|The name of an AutoML Tables model|String|No||
 |train_budget|AutoML Training [training budget](https://cloud.google.com/automl-tables/docs/models) in millihours|Integer|No||
 |optimization_objective|AutoML Tables [optimization objective](https://cloud.google.com/automl-tables/docs/models).|String|Yes||
-|primary_metric|The name of the primary performance metric to retrieve after the training completes and to return as an output|String|No|
+|primary_metric|The name of the primary [performance metric](https://cloud.google.com/automl-tables/docs/evaluate) to retrieve after the training completes and to return as an output|String|No|
 |target_name|The name of the column to be used as the training label. If set it overwrites the value set during dataset import|Yes||
 |features_to_exclude|The list of features to exclude from this training run. Should be passed as a list literal. E.g. `"[feature1, feature2]"`|Yes|No|
 
@@ -24,4 +24,4 @@ Use the component to trigger training of an AutoML Tables model.
 |output_primary_metric_value|The value of the primary performance metric.|Float|
 
 ### Description
-The component is a wrapper around `AutoMlClient.create_dataset()` API. Currently, the component does not allow you to configure the schema of the target AutoML Tables Dataset. The component uses schema auto-detection.
+The component is a wrapper around `AutoMlClient.create_model()` API. If the target colummn's type is Categorical, AutoML Tables trains a classification model. If the target column's type is Numeric, AutoML Tables trains a regression model. Make sure to set `optimization_objective` and `primary_metric` parameters to match [the machine learning problem](https://cloud.google.com/automl-tables/docs/problem-types).
