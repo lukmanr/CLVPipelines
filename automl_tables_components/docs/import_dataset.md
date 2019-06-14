@@ -3,6 +3,7 @@
 ### Intended use
 Use the component to import data from GCS or BigQuery to an AutoML Dataset.
 ### Runtime arguments
+
 |Name|Description|Type|Optional|Default|
 |----|-----------|----|--------|-------|
 |project_id|GCP Project ID|GCPProjectID|No||
@@ -14,7 +15,14 @@ Use the component to import data from GCS or BigQuery to an AutoML Dataset.
 |ml_use_column_name|The name of a column in the source data to be used to split the rows into TRAIN, VALIDATE, and TEST sets.|String|Yes||
 
 
-
 ### Output
+
+|Name|Description|Type|
+|----|-----------|----|
+|project_id|GCP Project ID. This is a pass-through of the input project_id|GCPProjectID|
+|output_dataset_id|The ID of the created AutoML Tables Dataset|String|
+|output_location|The region where the AutoML Tables Dataset was create.|String|
+
+
 ### Cautions & requirements
 ### Implementation Details
