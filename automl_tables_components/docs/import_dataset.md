@@ -21,8 +21,7 @@ Use the component to import data from GCS or BigQuery to an AutoML Dataset.
 |----|-----------|----|
 |project_id|GCP Project ID. This is a pass-through of the input project_id|GCPProjectID|
 |output_dataset_id|The ID of the created AutoML Tables Dataset|String|
-|output_location|The region where the AutoML Tables Dataset was create.|String|
+|output_location|The region where the AutoML Tables Dataset was created.|String|
 
-
-### Cautions & requirements
-### Implementation Details
+### Description
+The component is a wrapper around `AutoMlClient.create_dataset()` API. Currently, the component does not allow you to configure the schema of the target AutoML Tables Dataset. The component uses schema auto-detection.
