@@ -24,10 +24,10 @@ You can use the `gcloud builds submit` command's `--substitutions` option to set
 Parameter | Description 
 -----------|-------------
 _CLV_REPO  | The name of the github repository with the solution's source components. 
-_BASE_IMAGE | The name of a base image for Lightweight Python compoments. Specify the image name only. The image will be pushed to `gcr.io/[YOUR_PROJECT_ID]/[_BASE_IMAGE]`
-_AUTOML_TABLES_IMAGE | The name of an image that hosts AutoML Tables components
-_TRAIN_PIPELINE | The name for the compiled training pipeline. The compiled pipeline will be saved as `[_TRAIN_PIPELINE].tar.gz`
-_PREDICT_PIPELINE | The name for the compiled training pipeline. The compiled pipeline will be saved as `[_PREDICT_PIPELINE].tar.gz` |
+_BASE_IMAGE | The name of the base image for Lightweight Python compoments. Specify the image name only. The image will be pushed to `gcr.io/[YOUR_PROJECT_ID]/[_BASE_IMAGE]`
+_AUTOML_TABLES_IMAGE | The name of the image that hosts AutoML Tables components
+_TRAIN_PIPELINE | The name for the compiled training pipeline. The compiled pipeline is saved as `[_TRAIN_PIPELINE].tar.gz`
+_PREDICT_PIPELINE | The name for the compiled batch predict pipeline. The compiled pipeline will be saved as `[_PREDICT_PIPELINE].tar.gz` |
 _BUCKET_NAME | The name of a GCP bucket in your project to store compiled pipelines and other artifacts used by the pipelines. If the bucket does not exist, it will be created by the build 
 _PIPELINES_FOLDER | The name of the folder in _BUCKET_NAME to store the compiled pipelines
 _ARTIFACTS_FOLDER | The name of the folder in _BUCKET_NAME to store artificats used by the pipelines at running time. 
