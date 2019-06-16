@@ -2,7 +2,7 @@
 
 ## Building and deploying the solution
 
-The building and deploying of the solution accelerator's pipelines and components have been automated using [GCP Cloud Build](https://cloud.google.com/cloud-build/docs/).  The build process goes through the following steps:
+Building and deploying of the solution accelerator's pipelines and components have been automated using [GCP Cloud Build](https://cloud.google.com/cloud-build/docs/).  The build process goes through the following steps:
 1. Copy the solution's github repo into the Cloud Build runtime environment
 1. Create a docker image to support custom build steps
 1. Build the base image for the lightweigh Python helper components. The name of the image is provided as a build parameter.
