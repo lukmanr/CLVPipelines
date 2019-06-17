@@ -33,7 +33,7 @@ steps:
   args: 
   - update_image_name_in_specs.py
   - ../../automl_tables_components/specs 
-  - gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE
+  - gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE:$_TAG
   dir: 'clv/build-deploy/helpers'
 
 # Update pipeline settings 
@@ -42,7 +42,7 @@ steps:
   args: 
   - update_pipeline_settings.py 
   - ../../clv_pipelines/settings.yaml
-  - --compiler_settings.lightweight_components_base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE
+  - --compiler_settings.lightweight_components_base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE:$_TAG
   - --argument_defaults.query_template_uri=gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja
   dir: 'clv/build-deploy/helpers'
 
