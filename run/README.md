@@ -1,25 +1,6 @@
-This folder contains sample code demonstrating how to use `kfp.Client()` API to configure experiments and submit pipeline runs programmatically.
+This folder contains code samples demonstrating how to use `kfp.Client()` API from KFP SDK to configure experiments and submit pipeline runs programmatically.
 
-
-## Running the pipelines using Kubeflow Pipelines UI
-
-To run the pipelines using Kubeflows Pipelines UI:
-- Connect to Kubeflow Pipelines UI. If you deployed Kubeflow using the Deployment Manager the Kubeflow Dashboard is available at `https:[DEPLOYMENT_NAME].endpoints.[YOUR_PROJECT_ID].cloud.goog`. The Kubeflow Pipelines UI is accessible from the Kubeflow Dashboard.
-- Locate the `tar.gz` file containing the compiled pipeline in the GCS location configured in the build.
-- Upload the compiled pipeline, configure an experiment and start a run following the procedure described in [Kubeflow Pipelines Quickstart](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart). Set the required parameters and if required change the default values.
-
-
-## Running the pipelines using KFP SDK API
-
-In the previous section of the tutorial, you run the pipelines using Kubeflow Pipelines UI. 
-
-You can also interface with Kubeflow Pipelines programatically using  `kfp.Client()` API from the Kubeflow Pipelines SDK.
-
-`kfp.Client()` is a programmatic interface to the Kubeflow Pipelines service. 
-
-The scripts in `/run` folder demonstrate how to use `kfp.Client()` to connect to the Kubeflow Pipelines service, create experiments and submit runs.
-
-`run_pipeline.py` implements a CLI wrapper around `kfp.Client()`. `run_train.sh` and `run_batch_predict.sh` are example scripts that utilize `run_pipeline.py` to submit pipeline runs.
+The `run_pipeline.py` Python script implements a CLI wrapper around `kfp.Client()`. The `run_train.sh` and `run_batch_predict.sh` are example bash scripts that utilize `run_pipeline.py` to submit pipeline runs.
 
 To submit a run using `run_pipeline.py`
 
