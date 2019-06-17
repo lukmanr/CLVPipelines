@@ -26,6 +26,7 @@ Parameter | Description
 _CLV_REPO  | The name of the github repository with the solution's source components. 
 _BASE_IMAGE | The name of the base image for Lightweight Python compoments. Specify the image name only. The image will be pushed to `gcr.io/[YOUR_PROJECT_ID]/[_BASE_IMAGE]`
 _AUTOML_TABLES_IMAGE | The name of the image that hosts AutoML Tables components
+_TAG | The tag to apply when building images. Both images will be tagged with the same tag.
 _TRAIN_PIPELINE | The name for the compiled training pipeline. The compiled pipeline is saved as `[_TRAIN_PIPELINE].tar.gz`
 _PREDICT_PIPELINE | The name for the compiled batch predict pipeline. The compiled pipeline will be saved as `[_PREDICT_PIPELINE].tar.gz` |
 _BUCKET_NAME | The name of a GCP bucket in your project to store compiled pipelines and other artifacts used by the pipelines. If the bucket does not exist, it will be created by the build 
