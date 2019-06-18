@@ -87,6 +87,12 @@ steps:
   - gs://clv-datasets/transactions/transactions.csv
   - gs://$_BUCKET_NAME/$_SAMPLE_DATASET_FOLDER/transactions.csv
   dir: 'clv/clv_pipelines'
+- name: 'gcr.io/cloud-builders/gsutil' 
+  args: 
+  - cp
+  - gs://clv-datasets/transactions/test_transactions.csv
+  - gs://$_BUCKET_NAME/$_SAMPLE_DATASET_FOLDER/test_transactions.csv
+  dir: 'clv/clv_pipelines'
 
 # Push component images
 images: ['gcr.io/$PROJECT_ID/${_BASE_IMAGE}', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}']
