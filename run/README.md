@@ -16,9 +16,7 @@ python run_pipeline.py --host [HOST_URL]
 
 `--host`
 
-The URL to use to interface with Kubeflow Pipelines. For an IAP enabled cluster set it to:
-`https://[YOUR_DEPLOYMENT_NAME].endpoints.[YOUR_PROJECT_ID].[CLIENT_ID]`, where
-[CLIENT_ID] is the client ID used by Identity-Aware Proxy.
+The URL to use to interface with Kubeflow Pipelines. 
 
 `--experiment`
 
