@@ -151,7 +151,7 @@ The pipeline uses the same data preprocessing and feature engineering flow as th
 
 ## Customizing the pipelines
 
-Both the training and the batch predict pipeline can be customized at three levels:
+The pipeline's can be customized at three levels:
 - Fine tuning of the YAML settings file
 - Modyfing data preprocessing and feature engineering logic
 - Recoding the workflow
