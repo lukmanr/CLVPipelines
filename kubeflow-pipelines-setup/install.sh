@@ -47,7 +47,7 @@ gcloud iam service-accounts keys create ${KEY_PATH} \
 --iam-account ${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
 
 echo "Saving the key as a secret: user-gcp-sa"
-SECRET_EXISTS=$(kubectl get secrets | grep -q "user-gcp-sa")
+SECRET_EXISTS=$(kubectl get secrets -n kubeflow | grep -q "user-gcp-sa")
 if [ -n "$SECRET_EXISTS" ]
 then
   echo "user-gcp-sa secret already exists. Deleting and re-creating ..."
