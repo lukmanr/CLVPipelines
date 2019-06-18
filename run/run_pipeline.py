@@ -17,10 +17,10 @@ import fire
 import kfp
 
 
-def run(host, client_id, experiment, run_name, pipeline_file, arguments):
+def run(host, experiment, run_name, pipeline_file, arguments):
   """Submits a KFP pipeline for execution."""
 
-  client = kfp.Client(host, client_id)
+  client = kfp.Client(host)
 
   experiment_ref = client.create_experiment(experiment)
 
