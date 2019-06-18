@@ -57,17 +57,17 @@ kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$KFP_VERSI
 echo "Sleeping for 5 minutes to let services start"
 sleep 5m 
 
-# 5. Create a service account to be used by pipelines
+# 5. Create a service account to be used by pipelines. If the account with that name exists, re-use it
 echo "Creating service account: "${SA_NAME}
 SA_EXISTS=$(gcloud beta iam service-accounts list | grep ${SA_NAME})
-if [ -n "$SA_EXISTS" ]
+if [ -z "$SA_EXISTS" ]
 then
-  echo "Service account: "${SA_NAME}" already exists. Deleting an re-creating the account." 
-  gcloud beta iam service-accounts delete ${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com -q 
+  gcloud beta iam service-accounts create ${SA_NAME}  \
+  --description "Kubeflow Pipelines Service Account" \
+  --display-name "Kubeflow Pipelines SA"
+else
+  echo "Service account: "${SA_NAME}" already exists. Re-using ..." 
 fi
-gcloud beta iam service-accounts create ${SA_NAME}  \
---description "Kubeflow Pipelines Service Account" \
---display-name "Kubeflow Pipelines SA"
 
 # 6. Create a service account private key in the current folder
 echo "Creating service account key: key.json"
