@@ -7,7 +7,7 @@ python run_pipeline.py \
 --pipeline_file clv_predict.tar.gz \
 --arguments '{\
 "project_id": "clv-prod", \
-"source_gcs_path": "gs://clv-accelerator/sample-dataset/transactions.csv", \
+"source_gcs_path": "gs://clv-accelerator/sample-dataset/test_transactions.csv", \
 "source_bq_table": "", \
 "bq_dataset_name": "", \
 "predict_end": "2011-12-12", \
