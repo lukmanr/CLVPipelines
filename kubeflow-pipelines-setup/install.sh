@@ -102,6 +102,12 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 --role roles/automl.admin \
 --no-user-output-enabled
 
+# 12. Assigne the service account to AutoML Predictor role
+echo "Assigning AutoML permissions to: "$SA_NAME
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+--member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
+--role roles/automl.predictor \
+--no-user-output-enabled
 
 # 12. Print out the KFP UI endpoint
 KFP_UI_URL="https://"$(kubectl describe configmap inverse-proxy-config -n kubeflow | grep "googleusercontent.com")
