@@ -71,10 +71,11 @@ def predict(project_id, region, model_id, datasource, destination_prefix,
 
   # Wait for completion
   # WORKAROUND to catch exception thrown by response.result()
-  try:
-    response.result()
-  except:
-    pass
+  #try:
+  #  response.result()
+  #except:
+  #  pass
+  response.result()
   result = response.metadata
 
   logging.info("Batch scoring completed: {}".format(str(result)))
