@@ -31,6 +31,48 @@ KFP_VERSION=${6}
 echo "Setting a default project to: "${1}
 gcloud config set project $PROJECT_ID
 
+echo "Creating service account: "${SA_NAME}
+SA_EXISTS=$(gcloud beta iam service-accounts list | grep ${SA_NAME})
+if [ -n "$SA_EXISTS" ]
+then
+  echo "Service account: "${SA_NAME}" already exists. Deleting an re-creating the account." 
+  gcloud beta iam service-accounts delete ${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com -q 
+fi
+gcloud beta iam service-accounts create ${SA_NAME}  \
+--description "Kubeflow Pipelines Service Account" \
+--display-name "Kubeflow Pipelines SA"
+
+echo "Creating service account key: "${KEY_PATH}
+gcloud iam service-accounts keys create ${KEY_PATH} \
+--iam-account ${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
+
+echo "Saving the key as a secret: user-gcp-sa"
+SECRET_EXISTS=$(kubectl get secrets | grep -q "user-gcp-sa")
+if [ -n "$SECRET_EXISTS" ]
+then
+  echo "user-gcp-sa secret already exists. Deleting and re-creating ..."
+  kubectl delete secret user-gcp-sa -n kubeflow
+fi
+kubectl create secret -n kubeflow generic user-gcp-sa --from-file=user-gcp-sa.json=${KEY_PATH}
+
+echo "Assigning Cloud Storage permissions to: "$SA_NAME
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+--member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
+--role roles/storage.admin \
+--no-user-output-enabled
+
+echo "Assigning BigQuery permissions to: "$SA_NAME
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+--member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
+--role roles/bigquery.admin \
+--no-user-output-enabled
+
+echo "Assigning AutoML permissions to: "$SA_NAME
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+--member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
+--role roles/automl.admin \
+--no-user-output-enabled
+
 echo "Creating GKE:"${2}" in zone: "${3} ...
 CLUSTER_EXISTS=$(gcloud container clusters list|grep ${CLUSTERNAME})
 if [ -z "$CLUSTER_EXISTS" ]
@@ -51,47 +93,6 @@ then
 fi
 kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$KFP_VERSION/manifests/namespaced-install.yaml
 
-echo "Creating service account: "${SA_NAME}
-SA_EXISTS=$(gcloud beta iam service-accounts list | grep ${SA_NAME})
-if [ -n "$SA_EXISTS" ]
-then
-  echo "Service account: "${SA_NAME}" already exists. Deleting an re-creating the account." 
-  gcloud beta iam service-accounts delete ${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com -q 
-fi
-gcloud beta iam service-accounts create ${SA_NAME}  \
---description "Kubeflow Pipelines Service Account" \
---display-name "Kubeflow Pipelines SA"
-
-echo "Assigning Cloud Storage permissions to: "$SA_NAME
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
---member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
---role roles/storage.admin \
---no-user-output-enabled
-
-echo "Assigning BigQuery permissions to: "$SA_NAME
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
---member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
---role roles/bigquery.admin \
---no-user-output-enabled
-
-echo "Assigning AutoML permissions to: "$SA_NAME
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
---member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
---role roles/automl.editor \
---no-user-output-enabled
-
-echo "Creating service account key: "${KEY_PATH}
-gcloud iam service-accounts keys create ${KEY_PATH} \
---iam-account ${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
-
-echo "Saving the key as a secret: user-gcp-sa"
-SECRET_EXISTS=$(kubectl get secrets | grep -q "user-gcp-sa")
-if [ -n "$SECRET_EXISTS" ]
-then
-  echo "user-gcp-sa secret already exists. Deleting and re-creating ..."
-  kubectl delete secret user-gcp-sa -n kubeflow
-fi
-kubectl create secret -n kubeflow generic user-gcp-sa --from-file=user-gcp-sa.json=${KEY_PATH}
 
 echo "Sleeping for 5 minutes before retrieving Inverting Proxy endpoint"
 sleep 5m 
