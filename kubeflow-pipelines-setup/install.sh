@@ -103,7 +103,7 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 --no-user-output-enabled
 
 # 12. Assigne the service account to AutoML Predictor role
-echo "Assigning AutoML permissions to: "$SA_NAME
+echo "Assigning AutoML Predict permissions to: "$SA_NAME
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 --member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
 --role roles/automl.predictor \
