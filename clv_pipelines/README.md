@@ -151,23 +151,30 @@ The pipeline uses the same data preprocessing and feature engineering flow as th
 
 ## Customizing the pipelines
 
-The pipelines can be customized at three levels:
-- Changing the default values for the arguments and/or compiler settings
+The pipelines can be customized by:
+- Changing the default values of the pipelines' parameters
+- Changing the compiler setting
 - Modyfing data preprocessing and feature engineering logic
 - Recoding the workflow
 
-### Changing the default values for the arguments and compiler
+### Changing the default values of the pipelines' parameters
 The pipelines have been designed to minimize hard-coded values. Most pipeline settings are centralized in a single settings file - `settings.yaml`. The file uses the YAML format and has two sections:
 - `argument_defaults`
 - `compiler_settings`
 
-In the `argument_defaults` section, you can define the default values for the pipelines' runtime arguments. In the `compiler_settings` section you define the settings that control how the KFP `dsl-compiler` converts Python DSL into the resulting YAML. Currently, the following `compiler_settings` are supported:
+In the `argument_defaults` section, you can define the default values for the pipelines' runtime arguments. Any runtime parameter can be configured with an arbitrary default value.
+
+To take effect, the `settings.yaml` file must be located in the directory from which the KFP `dsl-compiler` is invoked. 
+
+### Changing the compiler settings
+
+In the `compiler_settings` section you define the settings that control how the KFP `dsl-compiler` converts Python DSL into the resulting YAML. Currently, the following `compiler_settings` are supported:
 - `lightweight_components_base_image` - the full name of a container image used to run helper lightweight Python components
 - `local_search_path` - a (YAML encoded) list of local file system paths that the DSL compiler searches to find component specfications
 - `url_search_prefixes` - a (YAML encoded ) list of URL prefixes that the DSL compiler searches to find component specifications
 - `use_sa_secret` - If set to True the pipelines will be compiled to use the KFP user service account to access external resources. Otherwise the pipelines will be compiled to use the default GCE service account of GKE nodes to access external resources.
 
-To take effect, the `settings.yaml` file must be located in the directory from which the KFP `dsl-compiler` is invoked. 
+
 
 ### Modyfing data preprocessing and featuring engineering logic
 
