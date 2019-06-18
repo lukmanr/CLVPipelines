@@ -46,15 +46,6 @@ echo "Creating service account key: "${KEY_PATH}
 gcloud iam service-accounts keys create ${KEY_PATH} \
 --iam-account ${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
 
-echo "Saving the key as a secret: user-gcp-sa"
-SECRET_EXISTS=$(kubectl get secrets -n kubeflow | grep -q "user-gcp-sa")
-if [ -n "$SECRET_EXISTS" ]
-then
-  echo "user-gcp-sa secret already exists. Deleting and re-creating ..."
-  kubectl delete secret user-gcp-sa -n kubeflow
-fi
-kubectl create secret -n kubeflow generic user-gcp-sa --from-file=user-gcp-sa.json=${KEY_PATH}
-
 echo "Assigning Cloud Storage permissions to: "$SA_NAME
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 --member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
@@ -92,6 +83,15 @@ then
   kubectl delete namespace kubeflow 
 fi
 kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$KFP_VERSION/manifests/namespaced-install.yaml
+
+echo "Saving the key as a secret: user-gcp-sa"
+SECRET_EXISTS=$(kubectl get secrets -n kubeflow | grep -q "user-gcp-sa")
+if [ -n "$SECRET_EXISTS" ]
+then
+  echo "user-gcp-sa secret already exists. Deleting and re-creating ..."
+  kubectl delete secret user-gcp-sa -n kubeflow
+fi
+kubectl create secret -n kubeflow generic user-gcp-sa --from-file=user-gcp-sa.json=${KEY_PATH}
 
 
 echo "Sleeping for 5 minutes before retrieving Inverting Proxy endpoint"
