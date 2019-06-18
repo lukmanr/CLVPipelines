@@ -13,11 +13,10 @@
 # limitations under the License.
 """Helper Lightweight Python components."""
 
-from jinja2 import Template
-
 import kfp
 from kfp import dsl
 from typing import NamedTuple
+
 
 @kfp.dsl.python_component(name='Load transactions')
 def load_sales_transactions(project_id: str, source_gcs_path: str,
@@ -34,6 +33,8 @@ def load_sales_transactions(project_id: str, source_gcs_path: str,
   import uuid
   import logging
   from google.cloud import bigquery
+
+  logging.basicConfig(level=logging.INFO)
 
   client = bigquery.Client(project=project_id)
 
@@ -62,6 +63,8 @@ def load_sales_transactions(project_id: str, source_gcs_path: str,
       table_id = 'transactions_{}'.format(uuid.uuid4().hex)
 
     # Start the load job
+    logging.info('Importing data from {} to {}.{}'.format(
+        source_gcs_path, dataset_name, table_id))
     load_job = client.load_table_from_uri(
         source_gcs_path, dataset_ref.table(table_id), job_config=job_config)
 
@@ -70,6 +73,7 @@ def load_sales_transactions(project_id: str, source_gcs_path: str,
 
     output = '{}.{}.{}'.format(project_id, dataset_name, table_id)
   else:
+    logging.info('Source data already in BigQuery: {}'.format(source_bq_table))
     output = source_bq_table
 
   return output
@@ -94,8 +98,14 @@ def prepare_feature_engineering_query(
   import uuid
   import logging
   import re
+
+  from jinja2 import Template
   from google.cloud import storage
   from google.cloud import bigquery
+
+  logging.basicConfig(level=logging.INFO)
+  logging.info(
+      'Retrieving the query template from: {}'.format(query_template_uri))
 
   # Read a query template from GCS
   _, bucket, blob_name = re.split('gs://|/', query_template_uri, 2)
