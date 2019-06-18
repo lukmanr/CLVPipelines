@@ -1,7 +1,7 @@
 #!/bin/bash
 
 python run_pipeline.py \
---host https://jkkf.endpoints.sandbox-235500.cloud.goog/pipeline \
+--host http://localhost:8082 \
 --experiment "CLV batch predit" \
 --run-name "Batch predict run" \
 --pipeline_file clv_predict.tar.gz \
