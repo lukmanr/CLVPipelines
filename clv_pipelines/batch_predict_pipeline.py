@@ -13,27 +13,30 @@
 # limitations under the License.
 """Batch Predict Pipeline."""
 
-from helper_components import (load_sales_transactions,
-                               prepare_feature_engineering_query)
-
-import yaml
-import pathlib
+from helper_components import load_sales_transactions
+from helper_components import prepare_feature_engineering_query
 
 import kfp
 from kfp import gcp
 
+import pathlib
+import yaml
 
 # Load pipeline settings
-compiler_settings = yaml.safe_load(pathlib.Path('settings.yaml').read_text())['compiler_settings']
-argument_defaults = yaml.safe_load(pathlib.Path('settings.yaml').read_text())['argument_defaults']
+compiler_settings = yaml.safe_load(
+    pathlib.Path('settings.yaml').read_text())['compiler_settings']
+argument_defaults = yaml.safe_load(
+    pathlib.Path('settings.yaml').read_text())['argument_defaults']
 
 # Initialize component store
-component_store = kfp.components.ComponentStore(compiler_settings['local_search_paths'],
-                                                compiler_settings['url_search_prefixes'])
+component_store = kfp.components.ComponentStore(
+    compiler_settings['local_search_paths'],
+    compiler_settings['url_search_prefixes'])
 
 # Create component factories
 load_sales_transactions_op = kfp.components.func_to_container_op(
-    load_sales_transactions, base_image=compiler_settings['lightweight_components_base_image'])
+    load_sales_transactions,
+    base_image=compiler_settings['lightweight_components_base_image'])
 prepare_feature_engineering_query_op = kfp.components.func_to_container_op(
     prepare_feature_engineering_query,
     base_image=compiler_settings['lightweight_components_base_image'])
