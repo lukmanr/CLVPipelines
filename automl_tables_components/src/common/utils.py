@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Commom utilities and helper functions."""
+
 import json
 
 from google.cloud import automl_v1beta1 as automl
