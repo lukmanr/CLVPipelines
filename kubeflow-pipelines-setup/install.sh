@@ -1,41 +1,73 @@
 #!/bin/bash
-
-KFCTL_VER=v0.5.1
-KFCTL_PLATFORM=linux
-KFCTL_TAR=kfctl_${KFCTL_VER}_${KFCTL_PLATFORM}.tar.gz
-KFCTL_PATH=https://github.com/kubeflow/kubeflow/releases/download/${KFCTL_VER}/${KFCTL_TAR}
-
 if [[ $# < 6 ]]; then
-    echo "Error: Arguments missing. [install INSTALL_PATH PROJECT_ID CLIENT_ID CLIENT_SECRET ZONE KFAPP]"
+    echo "Error: Arguments missing. [install PROJECT_ID CLUSTERNAME ZONE KFP_SA KEY_PATH KFP_VERSION]"
     exit 1
 fi
-
-echo "Installing KFCTL to: "${1}
-echo "Using PROJECT_ID to: "${2}
-echo "Installing KFAPP to: "${6}
-echo "Creating GKE in zone: "${5}
-
-export PROJECT=${2}
-export CLIENT_ID=${3}
-export CLIENT_SECRET=${4}
-export ZONE=${5}
-export KFAPP=${6}
-
-if [ -d ${1} ]; then
-    echo "Error: Install folder already exists. Remove it and restart installation."
-    exit 1
+PROJECT_ID=${1}
+PROJECT_NUMBER=$(gcloud projects list --filter="$PROJECT_ID" --format="value(PROJECT_NUMBER)")
+CLUSTERNAME=${2}
+ZONE=${3}
+SA_NAME=${4}
+KEY_PATH=${5}
+KFP_VERSION=${6}
+echo "Setting a default project to: "${1}
+gcloud config set project $PROJECT_ID
+echo "Creating GKE:"${2}" in zone: "${3} ...
+CLUSTER_EXISTS=$(gcloud container clusters list|grep ${CLUSTERNAME})
+if [ -z "$CLUSTER_EXISTS" ]
+then 
+  gcloud beta container clusters create $CLUSTERNAME \
+  --zone $ZONE \
+  --scopes cloud-platform
+else
+  echo "Cluster: "${CLUSTERNAME}" already exists. Skipping installation"
 fi
-
-mkdir ${1}
-cd ${1}
-
-curl -O -L  ${KFCTL_PATH}
-tar -xvf ${KFCTL_TAR}
-chmod 755 kfctl
-
-./kfctl init ${KFAPP} --platform gcp --project ${PROJECT}
-cd ${KFAPP}
-../kfctl generate all -V --zone ${ZONE}
-
-echo "Starting deployment ...."
-../kfctl apply all -V
+echo "Installing KFP version: "${KFP_VERSION}
+NAMESPACE_EXISTS=$(kubectl get namespace kubeflow -o=name)
+if [ -n "$NAMESPACE_EXISTS" ]
+then
+  echo "Namespace: kubeflow already exists. Deleting the existing namespace and re-installing KFP."
+  kubectl delete namespace kubeflow 
+fi
+kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$KFP_VERSION/manifests/namespaced-install.yaml
+echo "Creating service account: "${SA_NAME}
+SA_EXISTS=$(gcloud beta iam service-accounts list | grep ${SA_NAME})
+if [ -n "$SA_EXISTS" ]
+then
+  echo "Service account: "${SA_NAME}" already exists. Deleting an re-creating the account." 
+  gcloud beta iam service-accounts delete ${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com -q 
+fi
+gcloud beta iam service-accounts create ${SA_NAME}  \
+--description "Kubeflow Pipelines Service Account" \
+--display-name "Kubeflow Pipelines SA"
+echo "Assigning Cloud Storage permissions to: "$SA_NAME
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+--member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
+--role roles/storage.admin \
+--no-user-output-enabled
+echo "Assigning BigQuery permissions to: "$SA_NAME
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+--member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
+--role roles/bigquery.admin \
+--no-user-output-enabled
+echo "Assigning AutoML permissions to: "$SA_NAME
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+--member serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
+--role roles/automl.editor \
+--no-user-output-enabled
+echo "Creating service account key: "${KEY_PATH}
+gcloud iam service-accounts keys create ${KEY_PATH} \
+--iam-account ${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
+echo "Saving the key as a secret: user-gcp-sa"
+SECRET_EXISTS=$(kubectl get secrets | grep -q "user-gcp-sa")
+if [ -n "$SECRET_EXISTS" ]
+then
+  echo "user-gcp-sa secret already exists. Deleting and re-creating ..."
+  kubectl delete secret user-gcp-sa -n kubeflow
+fi
+kubectl create secret -n kubeflow generic user-gcp-sa --from-file=user-gcp-sa.json=${KEY_PATH}
+echo "Sleeping for 5 minutes before retrieving Inverting Proxy endpoint"
+sleep 5m 
+KFP_UI_URL="https://"$(kubectl describe configmap inverse-proxy-config -n kubeflow | grep "googleusercontent.com")
+echo "Kubeflow Pipelines installation complete"
+echo "You can access KFP UI at: "${KFP_UI_URL}
