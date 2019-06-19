@@ -1,4 +1,4 @@
-# Solution Accelerator - Predicting Customer Lifetime Value
+# Predicting Customer Lifetime Value with Kubeflow Pipelines
 
 ## Overview
 
