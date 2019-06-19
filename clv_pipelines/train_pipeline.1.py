@@ -142,7 +142,7 @@ def clv_train(
 
   # Deploy the model if configured and the primary metric below the threshold
   with kfp.dsl.Condition(skip_deployment != True):
-    with kfp.dsl.Condition(train_model.outputs['output_primary_metric_value'] <
+    with kfp.dsl.Condition(log_metrics_outputs['output_primary_metric_value'] <
                            deployment_threshold):
       deploy_model = deploy_model_op(
           train_model.outputs['output_model_full_id'])
