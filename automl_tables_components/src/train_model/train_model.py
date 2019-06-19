@@ -15,7 +15,6 @@
 
 import logging
 
-from common import get_latest_evaluation_metrics
 from pathlib import Path
 
 from google.cloud import automl_v1beta1 as automl
@@ -28,7 +27,6 @@ def train(
     model_name,
     train_budget,
     optimization_objective,
-    primary_metric,
     target_name,
     features_to_exclude,
     output_model_full_id,
@@ -37,14 +35,11 @@ def train(
   """Train an AutoML Tables model."""
 
   
-
+  print("testing")
   model_full_id = 'projects/928933997278/locations/us-central1/models/TBL7003000663537876992'
-  primary_metric_value = '1100'
   
   Path(output_model_full_id).parent.mkdir(parents=True, exist_ok=True)
   Path(output_model_full_id).write_text(model_full_id)
-  Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
-  Path(output_primary_metric_value).write_text(primary_metric_value)
   
   return
 
@@ -103,12 +98,5 @@ def train(
   model_full_id = response.result().name
   logging.info('Model training completed: {}'.format(model_full_id))
 
-  # Output the model's full id and the value of the primary metric
-  metrics = get_latest_evaluation_metrics(model_full_id)
-  primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
-      metrics, primary_metric) else 'N/A'
-
   Path(output_model_full_id).parent.mkdir(parents=True, exist_ok=True)
   Path(output_model_full_id).write_text(model_full_id)
-  Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
-  Path(output_primary_metric_value).write_text(primary_metric_value)

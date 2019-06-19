@@ -18,8 +18,6 @@ implementation:
     - inputValue: train_budget
     - --optimization-objective
     - inputValue: optimization_objective
-    - --primary-metric
-    - inputValue: primary_metric
     - --target-name
     - inputValue: target_name
     - --features-to-exclude
@@ -48,9 +46,6 @@ inputs:
 - description: AutoML optimization objective
   name: optimization_objective
   type: String
-- description: Primary metric to report through output
-  name: primary_metric
-  type: String
 - description: Target (Label) column in the training dataset
   name: target_name
   type: String
@@ -61,7 +56,4 @@ name: Train Model
 outputs:
 - description: AutoML model ID.
   name: output_model_full_id
-  type: String
-- description: Primary metric value.
-  name: output_primary_metric_value
   type: String

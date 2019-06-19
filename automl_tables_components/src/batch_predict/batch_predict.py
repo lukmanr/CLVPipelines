@@ -15,30 +15,9 @@
 
 import logging
 
-from common import write_metadata_for_output_viewers
 from pathlib import Path
 
 from google.cloud import automl_v1beta1 as automl
-
-
-def prediction_metadata_to_markdown_metadata(response_metadata):
-  """Converts batch predict response metadata to markdown."""
-
-  markdown_template = (
-      "**Batch predict results:**  \n"
-      "&nbsp;&nbsp;&nbsp;&nbsp;**Input datasource:**&nbsp;{input}  \n"
-      "&nbsp;&nbsp;&nbsp;&nbsp;**Output destination:**&nbsp;{output}  \n")
-  markdown = markdown_template.format(
-      input=response_metadata.batch_predict_details.input_config,
-      output=response_metadata.batch_predict_details.output_info)
-
-  markdown_metadata = {
-      "type": "markdown",
-      "storage": "inline",
-      "source": markdown
-  }
-
-  return markdown_metadata
 
 
 def predict(project_id, region, model_id, datasource, destination_prefix,
@@ -79,9 +58,7 @@ def predict(project_id, region, model_id, datasource, destination_prefix,
   result = response.metadata
 
   logging.info("Batch scoring completed: {}".format(str(result)))
-  write_metadata_for_output_viewers(
-      prediction_metadata_to_markdown_metadata(result))
-
+  
   # Save results
   if destination_prefix.startswith("bq"):
     output = result.batch_predict_details.output_info.bigquery_output_dataset

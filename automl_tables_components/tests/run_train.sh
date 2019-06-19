@@ -7,8 +7,7 @@ python -m launcher train_model train \
 --model-name="test model" \
 --train-budget=1000 \
 --optimization-objective=MIMINIZE_MAE \
---primary-metric=mean_absolute_error \
 --target-name=target_monetary \
 --features-to-exclude='["customer_id"]' \
 --output-model-full-id='outputs/model_full_id.txt' \
---output-primary-metric-value='outputs/primary-metric-value.txt' \
+--output-primary-metric-value='outputs/primary-metric-value.txt' 

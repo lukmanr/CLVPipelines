@@ -1,4 +1,5 @@
 # Copyright 2019 Google Inc. All Rights Reserved.
+# Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,12 +17,6 @@
 Currently only regression evaluation metrics are supported
 """
 
-from common import get_latest_evaluation_metrics
-from common import write_metadata_for_output_viewers
-from common import write_metrics
-
-from google.cloud import automl_v1beta1 as automl
-
 
 def log_metrics(model_full_id, primary_metric):
   """Retrieves and logs the latest evaluation metrics for an AutoML Tables  model.
@@ -32,19 +27,17 @@ def log_metrics(model_full_id, primary_metric):
 
   metrics = get_latest_evaluation_metrics(model_full_id)
 
-  markdown_metadata = None
   if isinstance(metrics, automl.types.RegressionEvaluationMetrics):
     markdown_metadata = regression_evaluation_metrics_to_markdown_metadata(
         metrics)
   elif isinstance(metrics, automl.types.ClassificationEvaluationMetrics):
     markdown_metadata = classification_evaluation_metrics_to_markdown_metadata(
-        metrics)
+        metrics) 
 
   write_metadata_for_output_viewers(markdown_metadata)
 
   primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
     metrics, primary_metric) else None 
-  )
 
   if primary_metric_value:
     metric_metadata = {
@@ -55,6 +48,18 @@ def log_metrics(model_full_id, primary_metric):
   write_metrics(primary_metric_value)
 
 
+def classification_evaluation_metrics_to_markdown_metadata(metrics):
+  """Converts classification evaluation metrics to KFP Viewer markdown metadata."""
+
+  markdown = "TBD"
+
+  markdown_metadata = {
+      "type": "markdown",
+      "storage": "inline",
+      "source": markdown
+  }
+
+  return markdown_metadata
 
 def regression_evaluation_metrics_to_markdown_metadata(metrics):
   """Converts regression evaluation metrics to KFP Viewer markdown metadata."""
@@ -78,16 +83,36 @@ def regression_evaluation_metrics_to_markdown_metadata(metrics):
 
   return markdown_metadata
 
+def get_latest_evaluation_metrics(model_full_id):
+  """Retrieves the latest evaluation metrics for an AutoML Tables model."""
 
-def classification_evaluation_metrics_to_markdown_metadata(metrics):
-  """Converts classification evaluation metrics to KFP Viewer markdown metadata."""
+  client = automl.AutoMlClient()
+  evaluations = list(client.list_model_evaluations(model_full_id))
 
-  markdown = "TBD"
+  create_seconds = 0
+  evaluation_metrics = None
+  for evaluation in evaluations:
+    if evaluation.create_time.seconds > create_seconds:
+      if evaluation.regression_evaluation_metrics.ListFields():
+        evaluation_metrics = evaluation.regression_evaluation_metrics
+        create_seconds = evaluation.create_time.seconds
+      elif evaluation.classification_evaluation_metrics.ListFields():
+        evaluation_metrics = evaluation.classification_evaluation_metrics
+        create_seconds = evaluation.create_time.seconds
 
-  markdown_metadata = {
-      "type": "markdown",
-      "storage": "inline",
-      "source": markdown
-  }
+  return evaluation_metrics
 
-  return markdown_metadata
+
+def write_metadata_for_output_viewers(*argv):
+  """Writes items to be rendered by KFP UI as artificats."""
+
+  output_metadata = {'version': 1, 'outputs': argv}
+  with open('/mlpipeline-ui-metadata.json', 'w') as f:
+    json.dump(output_metadata, f)
+
+def write_metrics(*metrics):
+  """Writes pipeline metrics."""
+
+  metrics_metadata = {'metrics': metrics}
+  with open('/mlpipeline-metrics.json', 'w') as f:
+    json.dump(metrics_metadata, f)

@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from log_evaluation_metrics.log_evaluation_metrics import log_metrics
+from log_evaluation_metrics.log_evalutation_metrics import log_metrics
