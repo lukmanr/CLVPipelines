@@ -8,7 +8,7 @@ implementation:
     - log_metrics
     - --model-full-id
     - inputValue: model_full_id
-    - --primary_metric
+    - --primary-metric
     - inputValue: primary_metric
     image: gcr.io
 inputs:
