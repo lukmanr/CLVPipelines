@@ -52,6 +52,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
       'name': primary_metric,
       'numberValue': primary_metric_value
     }
+    print(metric_metadata)
     write_metrics(primary_metric_value)
 
   Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
