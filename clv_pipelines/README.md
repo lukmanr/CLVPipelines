@@ -182,7 +182,7 @@ The data preprocessing and feature engineering logic is encapsulated in a SQL qu
 
 If a different logic needs to be implemented - for example new input columns, new features or a different logic for existing features - the SQL template and **Prepare query** components can be modified.
 
-The pipelines use a very flexible approach when passing features to the training steps of the workflow. The AutoML Tables Import Dataset component can import any schema as long a label feature has the `Float` data type. Furthermore, the AutoML Tables Train Model component can be instructed (through a runtime parameter) what features to use for training. As such no modifications to the training and deployment or batch predict part of the workflows are required when fine tuning the data preprocessing and feature engineering query template.
+The pipelines use a very flexible approach when passing features to the training steps of the workflow. The AutoML Tables Import Dataset component can import any schema as long a label feature has a `Numeric` data type. Furthermore, the AutoML Tables Train Model component can be instructed (through a runtime parameter) what features to use for training. As such no modifications to the training and deployment or batch predict part of the workflows are required when fine tuning the data preprocessing and feature engineering query template.
 
 
 ### Modifying the workflow
