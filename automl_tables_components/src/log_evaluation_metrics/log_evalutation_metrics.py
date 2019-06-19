@@ -43,14 +43,16 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
 
   primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
     metrics, primary_metric) else None 
+  
+  print(primary_metric)
+  print(primary_metric_value)
 
   if primary_metric_value:
     metric_metadata = {
       'name': primary_metric,
       'numberValue': primary_metric_value
     }
-
-  write_metrics(primary_metric_value)
+    write_metrics(primary_metric_value)
 
   Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
   Path(output_primary_metric_value).write_text(primary_metric_value)
