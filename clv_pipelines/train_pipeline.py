@@ -76,6 +76,9 @@ def clv_train(
     query_template_uri=argument_defaults['query_template_uri']):
   """Trains and optionally deploys a CLV Model."""
 
+
+  """
+
   # Load sales transactions
   load_transactions = load_sales_transactions_op(
       project_id=project_id,
@@ -127,6 +130,19 @@ def clv_train(
       project_id=project_id,
       region=aml_compute_region,
       dataset_id=import_dataset.outputs['output_dataset_id'],
+      model_name=aml_model_name,
+      train_budget=train_budget,
+      optimization_objective=optimization_objective,
+      primary_metric=primary_metric,
+      target_name=target_column_name,
+      features_to_exclude=features_to_exclude)
+
+  """
+
+  train_model = train_model_op(
+      project_id=project_id,
+      region=aml_compute_region,
+      dataset_id="model_id",
       model_name=aml_model_name,
       train_budget=train_budget,
       optimization_objective=optimization_objective,
