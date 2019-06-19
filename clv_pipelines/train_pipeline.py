@@ -133,7 +133,6 @@ def clv_train(
       model_name=aml_model_name,
       train_budget=train_budget,
       optimization_objective=optimization_objective,
-      primary_metric=primary_metric,
       target_name=target_column_name,
       features_to_exclude=features_to_exclude)
 
@@ -146,7 +145,6 @@ def clv_train(
       model_name=aml_model_name,
       train_budget=train_budget,
       optimization_objective=optimization_objective,
-      primary_metric=primary_metric,
       target_name=target_column_name,
       features_to_exclude=features_to_exclude)
 
