@@ -29,8 +29,7 @@ def train(
     optimization_objective,
     target_name,
     features_to_exclude,
-    output_model_full_id,
-    output_primary_metric_value,
+    output_model_full_id
 ):
   """Train an AutoML Tables model."""
 
