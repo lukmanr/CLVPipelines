@@ -16,7 +16,7 @@ argument_defaults:
 compiler_settings:
   lightweight_components_base_image: gcr.io
   local_search_paths:
-  - ../automl_tables_components/specs
+  - ../components/automl_tables/specs
   url_search_prefixes:
   - https://raw.githubusercontent.com/kubeflow/pipelines/3b938d664de35db9401c6d198439394a9fca95fa/components/gcp/
   use_sa_secret: true
