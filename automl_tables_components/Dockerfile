@@ -13,6 +13,5 @@ COPY src/deploy_model/* /ml/deploy_model/
 COPY src/batch_predict/* /ml/batch_predict/
 COPY src/log_evaluation_metrics/* /ml/log_evaluation_metrics/
 COPY src/launcher/* /ml/launcher/
-COPY src/common/* /ml/common/
 
 ENTRYPOINT ["python", "-u", "-m", "launcher"]
