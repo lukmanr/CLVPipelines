@@ -11,7 +11,7 @@ The solution accelerater includes the following components:
 - AutoML Tables KFP components - `/automl_tables_components`
 - Build and deployment automation - `/build-deploy`
 - Sample integration code - `/run`
-- Lightweight Kubeflow Pipelines on GKE deployment automation
+- Lightweight Kubeflow Pipelines on GKE deployment automation - `/run`
 
 ### Training and inference KFP pipelines
 
