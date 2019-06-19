@@ -77,29 +77,84 @@ def clv_train(
   """Trains and optionally deploys a CLV Model."""
 
 
-  
+  # Load sales transactions
+  load_transactions = load_sales_transactions_op(
+      project_id=project_id,
+      source_gcs_path=source_gcs_path,
+      source_bq_table=source_bq_table,
+      dataset_location=dataset_location,
+      dataset_name=bq_dataset_name,
+      table_id=transactions_table_name)
 
+  # Generate the feature engineering query
+  prepare_query = prepare_feature_engineering_query_op(
+      project_id=project_id,
+      source_table_id=load_transactions.output,
+      destination_dataset=bq_dataset_name,
+      features_table_name=features_table_name,
+      threshold_date=threshold_date,
+      predict_end=predict_end,
+      max_monetary=max_monetary,
+      query_template_uri=query_template_uri)
 
+  # Run the feature engineering query on BigQuery.
+  engineer_features = engineer_features_op(
+      query=prepare_query.outputs['query'],
+      project_id=project_id,
+      dataset_id=prepare_query.outputs['dataset_name'],
+      table_id=prepare_query.outputs['table_name'],
+      output_gcs_path='',
+      dataset_location=dataset_location,
+      job_config='')
+
+  source_data_uri = 'bq://{}.{}.{}'.format(
+      project_id, prepare_query.outputs['dataset_name'],
+      prepare_query.outputs['table_name'])
+
+  # Import BQ table with features into AML dataset
+  import_dataset = import_dataset_op(
+      project_id=project_id,
+      region=aml_compute_region,
+      dataset_name=aml_dataset_name,
+      description='',
+      source_data_uri=source_data_uri,
+      target_column_name=target_column_name,
+      weight_column_name='',
+      ml_use_column_name='')
+  import_dataset.after(engineer_features)
+
+  # Train the model
   train_model = train_model_op(
       project_id=project_id,
       region=aml_compute_region,
-      dataset_id="model_id",
+      dataset_id=import_dataset.outputs['output_dataset_id'],
       model_name=aml_model_name,
       train_budget=train_budget,
       optimization_objective=optimization_objective,
       target_name=target_column_name,
       features_to_exclude=features_to_exclude)
 
+
   # Log evaluation metrics
   log_metrics = log_metrics_op(
       model_full_id=train_model.outputs['output_model_full_id'],
       primary_metric=primary_metric)
 
-  
+  # Deploy the model if configured and the primary metric below the threshold
+  with kfp.dsl.Condition(skip_deployment != True):
+    with kfp.dsl.Condition(train_model.outputs['output_primary_metric_value'] <
+                           deployment_threshold):
+      deploy_model = deploy_model_op(
+          train_model.outputs['output_model_full_id'])
+
+
+  # Configure the pipeline to use a service account secret
   if compiler_settings['use_sa_secret']:
     steps = [
+        load_transactions, prepare_query, engineer_features, import_dataset,
         train_model, log_metrics, deploy_model
     ]
     for step in steps:
       step.apply(gcp.use_gcp_secret('user-gcp-sa'))
- 
+
+  
