@@ -12,39 +12,39 @@ steps:
   - https://github.com/${_CLV_REPO}
   - clv
 
+# Create the image for custom build steps 
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'kfp-compiler', '.']
+  dir: 'clv/deploy/kfp-compiler-builder'
+
 # Build a base image for lightweight components
 - name: 'gcr.io/cloud-builders/docker' 
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_BASE_IMAGE:$_TAG', '.'] 
-  dir: 'clv/clv_pipelines/helper_components'
+  dir: 'clv/pipelines/helper_components'
 
 # Build the AutoML Tables component image
 - name:  'gcr.io/cloud-builders/docker' 
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE:$_TAG', '.'] 
-  dir: 'clv/automl_tables_components'
-
-# Create the image for custom build steps 
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'kfp-compiler', '.']
-  dir: 'clv/build-deploy/kfp-compiler-builder'
+  dir: 'clv/components/automl_tables'
 
 # Update AutoML components specs with the container image name 
 - name: 'kfp-compiler'
   entrypoint: 'python'
   args: 
   - update_image_name_in_specs.py
-  - ../../automl_tables_components/specs 
+  - ../../components/automl_tables/specs 
   - gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE:$_TAG
-  dir: 'clv/build-deploy/helpers'
+  dir: 'clv/deploy/helpers'
 
 # Update pipeline settings 
 - name: 'kfp-compiler'
   entrypoint: 'python'
   args: 
   - update_pipeline_settings.py 
-  - ../../clv_pipelines/settings.yaml
+  - ../../pipelines/settings.yaml
   - --compiler_settings.lightweight_components_base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE:$_TAG
   - --argument_defaults.query_template_uri=gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja
-  dir: 'clv/build-deploy/helpers'
+  dir: 'clv/deploy/helpers'
 
 # Compile the pipelines 
 - name: 'kfp-compiler'
@@ -52,13 +52,13 @@ steps:
   - '-c'
   - |
     dsl-compile --py  train_pipeline.py --output ${_TRAIN_PIPELINE}.tar.gz --disable-type-check
-  dir: 'clv/clv_pipelines'
+  dir: 'clv/pipelines'
 - name: 'kfp-compiler'
   args:
   - '-c'
   - |
     dsl-compile --py  batch_predict_pipeline.py --output ${_PREDICT_PIPELINE}.tar.gz --disable-type-check
-  dir: 'clv/clv_pipelines'
+  dir: 'clv/pipelines'
 
 # Deploy the compiled pipelines
 - name: 'gcr.io/cloud-builders/gsutil'
@@ -70,7 +70,7 @@ steps:
 
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', '*.tar.gz', 'gs://$_BUCKET_NAME/$_PIPELINES_FOLDER']
-  dir: 'clv/clv_pipelines'
+  dir: 'clv/pipelines'
 
 # Deploy the SQL query template
 - name: 'gcr.io/cloud-builders/gsutil' 
@@ -78,7 +78,7 @@ steps:
   - cp
   - artifacts/query_template.sql.jinja
   - gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja
-  dir: 'clv/clv_pipelines'
+  dir: 'clv/pipelines'
 
 # Deploy the sample dataset
 - name: 'gcr.io/cloud-builders/gsutil' 
@@ -86,13 +86,13 @@ steps:
   - cp
   - gs://clv-datasets/transactions/transactions.csv
   - gs://$_BUCKET_NAME/$_SAMPLE_DATASET_FOLDER/transactions.csv
-  dir: 'clv/clv_pipelines'
+  dir: 'clv/pipelines'
 - name: 'gcr.io/cloud-builders/gsutil' 
   args: 
   - cp
   - gs://clv-datasets/transactions/test_transactions.csv
   - gs://$_BUCKET_NAME/$_SAMPLE_DATASET_FOLDER/test_transactions.csv
-  dir: 'clv/clv_pipelines'
+  dir: 'clv/pipelines'
 
 # Push component images
 images: ['gcr.io/$PROJECT_ID/${_BASE_IMAGE}', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}']
