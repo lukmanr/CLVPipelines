@@ -41,7 +41,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
 
   write_metadata_for_output_viewers(markdown_metadata)
 
-  primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
+  output_primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
     metrics, primary_metric) else None 
   
   print(primary_metric)
@@ -69,10 +69,8 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   with open('/mlpipeline-metrics.json', 'w') as f:
     json.dump(metrics, f)
 
-  output = "{}  {}".format(accuracy, recall)
-  return output
-
-
+  Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
+  Path(output_primary_metric_value).write_text(output_primary_metric_value)
  
 
 def classification_evaluation_metrics_to_markdown_metadata(metrics):
