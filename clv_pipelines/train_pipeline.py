@@ -136,7 +136,8 @@ def clv_train(
 
   # Log evaluation metrics
   log_metrics = log_metrics_op(
-      model_full_id=train_model.outputs['output_model_full_id'])
+      model_full_id=train_model.outputs['output_model_full_id'],
+      primary_metric=primary_metric)
 
   # Deploy the model if configured and the primary metric below the threshold
   with kfp.dsl.Condition(skip_deployment != True):
