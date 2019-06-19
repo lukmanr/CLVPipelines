@@ -153,12 +153,15 @@ def clv_train(
       model_full_id=train_model.outputs['output_model_full_id'],
       primary_metric=primary_metric)
 
+  """
   # Deploy the model if configured and the primary metric below the threshold
   with kfp.dsl.Condition(skip_deployment != True):
     with kfp.dsl.Condition(train_model.outputs['output_primary_metric_value'] <
                            deployment_threshold):
       deploy_model = deploy_model_op(
           train_model.outputs['output_model_full_id'])
+  """
+
 
   """
   # Configure the pipeline to use a service account secret
