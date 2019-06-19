@@ -16,12 +16,19 @@
 Currently only regression evaluation metrics are supported
 """
 
-from common import get_latest_evaluation_metrics, write_metadata_for_output_viewers
+from common import get_latest_evaluation_metrics
+from common import write_metadata_for_output_viewers
+from common import write_metrics
+
 from google.cloud import automl_v1beta1 as automl
 
 
-def log_metrics(model_full_id):
-  """Retrieves and logs the latest evaluation metrics for an AutoML Tables  model."""
+def log_metrics(model_full_id, primary_metric):
+  """Retrieves and logs the latest evaluation metrics for an AutoML Tables  model.
+  
+  A full set of metrics is written out as a Markdown output artifacts.
+  The primary metric is written out as a pipeline metric
+  """
 
   metrics = get_latest_evaluation_metrics(model_full_id)
 
@@ -34,6 +41,19 @@ def log_metrics(model_full_id):
         metrics)
 
   write_metadata_for_output_viewers(markdown_metadata)
+
+  primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
+    metrics, primary_metric) else None 
+  )
+
+  if primary_metric_value:
+    metric_metadata = {
+      'name': primary_metric,
+      'numberValue': primary_metric_value
+    }
+
+  write_metrics(primary_metric_value)
+
 
 
 def regression_evaluation_metrics_to_markdown_metadata(metrics):
