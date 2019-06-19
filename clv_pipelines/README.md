@@ -153,9 +153,9 @@ The pipeline uses the same data preprocessing and feature engineering flow as th
 
 The pipelines can be customized by:
 - Changing the default values of the pipelines' parameters
-- Changing the compiler setting
+- Changing the compiler settings
 - Modyfing data preprocessing and feature engineering logic
-- Recoding the workflow
+- Re-coding the workflow
 
 ### Changing the default values of the pipelines' parameters
 The pipelines have been designed to minimize hard-coded values. Most pipeline settings are centralized in a single settings file - `settings.yaml`. The file uses the YAML format and has two sections:
