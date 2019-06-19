@@ -10,6 +10,8 @@ implementation:
     - inputValue: model_full_id
     - --primary-metric
     - inputValue: primary_metric
+    - --output-primary-metric-value
+    - outputPath: output_primary_metric_value
     image: gcr.io
 inputs:
 - description: The full id of the model
@@ -19,3 +21,7 @@ inputs:
   name: primary_metric
   type: String
 name: Log Metrics
+outputs:
+- description: Primary metric value
+  name: output_primary_metric_value
+  type: Float

@@ -18,15 +18,16 @@ Currently only regression evaluation metrics are supported
 """
 
 import logging
+import json
 from pathlib import Path
 from google.cloud import automl_v1beta1 as automl
 
 
-def log_metrics(model_full_id, primary_metric):
+def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   """Retrieves and logs the latest evaluation metrics for an AutoML Tables  model.
   
-  A full set of metrics is written out as a Markdown output artifacts.
-  The primary metric is written out as a pipeline metric
+  A full set of metrics is written out as a Markdown output artifact.
+  The primary metric is written out as a pipeline metric and returned as an output
   """
 
   metrics = get_latest_evaluation_metrics(model_full_id)
@@ -51,6 +52,9 @@ def log_metrics(model_full_id, primary_metric):
 
   write_metrics(primary_metric_value)
 
+  Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
+  Path(output_primary_metric_value).write_text(primary_metric_value)
+  
 
 def classification_evaluation_metrics_to_markdown_metadata(metrics):
   """Converts classification evaluation metrics to KFP Viewer markdown metadata."""
