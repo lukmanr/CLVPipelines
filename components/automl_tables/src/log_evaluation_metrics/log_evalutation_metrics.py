@@ -41,7 +41,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
 
   write_metadata_for_output_viewers(markdown_metadata)
 
-  output_primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
+  primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
     metrics, primary_metric) else None 
   
   print(primary_metric)
@@ -70,7 +70,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
     json.dump(metrics, f)
 
   Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
-  Path(output_primary_metric_value).write_text(output_primary_metric_value)
+  Path(output_primary_metric_value).write_text(primary_metric_value)
  
 
 def classification_evaluation_metrics_to_markdown_metadata(metrics):
