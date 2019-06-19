@@ -17,6 +17,10 @@
 Currently only regression evaluation metrics are supported
 """
 
+import logging
+from pathlib import Path
+from google.cloud import automl_v1beta1 as automl
+
 
 def log_metrics(model_full_id, primary_metric):
   """Retrieves and logs the latest evaluation metrics for an AutoML Tables  model.
