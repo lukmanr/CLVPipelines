@@ -48,7 +48,7 @@ The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** runni
 
 ### Building runtime environment
 
-The lightweight deployment of Kubeflow Pipelines on GKE has been automated with a bash script. You can find the script in the `/kfp_setup` folder.
+The lightweight deployment of Kubeflow Pipelines on GKE has been automated with a bash script. You can find the script in the `/kubeflow_pipelines_setup` folder.
 
 The solution accelerator has been developed using Kubeflow v5.0 and Kubeflow Pipelines v0.1.20
 
