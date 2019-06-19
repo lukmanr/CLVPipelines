@@ -162,6 +162,7 @@ def clv_train(
       deploy_model = deploy_model_op(
           train_model.outputs['output_model_full_id'])
 
+  """
   # Configure the pipeline to use a service account secret
   if compiler_settings['use_sa_secret']:
     steps = [
@@ -170,3 +171,12 @@ def clv_train(
     ]
     for step in steps:
       step.apply(gcp.use_gcp_secret('user-gcp-sa'))
+  """
+
+  if compiler_settings['use_sa_secret']:
+    steps = [
+        train_model, log_metrics, deploy_model
+    ]
+    for step in steps:
+      step.apply(gcp.use_gcp_secret('user-gcp-sa'))
+ 
