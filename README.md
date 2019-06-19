@@ -11,6 +11,7 @@ The solution accelerater includes the following components:
 - AutoML Tables KFP components - `/automl_tables_components`
 - Build and deployment automation - `/build-deploy`
 - Sample integration code - `/run`
+- Lightweight Kubeflow Pipelines on GKE deployment automation
 
 ### Training and inference KFP pipelines
 
@@ -47,35 +48,9 @@ The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** runni
 
 ### Building runtime environment
 
-**NOTE**. *The below installation procedure installs a full Kubeflow configuration that includes Kubeflow Pipelines and other components. When a lightweight configuration that only includes Kubeflow Pipeline components is supported this reference will be updated*
-
-To install Kubeflow, including Kubeflow Pipelines on Google Kubernetes Engine follow the instructions on [www.kubeflow.org](https://www.kubeflow.org/docs/gke/deploy/).
-
-**Make sure to configure Identity Aware Proxy (IAP) and Create Permanent Storage**.
+The lightweight deployment of Kubeflow Pipelines on GKE has been automated with a bash script. You can find the script in the `/kfp_setup` folder.
 
 The solution accelerator has been developed using Kubeflow v5.0 and Kubeflow Pipelines v0.1.20
-
-### Updating Kubeflow service account permissions
-The Kubelfow deployment process creates 3 service accounts:
-- `<your deployment name>-admin@<your project id>.iam.gserviceaccount.com`
-- `<your deployment name>-user@<your project id>.iam.gserviceaccount.com`
-- `<your deployment name>-vm@<your project id>.iam.gserviceaccount.com`
-  
-By default, the pipelines run using `<your deployment name>-user@<your project id>.iam.gserviceaccount.com` account. This account does not have access to AutoML Tables service.
-  
-To grant AutoML access use GCP Console or `gcloud`.
-```
-gcloud projects add-iam-policy-binding [YOUR_PROJECT_ID] \
-   --member="serviceAccount:<your deployment name>-user@<your project id>.iam.gserviceaccount.com" \
-   --role="roles/automl.admin"
-```
-
-### Kubeflow Pipelines installation automation
-
-TBD
-
-`/kfp-installation`
-
 
 
 
