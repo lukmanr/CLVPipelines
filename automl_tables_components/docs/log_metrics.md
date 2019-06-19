@@ -13,4 +13,4 @@ Use the componet to retrieve and log the latest evaluation metrics of a trained 
 The component does not return any outputs.
 
 ### Description
-The component retrieves *the latest* performance evaluation for a given trained AutoML tables model and writes it as a KFP Markdown artificat. The artifact can be inspected in the KFP UI. Currently, only the regression evaluation metrics are supported. 
+The component retrieves *the latest* performance evaluation for a given trained AutoML tables model and writes it as a KFP Markdown artifact. The artifact can be inspected in the KFP UI. Currently, only the regression evaluation metrics are supported. 
