@@ -98,7 +98,7 @@ def clv_train(
   
   if compiler_settings['use_sa_secret']:
     steps = [
-        train_model, log_metrics, deploy_model
+        train_model, log_metrics
     ]
     for step in steps:
       step.apply(gcp.use_gcp_secret('user-gcp-sa'))
