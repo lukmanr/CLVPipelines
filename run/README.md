@@ -8,7 +8,7 @@ There are two ways of triggering a KFP pipeline run:
 
 If you provisioned the lightweight Kubeflow Pipelines deployment, the KFP UI is available at the URL printed at the end of the Kubeflow Pipelines deployment process. You can also retrieve it using the following command:
 
-echo "https://"$(kubectl describe configmap inverse-proxy-config -n kubeflow | grep "googleusercontent.com")
+`echo "https://"$(kubectl describe configmap inverse-proxy-config -n kubeflow | grep "googleusercontent.com")`
 
 Use the procedure described in [Pipelines Quickstart](https://www.kubeflow.org/docs/pipelines/pipelines-quickstart/) to create experiments and submit pipeline runs.
 
