@@ -23,7 +23,7 @@ from google.cloud import automl_v1beta1 as automl
 def train(project_id, region, dataset_id, model_name, train_budget,
           optimization_objective, target_name, features_to_exclude,
           output_model_full_id):
-  """Train an AutoML Tables model."""
+  """Trains an AutoML Tables model."""
 
   logging.basicConfig(level=logging.INFO)
 
