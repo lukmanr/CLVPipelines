@@ -65,24 +65,26 @@ The installation script goes through the following steps.
 
 The solution includes KFP pipelines and KFP components. Before the pipelines can be run they have to be compiled and the solution's components need to be packaged in container images. The building and deploying of the solution has been automated using **Cloud Build**. Refer to [README](/deploy/README.md) in the `/deploy` folder of this repo for the detailed deployment instructions.
 
-### Training and inference KFP pipelines
 
-The solution accelerator includes two template KFP Pipelines:
+## Repository structure
+
+`/pipelines`
+The source code for two template KFP Pipelines:
 - The pipeline that automates CLV model training and deployment
-- The pipeline that automates batch inference using a trained CLV model
+- The pipeline that automates batch inference 
 
-Both pipelines use BigQuery for data preprocessing and feature engineering and AutoML Tables for model training, deployment and inference.
 
-Refer to `/clv_pipelines/README.md` for more information on the pipelines' design and usage.
+`/components`
 
-### AutoML Tables KFP components
-
-The pipelines utilize a number of KFP components including custom KFP components that wrap selected AutoML Tables APIs. The source code for the components can be found in the `components/automl_tables` folder.
+The source code for the KFP components that wrap selected **AutoML Tables** APIs.
 
 Refer to `/automl_tables_components/README.md` for more information on the components' design and usage.
 
+`/install`
 
-### Sample integration code
+Lightweight Kubeflow Pipelines deployment installation script
+
+`/deploy`
 
 The pipelines can be run using Kubeflow Pipelines UI but they can also be integrated with other systems by using `kfp.Client()` programmatic interface. The `/run` folder contains codes samples demonstrating how to use `kfp.Client()` interface.
 
