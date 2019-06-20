@@ -76,7 +76,6 @@ def clv_train(
     query_template_uri=argument_defaults['query_template_uri']):
   """Trains and optionally deploys a CLV Model."""
 
-
   # Load sales transactions
   load_transactions = load_sales_transactions_op(
       project_id=project_id,
@@ -145,7 +144,6 @@ def clv_train(
                            deployment_threshold):
       deploy_model = deploy_model_op(
           train_model.outputs['output_model_full_id'])
-
 
   # Configure the pipeline to use a service account secret
   if compiler_settings['use_sa_secret']:
