@@ -14,7 +14,7 @@ The below diagram depicts the high level architecture of the solution:
 
 ![KFP Runtime](/images/architecture.jpg)
 
-In the solution, Kubeflow Pipelines is used solely as an orchestrator of Google Cloud  managed services: **BigQuery**, **AutoML Tables**, and **Cloud Storage**. **BigQuery** is used for data pre-processing and feature engineering. **AutoML Tables** is used for model training and inference. **Cloud Storage** is used for staging input and output datasets. 
+In the solution, **Kubeflow Pipelines** is used solely as an orchestrator of Google Cloud  managed services: **BigQuery**, **AutoML Tables**, and **Cloud Storage**. **BigQuery** is used for data pre-processing and feature engineering. **AutoML Tables** is used for model training and inference. **Cloud Storage** is used for staging input and output datasets. 
 
 The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The solution's training and inference pipelines access **BigQuery**,  **AutoML Tables** services through a set of Kubeflow Pipelines components that wrap the respective **Google Cloud APIs**. The container images for the components utilized by the pipelines are managed in **Container Registry**.
 
