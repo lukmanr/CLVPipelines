@@ -53,7 +53,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   print(str(primary_metric))
   print(type(str(primary_metric)))
 
-  primary_metric = 'metric'
+  primary_metric = primary_metric.replace('_', '-')
   if primary_metric_value:
     metrics = {
       'metrics': [{
