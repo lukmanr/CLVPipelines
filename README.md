@@ -44,6 +44,7 @@ chmod 755 install.sh
 ./install.sh [PROJECT_ID] [CLUSTER_NAME] [REGION] [KFP_SA] master
 ```
 where
+
 Parameter | Description
 ----------|------------
 PROJECT_ID|Project ID of the GCP project you selected for the solution
