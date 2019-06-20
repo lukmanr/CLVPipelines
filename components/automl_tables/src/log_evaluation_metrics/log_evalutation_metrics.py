@@ -52,7 +52,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   if primary_metric_value:
     metrics = {
       'metrics': [{
-        'name': str(primary_metric),
+        'name': 'metric2',
         'numberValue': primary_metric_value
       }]
     }
@@ -63,20 +63,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   # Write the primary metric value as to the output
   Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
   Path(output_primary_metric_value).write_text(str(primary_metric_value))
- 
 
-def classification_evaluation_metrics_to_markdown_metadata(metrics):
-  """Converts classification evaluation metrics to KFP Viewer markdown metadata."""
-
-  markdown = "TBD"
-
-  markdown_metadata = {
-      "type": "markdown",
-      "storage": "inline",
-      "source": markdown
-  }
-
-  return markdown_metadata
 
 def regression_evaluation_metrics_to_markdown_metadata(metrics):
   """Converts regression evaluation metrics to KFP Viewer markdown metadata."""
@@ -99,6 +86,21 @@ def regression_evaluation_metrics_to_markdown_metadata(metrics):
   }
 
   return markdown_metadata
+
+
+def classification_evaluation_metrics_to_markdown_metadata(metrics):
+  """Converts classification evaluation metrics to KFP Viewer markdown metadata."""
+
+  markdown = "TBD"
+
+  markdown_metadata = {
+      "type": "markdown",
+      "storage": "inline",
+      "source": markdown
+  }
+
+  return markdown_metadata
+
 
 def get_latest_evaluation_metrics(model_full_id):
   """Retrieves the latest evaluation metrics for an AutoML Tables model."""

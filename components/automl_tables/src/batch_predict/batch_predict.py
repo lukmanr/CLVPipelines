@@ -27,7 +27,8 @@ def predict(project_id, region, model_id, datasource, destination_prefix,
   logging.basicConfig(level=logging.INFO)
 
   client = automl.PredictionServiceClient()
-  # Prepare prediction query config
+
+  # Prepare the prediction query config
   model_full_id = client.model_path(project_id, region, model_id)
   if datasource.startswith("bq"):
     input_config = {"bigquery_source": {"input_uri": datasource}}
@@ -58,7 +59,7 @@ def predict(project_id, region, model_id, datasource, destination_prefix,
   result = response.metadata
 
   logging.info("Batch scoring completed: {}".format(str(result)))
-  
+
   # Save results
   if destination_prefix.startswith("bq"):
     output = result.batch_predict_details.output_info.bigquery_output_dataset
