@@ -33,7 +33,7 @@ Refer to [README](/install/README.md) in the `/install` folder of this repo for 
 
 ## Building and deploying the solution
 
-The solution includes KFP pipelines and KFP components. Before the pipelines can be run they have to be compiled and the solution's components need to be packaged in container images. The building and deploying of the solution has been automated using **Cloud Build**. 
+The building and deploying of the solution components has been automated using **Cloud Build**. 
 
 Refer to [README](/deploy/README.md) in the `/deploy` folder of this repo for the detailed deployment instructions.
 
