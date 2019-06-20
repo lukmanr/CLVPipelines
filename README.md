@@ -2,7 +2,7 @@
 
 ## Solution Overview
 
-This repository maintains the source code for  **Predicting Customer Lifetime Value with Kubeflow Pipelines** solution.
+This repository maintains the source code for the **Predicting Customer Lifetime Value with Kubeflow Pipelines** solution.
 
 The **Predicting Customer Lifetime Value** solution  delivers automation of Customer Lifetime Value (CLV) modeling techniques described in the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series of articles.
 
