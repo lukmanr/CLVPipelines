@@ -170,8 +170,8 @@ To take effect, the `settings.yaml` file must be located in the directory from w
 
 In the `compiler_settings` section you define the settings that control how the KFP `dsl-compiler` converts Python DSL into the resulting YAML. Currently, the following `compiler_settings` are supported:
 - `lightweight_components_base_image` - the full name of a container image used to run helper lightweight Python components
-- `local_search_path` - a (YAML encoded) list of local file system paths that the DSL compiler searches to find component specfications
-- `url_search_prefixes` - a (YAML encoded ) list of URL prefixes that the DSL compiler searches to find component specifications
+- `local_search_path` - a list of local file system paths that the DSL compiler searches to find component specfications
+- `url_search_prefixes` - a list of URL prefixes that the DSL compiler searches to find component specifications
 - `use_sa_secret` - If set to True the pipelines will be compiled to use the KFP user service account to access external resources. Otherwise the pipelines will be compiled to use the default GCE service account of GKE nodes to access external resources.
 
 
