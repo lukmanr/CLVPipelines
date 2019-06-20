@@ -127,17 +127,3 @@ def get_latest_evaluation_metrics(model_full_id):
   return evaluation_metrics
 
 
-def write_metadata_for_output_viewers(*argv):
-  """Writes items to be rendered by KFP UI as artificats."""
-
-  output_metadata = {'version': 1, 'outputs': argv}
-  with open('/mlpipeline-ui-metadata.json', 'w') as f:
-    json.dump(output_metadata, f)
-
-
-def write_metrics(*metrics):
-  """Writes pipeline metrics."""
-
-  metrics_metadata = {'metrics': metrics}
-  with open('/mlpipeline-metrics.json', 'w') as f:
-    json.dump(metrics_metadata, f)
