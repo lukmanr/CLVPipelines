@@ -17,7 +17,6 @@
 Currently only regression evaluation metrics are supported
 """
 
-import logging
 import json
 from pathlib import Path
 from google.cloud import automl_v1beta1 as automl
@@ -29,6 +28,12 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   A full set of metrics is written out as a Markdown output artifact.
   The primary metric is written out as a pipeline metric and returned as an
   output
+
+  Args:
+    model_full_id: A full ID of an AutoML model.
+    primary_metric: A primary evaluation metric to retrieve and log as KFP
+      metric
+    output_primary_metric_value: An output argument for KFP use.
   """
 
   metrics = get_latest_evaluation_metrics(model_full_id)
@@ -46,9 +51,8 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
     json.dump(output_metadata, f)
 
   # Write the primary metric as a pipeline metric
-  #primary_metric_value = getattr(metrics, primary_metric) if hasattr(
-  #    metrics, primary_metric) else None
-  primary_metric_value = getattr(metrics, primary_metric)
+  primary_metric_value = getattr(metrics, primary_metric) if hasattr(
+      metrics, primary_metric) else None
 
   if primary_metric_value:
     metrics = {
