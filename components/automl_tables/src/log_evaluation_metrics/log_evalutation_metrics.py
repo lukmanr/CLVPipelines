@@ -62,8 +62,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   metrics = {
     'metrics': [{
       'name': 'accuracy-score',
-      'numberValue':  accuracy,
-      'format': "PERCENTAGE",
+      'numberValue':  accuracy
     }]
   }
   with open('/mlpipeline-metrics.json', 'w') as f:
