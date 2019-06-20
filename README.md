@@ -86,9 +86,11 @@ Lightweight Kubeflow Pipelines deployment installation script
 
 `/deploy`
 
-The pipelines can be run using Kubeflow Pipelines UI but they can also be integrated with other systems by using `kfp.Client()` programmatic interface. The `/run` folder contains codes samples demonstrating how to use `kfp.Client()` interface.
+Cloud Build configuration for automated building and deployment of the solution.
 
+`/run`
 
+Sample code demonstrating how to use the `kfp.Client()` programmatic interface to KFP services.
 
 
 
@@ -99,11 +101,4 @@ The sample dataset used in the solution accelrator is based on the publicly avai
 The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. 
 
 
-
-
-The solution accelerater includes the following components:
-- Training and inference Kubeflow Pipelines (KFP) pipelines - `/pipelines`
-- AutoML Tables KFP components - `/components`
-- Cloud Build configuration for automated building and deployment of the solution's KFP components and pipelines - `/deploy`
-- Sample integration code demonstrating  - `/run`
 
