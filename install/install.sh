@@ -109,7 +109,7 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 --role roles/automl.predictor \
 --no-user-output-enabled
 
-# 12. Print out the KFP UI endpoint
+# 13. Print out the KFP UI endpoint
 KFP_UI_URL="https://"$(kubectl describe configmap inverse-proxy-config -n kubeflow | grep "googleusercontent.com")
 echo "Kubeflow Pipelines installation complete"
 echo "You can access KFP UI at: "${KFP_UI_URL}

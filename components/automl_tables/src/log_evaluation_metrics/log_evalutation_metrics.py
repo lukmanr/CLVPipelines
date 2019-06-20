@@ -51,7 +51,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
 
   print(type(primary_metric))
   print(str(primary_metric))
-  print(type(str(primary_mertric)))
+  print(type(str(primary_metric)))
 
   primary_metric = 'metric'
   if primary_metric_value:
