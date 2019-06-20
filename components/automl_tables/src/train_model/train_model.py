@@ -20,30 +20,10 @@ from pathlib import Path
 from google.cloud import automl_v1beta1 as automl
 
 
-def train(
-    project_id,
-    region,
-    dataset_id,
-    model_name,
-    train_budget,
-    optimization_objective,
-    target_name,
-    features_to_exclude,
-    output_model_full_id
-):
+def train(project_id, region, dataset_id, model_name, train_budget,
+          optimization_objective, target_name, features_to_exclude,
+          output_model_full_id):
   """Train an AutoML Tables model."""
-
-  
-  print("testing")
-  model_full_id = 'projects/928933997278/locations/us-central1/models/TBL7003000663537876992'
-  
-  Path(output_model_full_id).parent.mkdir(parents=True, exist_ok=True)
-  Path(output_model_full_id).write_text(model_full_id)
-  
-  return
-
-
-
 
   logging.basicConfig(level=logging.INFO)
 
