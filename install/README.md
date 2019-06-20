@@ -16,7 +16,7 @@ To provision the lightweight Kubeflow Pipelines deployment:
 1. Start the installation process by executing the following commands:
 ```
 chmod 755 install.sh
-./install.sh [PROJECT_ID] [CLUSTER_NAME] [REGION] [KFP_SA] master
+./install.sh [PROJECT_ID] [CLUSTER_NAME] [ZONE] [KFP_SA] master
 ```
 
 Parameter | Description
