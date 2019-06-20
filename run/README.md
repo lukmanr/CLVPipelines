@@ -22,7 +22,7 @@ The compiled batch predict pipeline is in
 
 The sample training and testing datasets can be found in:
 
-`gs://[_BUCKET_NAME][_SAMPLE_DATASET]
+`gs://[_BUCKET_NAME][_SAMPLE_DATASET]`
 
 The runtime parameters required by the pipelines are described in detail in [`/pipelines/README.md`](/pipelines/README.md)
 
