@@ -10,8 +10,12 @@ The below diagram depicts the high level architecture of the solution:
 
 ![KFP Runtime](/images/architecture.jpg)
 
+The solution utilizes an architectural pattern where Kubeflow Pipelines is used solely as an orchestrator of . The primary goal of the pipelines in the solution is to orchestrate **BigQuery** and **AutoML Tables** services. **BigQuery** is used for data pr
+
+
 The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The solution's pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through a set of Kubeflow Pipelines components that wrap the respective **Google Cloud APIs**.The container images for the components utilized by the pipelines are managed in **Container Registry**.
 
+The 
 
 
 ## Installing Kubeflow Pipelines
