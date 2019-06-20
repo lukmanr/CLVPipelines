@@ -32,41 +32,35 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
 
   metrics = get_latest_evaluation_metrics(model_full_id)
 
+  # Write metrics as a Markdown artifact
   if isinstance(metrics, automl.types.RegressionEvaluationMetrics):
     markdown_metadata = regression_evaluation_metrics_to_markdown_metadata(
         metrics)
   elif isinstance(metrics, automl.types.ClassificationEvaluationMetrics):
     markdown_metadata = classification_evaluation_metrics_to_markdown_metadata(
         metrics) 
+ 
+  output_metadata = {'version': 1, 
+                     'outputs': [markdown_metadata]}
+  with open('/mlpipeline-ui-metadata.json', 'w') as f:
+    json.dump(output_metadata, f)
 
-  write_metadata_for_output_viewers(markdown_metadata)
-
+  # Write the primary metric as a pipeline metric
   primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
     metrics, primary_metric) else None 
-  
-  print(primary_metric)
-  print(primary_metric_value)
-
-
-  """
+ 
   if primary_metric_value:
-    metric_metadata = {
-      'name': primary_metric,
-      'numberValue': primary_metric_value
+    metrics = {
+      'metrics': [{
+        'name': primary_metric,
+        'numberValue': primary_metric_value 
+      }]
     }
-    print(metric_metadata)
-    write_metrics(primary_metric_value)
-  """
 
-  accuracy = 0.9
-  metrics = {
-    'metrics': [{
-      'name': 'accuracy-score',
-      'numberValue':  accuracy
-    }]
-  }
-  with open('/mlpipeline-metrics.json', 'w') as f:
-    json.dump(metrics, f)
+    print(primary_metric, primary_metric_value)
+
+    with open('/mlpipeline-metrics.json', 'w') as f:
+      json.dump(metrics, f)
 
   Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
   Path(output_primary_metric_value).write_text(primary_metric_value)
