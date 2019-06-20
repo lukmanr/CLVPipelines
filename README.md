@@ -10,7 +10,7 @@ The below diagram depicts the high level architecture of the solution:
 
 ![KFP Runtime](/images/architecture.jpg)
 
-The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The solution's pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through a set of Kubeflow Pipelines components that wrap the respective Google Cloud APIs.The container images for the components utilized by the pipelines are managed in **Container Registry**.
+The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The solution's pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through a set of Kubeflow Pipelines components that wrap the respective **Google Cloud APIs**.The container images for the components utilized by the pipelines are managed in **Container Registry**.
 
 
 
