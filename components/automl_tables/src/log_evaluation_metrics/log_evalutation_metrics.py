@@ -46,7 +46,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
     json.dump(output_metadata, f)
 
   # Write the primary metric as a pipeline metric
-  primary_metric_value = str(getattr(metrics, primary_metric)) if hasattr(
+  primary_metric_value = getattr(metrics, primary_metric) if hasattr(
     metrics, primary_metric) else None 
  
   if primary_metric_value:
@@ -63,7 +63,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
       json.dump(metrics, f)
 
   Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
-  Path(output_primary_metric_value).write_text(primary_metric_value)
+  Path(output_primary_metric_value).write_text(str(primary_metric_value))
  
 
 def classification_evaluation_metrics_to_markdown_metadata(metrics):
