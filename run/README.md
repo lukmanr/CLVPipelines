@@ -1,3 +1,11 @@
+## Running the solution's pipelines
+
+There are two ways of triggering a KFP pipeline run:
+- Using the Kubeflow Pipelines UI
+- Using the KFP SDK
+
+
+
 This folder contains code samples demonstrating how to use `kfp.Client()` API from KFP SDK to configure experiments and submit pipeline runs programmatically.
 
 The `run_pipeline.py` Python script implements a CLI wrapper around `kfp.Client()`. The `run_train.sh` and `run_batch_predict.sh` are example bash scripts that utilize `run_pipeline.py` to submit pipeline runs.
