@@ -61,16 +61,9 @@ The installation script goes through the following steps.
 1. Stores the key as the user-gcp-sa Kubernetes secret in the kubeflow namespace.
 1. Assigns the service account permissions in for BigQuery, Cloud Storage and AutoML Tables.
 
+## Building and deploying solution components
 
-
-  
-
-### Building runtime environment
-
-The lightweight deployment of Kubeflow Pipelines on GKE has been automated with a bash script. You can find the script in the `/kubeflow_pipelines_setup` folder.
-
-The solution accelerator has been developed using Kubeflow v5.0 and Kubeflow Pipelines v0.1.20
-
+The solution includes KFP pipelines and KFP components. Before the pipelines can be run they have to be compiled and the solution's components need to be package in container images. The building and deploying of the solution has been automated using **Cloud Build**. Refer to [README](/deploy/README.md) in the `/deploy` folder of this repo for the detailed deployment instructions.
 
 ### Training and inference KFP pipelines
 
@@ -88,9 +81,6 @@ The pipelines utilize a number of KFP components including custom KFP components
 
 Refer to `/automl_tables_components/README.md` for more information on the components' design and usage.
 
-### Build and deployment automation
-
-The process of customizing, compiling and deploying the pipelines and the AutoML Tables components has been automated using Google Cloud Build service. The automation script and its documentation are in the `/build-deploy` folder.
 
 ### Sample integration code
 
