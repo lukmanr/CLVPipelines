@@ -18,14 +18,13 @@ In the solution, **Kubeflow Pipelines** is used solely as an orchestrator of Goo
 
 The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The solution's training and inference pipelines access **BigQuery**,  **AutoML Tables** services through a set of Kubeflow Pipelines components that wrap the respective **Google Cloud APIs**. The container images for the components utilized by the pipelines are managed in **Container Registry**.
 
-No computation - other than workflow execution
 
 
 ## Installing Kubeflow Pipelines
 
-The solution accelerator has been developed and tested on Kubeflow Pipelines on Google Cloud Platform Kubernetes Engine (GKE). 
+The solution has been developed and tested on Kubeflow Pipelines on Google Cloud Platform Kubernetes Engine (GKE). 
 
-The runtime environment required by the solution accelerator is depicted on the below diagram:
+You can run the solution on a full Kubeflow installation which can be provisioned by following [this guide](https://www.kubeflow.org/docs/gke/deploy/) or on a lightweight deployment that only includes core Kubeflow Pipelines services.
 
 
 
