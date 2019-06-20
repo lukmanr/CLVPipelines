@@ -37,6 +37,12 @@ To provision the lightweight Kubeflow Pipelines deployment:
    - AutoML 
    - Cloud Build
 1. Open a new session in **Cloud Shell**
+1. Create a working directory and copy to it the `install.sh` script from the `/install` folder of this repo.
+1. Start the installation process by executing the following commands:
+```
+chmod 755 install.sh
+./install.sh [PROJECT_ID] [CLUSTER_NAME] [REGION] [SERVICE_ACCOUNT_NAME] master
+```
 
 
   
