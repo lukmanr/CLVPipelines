@@ -16,7 +16,7 @@ The compiled training pipeline hase been stored by Cloud Build in the following 
 
 `gs://[_BUCKET_NAME][_PIPELINES_FOLDER]/[_TRAIN_PIPELINE].tar.gz`
 
-The compiled batch predict in
+The compiled batch predict pipeline in
 
 `gs://[_BUCKET_NAME][_PIPELINES_FOLDER]/[_PREDICT_PIPELINE].tar.gz`
 
