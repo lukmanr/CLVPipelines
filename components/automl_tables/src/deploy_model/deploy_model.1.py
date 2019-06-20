@@ -23,9 +23,6 @@ from google.cloud.automl_v1beta1 import enums
 def deploy(model_full_id, output_deployment):
   """Deploys an AutoML Tables model."""
 
-  print("Returning")
-  return
-
   logging.basicConfig(level=logging.INFO)
   client = automl.AutoMlClient()
 

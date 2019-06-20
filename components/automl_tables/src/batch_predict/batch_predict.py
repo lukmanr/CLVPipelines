@@ -14,9 +14,7 @@
 """Run Automl Tables Batch Predict."""
 
 import logging
-
 from pathlib import Path
-
 from google.cloud import automl_v1beta1 as automl
 
 
@@ -50,11 +48,6 @@ def predict(project_id, region, model_id, datasource, destination_prefix,
   response = client.batch_predict(model_full_id, input_config, output_config)
 
   # Wait for completion
-  # WORKAROUND to catch exception thrown by response.result()
-  #try:
-  #  response.result()
-  #except:
-  #  pass
   response.result()
   result = response.metadata
 

@@ -31,7 +31,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
 
   Args:
     model_full_id: A full ID of an AutoML model.
-    primary_metric: A primary evaluation metric to retrieve and log as KFP
+    primary_metric: A primary evaluation metric to retrieve and log as a KFP
       metric
     output_primary_metric_value: An output argument for KFP use.
   """
