@@ -32,7 +32,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
 
   metrics = get_latest_evaluation_metrics(model_full_id)
 
-  # Write metrics as a Markdown artifact
+  # Write evalutaon metrics as a Markdown artifact
   if isinstance(metrics, automl.types.RegressionEvaluationMetrics):
     markdown_metadata = regression_evaluation_metrics_to_markdown_metadata(
         metrics)
@@ -52,7 +52,7 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   if primary_metric_value:
     metrics = {
       'metrics': [{
-        'name': primary_metric,
+        'name': 'metric',
         'numberValue': primary_metric_value
       }]
     }
