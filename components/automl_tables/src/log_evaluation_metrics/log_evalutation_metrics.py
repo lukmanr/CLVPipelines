@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Implementation of the KFP component that retrieves and outputs to the KFP artifact viewer the latest evaluation metrics.
+"""Implementation of the KFP component that retrieves and outputs to the KFP UI the latest evaluation metrics.
 
 Currently only regression evaluation metrics are supported
 """
@@ -25,9 +25,10 @@ from google.cloud import automl_v1beta1 as automl
 
 def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   """Retrieves and logs the latest evaluation metrics for an AutoML Tables  model.
-  
+
   A full set of metrics is written out as a Markdown output artifact.
-  The primary metric is written out as a pipeline metric and returned as an output
+  The primary metric is written out as a pipeline metric and returned as an
+  output
   """
 
   metrics = get_latest_evaluation_metrics(model_full_id)
@@ -38,28 +39,23 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
         metrics)
   elif isinstance(metrics, automl.types.ClassificationEvaluationMetrics):
     markdown_metadata = classification_evaluation_metrics_to_markdown_metadata(
-        metrics) 
- 
-  output_metadata = {'version': 1, 
-                     'outputs': [markdown_metadata]}
+        metrics)
+
+  output_metadata = {'version': 1, 'outputs': [markdown_metadata]}
   with open('/mlpipeline-ui-metadata.json', 'w') as f:
     json.dump(output_metadata, f)
 
   # Write the primary metric as a pipeline metric
-  primary_metric_value = getattr(metrics, primary_metric) if hasattr(
-    metrics, primary_metric) else None 
+  #primary_metric_value = getattr(metrics, primary_metric) if hasattr(
+  #    metrics, primary_metric) else None
+  primary_metric_value = getattr(metrics, primary_metric)
 
-  print(type(primary_metric))
-  print(str(primary_metric))
-  print(type(str(primary_metric)))
-
-  primary_metric = primary_metric.replace('_', '-')
   if primary_metric_value:
     metrics = {
-      'metrics': [{
-        'name': primary_metric,
-        'numberValue': primary_metric_value
-      }]
+        'metrics': [{
+            'name': primary_metric.replace('_', '-'),
+            'numberValue': primary_metric_value
+        }]
     }
 
     with open('/mlpipeline-metrics.json', 'w') as f:
@@ -74,10 +70,10 @@ def regression_evaluation_metrics_to_markdown_metadata(metrics):
   """Converts regression evaluation metrics to KFP Viewer markdown metadata."""
 
   regression_markdown_template = (
-      "**Evaluation Metrics:**  \n"
-      "&nbsp;&nbsp;&nbsp;&nbsp;**RMSE:**            {rmse}  \n"
-      "&nbsp;&nbsp;&nbsp;&nbsp;**MAE:**             {mae}  \n"
-      "&nbsp;&nbsp;&nbsp;&nbsp;**R-squared:**       {rsquared}  \n")
+      '**Evaluation Metrics:**  \n'
+      '&nbsp;&nbsp;&nbsp;&nbsp;**RMSE:**            {rmse}  \n'
+      '&nbsp;&nbsp;&nbsp;&nbsp;**MAE:**             {mae}  \n'
+      '&nbsp;&nbsp;&nbsp;&nbsp;**R-squared:**       {rsquared}  \n')
 
   markdown = regression_markdown_template.format(
       rmse=round(metrics.root_mean_squared_error, 2),
@@ -85,9 +81,9 @@ def regression_evaluation_metrics_to_markdown_metadata(metrics):
       rsquared=round(metrics.r_squared, 2))
 
   markdown_metadata = {
-      "type": "markdown",
-      "storage": "inline",
-      "source": markdown
+      'type': 'markdown',
+      'storage': 'inline',
+      'source': markdown
   }
 
   return markdown_metadata
@@ -96,12 +92,12 @@ def regression_evaluation_metrics_to_markdown_metadata(metrics):
 def classification_evaluation_metrics_to_markdown_metadata(metrics):
   """Converts classification evaluation metrics to KFP Viewer markdown metadata."""
 
-  markdown = "TBD"
+  markdown = 'TBD'
 
   markdown_metadata = {
-      "type": "markdown",
-      "storage": "inline",
-      "source": markdown
+      'type': 'markdown',
+      'storage': 'inline',
+      'source': markdown
   }
 
   return markdown_metadata
@@ -133,6 +129,7 @@ def write_metadata_for_output_viewers(*argv):
   output_metadata = {'version': 1, 'outputs': argv}
   with open('/mlpipeline-ui-metadata.json', 'w') as f:
     json.dump(output_metadata, f)
+
 
 def write_metrics(*metrics):
   """Writes pipeline metrics."""
