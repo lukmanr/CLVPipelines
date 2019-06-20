@@ -6,16 +6,17 @@ This repository maintains the source code for  **Predicting Customer Lifetime Va
 
 The **Predicting Customer Lifetime Value** solution  delivers automation of Customer Lifetime Value (CLV) modeling techniques described in the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series of articles.
 
+The primary goal of the solution is to orchestrate two Machine Learning workflows:
+- The training and deployment of the Customer Lifetime Value predictive model
+- The batch scoring using the trained Customer Lifetime Value predictive model.
+
 The below diagram depicts the high level architecture of the solution:
 
 ![KFP Runtime](/images/architecture.jpg)
 
-The solution utilizes an architectural pattern where Kubeflow Pipelines is used solely as an orchestrator of . The primary goal of the pipelines in the solution is to orchestrate **BigQuery** and **AutoML Tables** services. **BigQuery** is used for data pr
+In the solution, Kubeflow Pipelines is used solely as an orchestrator of **BigQuery** and **AutoML Tables** services. **BigQuery** is used for data pre-processing and feature engineering. **AutoML Tables** is used for model training and inference.
 
-
-The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The solution's pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through a set of Kubeflow Pipelines components that wrap the respective **Google Cloud APIs**.The container images for the components utilized by the pipelines are managed in **Container Registry**.
-
-The 
+The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The solution's training and inference pipelines access **BigQuery**,  **AutoML Tables**, and other auxiliary services through a set of Kubeflow Pipelines components that wrap the respective **Google Cloud APIs**. The container images for the components utilized by the pipelines are managed in **Container Registry**.
 
 
 ## Installing Kubeflow Pipelines
