@@ -7,7 +7,7 @@ This repository maintains the source code for  **Predicting Customer Lifetime Va
 The **Predicting Customer Lifetime Value** solution  delivers automation of Customer Lifetime Value (CLV) modeling techniques described in the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series of articles.
 
 The primary goal of the solution is to orchestrate two Machine Learning workflows:
-- The training the Customer Lifetime Value predictive model using historical sales data.
+- The training of the Customer Lifetime Value predictive model using historical sales data.
 - The batch scoring of new customer data using the trained Customer Lifetime Value predictive model.
 
 The below diagram depicts the high level architecture of the solution:
