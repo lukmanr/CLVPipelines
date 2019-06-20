@@ -26,6 +26,22 @@ The solution has been developed and tested on Kubeflow Pipelines on Google Cloud
 
 You can run the solution on a full Kubeflow installation which can be provisioned by following [the Kubeflow on GCP guide](https://www.kubeflow.org/docs/gke/deploy/) or on a lightweight deployment that only includes core Kubeflow Pipelines services.
 
+The solution includes a script that automates the lightweight Kubeflow Pipelines deployment.
+
+To provision the lightweight Kubeflow Pipelines deployment:
+1. Select or create a GCP project
+1. Make sure that the following Cloud APIs are enabled:
+  - Compute Engine
+  - Cloud Storage
+  - Container Registry
+  - Kubernetes Engine
+  - BigQuery
+  - AutoML 
+  - Cloud Build
+1. Open a new session in **Cloud Shell**
+
+
+  
 
 
 
