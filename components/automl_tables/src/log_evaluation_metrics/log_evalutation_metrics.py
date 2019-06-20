@@ -52,8 +52,8 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   if primary_metric_value:
     metrics = {
       'metrics': [{
-        'name': primary_metric,
-        'numberValue': primary_metric_value 
+        'name': 'accuracy-score',
+        'numberValue': primary_metric_value
       }]
     }
 
