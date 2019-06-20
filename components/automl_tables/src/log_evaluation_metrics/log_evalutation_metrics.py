@@ -48,11 +48,16 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   # Write the primary metric as a pipeline metric
   primary_metric_value = getattr(metrics, primary_metric) if hasattr(
     metrics, primary_metric) else None 
- 
+
+  print(type(primary_metric))
+  print(str(primary_metric))
+  print(type(str(primary_mertric)))
+
+  primary_metric = 'metric'
   if primary_metric_value:
     metrics = {
       'metrics': [{
-        'name': 'metric2',
+        'name': primary_metric,
         'numberValue': primary_metric_value
       }]
     }
