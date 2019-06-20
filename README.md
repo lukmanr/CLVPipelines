@@ -1,6 +1,6 @@
 # Predicting Customer Lifetime Value with Kubeflow Pipelines
 
-## Overview
+## Solution Overview
 
 This repository maintains the source code for  **Predicting Customer Lifetime Value with Kubeflow Pipeliens** solution.
 
