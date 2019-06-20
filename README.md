@@ -56,8 +56,6 @@ KFP_VERSION | The version of Kubeflow Pipelines to install. It is recommended to
 
   
 
-
-
 ### Building runtime environment
 
 The lightweight deployment of Kubeflow Pipelines on GKE has been automated with a bash script. You can find the script in the `/kubeflow_pipelines_setup` folder.
