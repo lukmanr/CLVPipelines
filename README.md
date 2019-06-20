@@ -7,7 +7,7 @@ This repository maintains the source code for  **Predicting Customer Lifetime Va
 The **Predicting Customer Lifetime Value** solution  delivers automation of Customer Lifetime Value (CLV) modeling techniques described in the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series of articles.
 
 The solution accelerater includes the following components:
-- Training and inference KFP pipelines - `/pipelines`
+- Training and inference Kubeflow Pipelines (KFP) pipelines - `/pipelines`
 - AutoML Tables KFP components - `/components`
 - Build and deployment automation - `/deploy`
 - Sample integration code - `/run`
