@@ -83,5 +83,17 @@ To use `run_pipeline.py` utility you also need [Python Fire package](https://goo
 pip install fire
 ```
 
+#### Configuring port forwarding to Kubeflow Pipelines services
+
+Currently, the lightweight deployment of Kubeflow Pipelines does not expose a public interface to the service. It will be addressed in future release. In the meantime, use Kubernetes port forwarding.
+
+```
+kubectl port-forward -n kubeflow svc/ml-pipeline 8082:8888
+```
+
+This command allows you to access the services by using a local URL: `http://localhost:8082`.
+
+Use this URL as a value of the `host` parameter of `run_pipeline.py`
+
 
 
