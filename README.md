@@ -61,9 +61,9 @@ The installation script goes through the following steps.
 1. Stores the key as the user-gcp-sa Kubernetes secret in the kubeflow namespace.
 1. Assigns the service account permissions in for BigQuery, Cloud Storage and AutoML Tables.
 
-## Building and deploying solution components
+## Building and deploying the solution
 
-The solution includes KFP pipelines and KFP components. Before the pipelines can be run they have to be compiled and the solution's components need to be package in container images. The building and deploying of the solution has been automated using **Cloud Build**. Refer to [README](/deploy/README.md) in the `/deploy` folder of this repo for the detailed deployment instructions.
+The solution includes KFP pipelines and KFP components. Before the pipelines can be run they have to be compiled and the solution's components need to be packaged in container images. The building and deploying of the solution has been automated using **Cloud Build**. Refer to [README](/deploy/README.md) in the `/deploy` folder of this repo for the detailed deployment instructions.
 
 ### Training and inference KFP pipelines
 
