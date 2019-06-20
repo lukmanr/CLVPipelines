@@ -20,6 +20,10 @@ The compiled batch predict pipeline is in
 
 `gs://[_BUCKET_NAME][_PIPELINES_FOLDER]/[_PREDICT_PIPELINE].tar.gz`
 
+The sample training and testing datasets can be found in:
+
+`gs://[_BUCKET_NAME][_SAMPLE_DATASET]
+
 The runtime parameters required by the pipelines are described in detail in [`/pipelines/README.md`](/pipelines/README.md)
 
 Most of the parameters have reasonable default values that don't have to be modified during the intial runs.
