@@ -24,7 +24,7 @@ The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** runni
 
 The solution has been developed and tested on Kubeflow Pipelines on Google Cloud Platform Kubernetes Engine (GKE). 
 
-You can run the solution on a full Kubeflow installation which can be provisioned by following [this guide](https://www.kubeflow.org/docs/gke/deploy/) or on a lightweight deployment that only includes core Kubeflow Pipelines services.
+You can run the solution on a full Kubeflow installation which can be provisioned by following [the Kubeflow on GCP guide](https://www.kubeflow.org/docs/gke/deploy/) or on a lightweight deployment that only includes core Kubeflow Pipelines services.
 
 
 
