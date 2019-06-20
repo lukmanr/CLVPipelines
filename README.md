@@ -50,8 +50,6 @@ The source code for two template KFP Pipelines:
 
 The source code for the KFP components that wrap selected **AutoML Tables** APIs.
 
-Refer to `/automl_tables_components/README.md` for more information on the components' design and usage.
-
 `/install`
 
 Lightweight Kubeflow Pipelines deployment installation script
