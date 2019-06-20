@@ -18,6 +18,9 @@ In the solution, **Kubeflow Pipelines** is used solely as an orchestrator of Goo
 
 The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The solution's training and inference pipelines access **BigQuery**,  **AutoML Tables** services through a set of Kubeflow Pipelines components that wrap the respective **Google Cloud APIs**. The container images for the components utilized by the pipelines are managed in **Container Registry**.
 
+Refer to [README](/pipelines/README.md) in the `/pipelines` folder of this repo for more details on the training and deployment pipelines.
+
+Refer to [README](/components/automl_tables/README.md) in the `/components/automl_tables` folder of this repo for more details on the AutoML Tables components.
 
 
 ## Installing Kubeflow Pipelines
