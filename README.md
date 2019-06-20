@@ -31,13 +31,13 @@ The solution includes a script that automates the lightweight Kubeflow Pipelines
 To provision the lightweight Kubeflow Pipelines deployment:
 1. Select or create a GCP project
 1. Make sure that the following Cloud APIs are enabled:
-  - Compute Engine
-  - Cloud Storage
-  - Container Registry
-  - Kubernetes Engine
-  - BigQuery
-  - AutoML 
-  - Cloud Build
+   - Compute Engine
+   - Cloud Storage
+   - Container Registry
+   - Kubernetes Engine
+   - BigQuery
+   - AutoML 
+   - Cloud Build
 1. Open a new session in **Cloud Shell**
 
 
