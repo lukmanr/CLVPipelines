@@ -52,16 +52,15 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
   if primary_metric_value:
     metrics = {
       'metrics': [{
-        'name': 'metric',
+        'name': str(primary_metric),
         'numberValue': primary_metric_value
       }]
     }
 
-    print(primary_metric, primary_metric_value)
-
     with open('/mlpipeline-metrics.json', 'w') as f:
       json.dump(metrics, f)
 
+  # Write the primary metric value as to the output
   Path(output_primary_metric_value).parent.mkdir(parents=True, exist_ok=True)
   Path(output_primary_metric_value).write_text(str(primary_metric_value))
  
