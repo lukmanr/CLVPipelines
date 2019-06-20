@@ -134,7 +134,6 @@ def clv_train(
       target_name=target_column_name,
       features_to_exclude=features_to_exclude)
 
-
   # Log evaluation metrics
   log_metrics = log_metrics_op(
       model_full_id=train_model.outputs['output_model_full_id'],
