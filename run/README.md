@@ -65,6 +65,7 @@ The path to a compiled pipeline package. The package can be in one of the format
 A dictionary literal with the pipeline's runtime arguments.
 
 
+Inspect `run_train.sh` and `run_predict.sh` to see the examples of using `run_pipeline.py`.
 
 #### Installing Kubeflow Pipelines SDK
 
