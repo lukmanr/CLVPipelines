@@ -8,7 +8,7 @@ The **Predicting Customer Lifetime Value** solution  delivers automation of Cust
 
 The primary goal of the solution is to orchestrate two Machine Learning workflows:
 - The training and deployment of the Customer Lifetime Value predictive model.
-- The batch inference using the deployed Customer Lifetime Value predictive model.
+- Batch inference using the deployed Customer Lifetime Value predictive model.
 
 The below diagram depicts the high level architecture of the solution:
 
