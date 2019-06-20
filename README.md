@@ -6,13 +6,12 @@ This repository maintains the source code for  **Predicting Customer Lifetime Va
 
 The **Predicting Customer Lifetime Value** solution  delivers automation of Customer Lifetime Value (CLV) modeling techniques described in the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series of articles.
 
-The solution utilizes Big
+The below diagram depicts a high level architecture of the solution:
 
-The solution accelerater includes the following components:
-- Training and inference Kubeflow Pipelines (KFP) pipelines - `/pipelines`
-- AutoML Tables KFP components - `/components`
-- Cloud Build configuration for automated building and deployment of the solution's KFP components and pipelines - `/deploy`
-- Sample integration code demonstrating  - `/run`
+![KFP Runtime](/images/architecture.jpg)
+
+The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The solution's pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services through a set of Kubeflow Pipelines components that wrap the respective Google Cloud APIs.The container images for the components utilized by the pipelines are managed in **Container Registry**.
+
 
 
 ## Installing Kubeflow Pipelines
@@ -20,9 +19,9 @@ The solution accelerater includes the following components:
 The solution accelerator has been developed and tested on Kubeflow Pipelines on Google Cloud Platform Kubernetes Engine (GKE). 
 
 The runtime environment required by the solution accelerator is depicted on the below diagram:
-![KFP Runtime](/images/architecture.jpg)
 
-The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The pipelines access **Cloud Storage**, **BigQuery**, and **AutoML Tables** services. The container images for the components utilized by the pipelines are managed in **Container Registry**.
+
+
 
 ### Building runtime environment
 
@@ -64,4 +63,13 @@ The pipelines can be run using Kubeflow Pipelines UI but they can also be integr
 The sample dataset used in the solution accelrator is based on the publicly available [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) from the UCI Machine Learning Repository. 
 
 The original dataset was preprocessed to conform to the above schema and uploaded to a public GCP bucket as `gs://clv-datasets/transactions/transactions.cv`. 
+
+
+
+
+The solution accelerater includes the following components:
+- Training and inference Kubeflow Pipelines (KFP) pipelines - `/pipelines`
+- AutoML Tables KFP components - `/components`
+- Cloud Build configuration for automated building and deployment of the solution's KFP components and pipelines - `/deploy`
+- Sample integration code demonstrating  - `/run`
 
