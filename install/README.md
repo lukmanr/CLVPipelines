@@ -9,20 +9,24 @@ To provision the lightweight Kubeflow Pipelines deployment:
    - Container Registry
    - Kubernetes Engine
    - BigQuery
-   - AutoML 
+   - AutoML
    - Cloud Build
 1. Open a new session in **Cloud Shell**
 1. Create a working directory and copy to it the `install.sh` script from the `/install` folder of this repo.
 1. Start the installation process by executing the following commands:
 ```
-chmod 755 install.sh
-./install.sh [PROJECT_ID] [CLUSTER_NAME] [ZONE] [KFP_SA] master
+./install.sh [PROJECT_ID] [CLUSTER_NAME] [ZONE] [KFP_SA] [VERSION]
+
+for example:
+
+./install.sh my-project my-cluster us-central1-a kubeflow-pipelines master
+
 ```
 
 Parameter | Description
 ----------|------------
 PROJECT_ID|Project ID of the GCP project you selected for the solution
-CLUSTER_NAME| The name of the GKE cluster to create. If the cluster with that name already exists the script will skip the creation step. 
+CLUSTER_NAME| The name of the GKE cluster to create. If the cluster with that name already exists the script will skip the creation step.
 ZONE | The zone for the cluster. Since AutoML only support` us-central1` it is recommended to create the cluster in one of the zones in the same region
 KFP_SA | The name of the service account to be used by Kubeflow Pipelines. If the service account with that name already exists the account is reused.
 KFP_VERSION | The version of Kubeflow Pipelines to install. It is recommended to use the latest version from the master branch in Kubeflow Pipelines GitHub repo.
