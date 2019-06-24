@@ -30,15 +30,45 @@ Most of the parameters have reasonable default values that don't have to be modi
 
 ### Running the pipelines using KFP SDK
 
+#### Installing Kubeflow Pipelines SDK
 
-This folder contains code samples demonstrating how to use `kfp.Client()` API from KFP SDK to configure experiments and submit pipeline runs programmatically.
+To use `kfp.Client()` you need a Python 3.5+ environment with KFP SDK installed. It is highly recommended to install KFP SDK into a dedicated Python or Conda environment.
+
+The code in this tutorial was tested with KFP SDK version 0.1.20.
+
+```
+SDK_VERSION=0.1.20
+pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
+```
+
+To use `run_pipeline.py` utility you also need [Python Fire package](https://google.github.io/python-fire/guide/).
+```
+pip install fire
+```
+
+#### Configuring port forwarding to Kubeflow Pipelines services
+
+Currently, the lightweight deployment of Kubeflow Pipelines does not expose a public interface to the service. It will be addressed in future release. In the meantime, use Kubernetes port forwarding to access the deployed Kubeflow Pipelines service.
+
+```
+kubectl port-forward -n kubeflow svc/ml-pipeline 8082:8888
+```
+
+This command allows you to access the services by using a local URL: `http://localhost:8082`.
+
+Use this URL as a value of the `host` parameter of `run_pipeline.py`
+
+
+#### Using run_pipeline.py
+
+The `run/` folder contains code samples demonstrating how to use `kfp.Client()` API from KFP SDK to configure experiments and submit pipeline runs programmatically.
 
 The `run_pipeline.py` Python script implements a CLI wrapper around `kfp.Client()`. The `run_train.sh` and `run_batch_predict.sh` are example bash scripts that utilize `run_pipeline.py` to submit pipeline runs.
 
 To submit a run using `run_pipeline.py`
 
 ```
-python run_pipeline.py --host [HOST_URL] 
+python run_pipeline.py --host [HOST_URL]
                        --experiment [EXPERIMENT_NAME]
                        --run_name [RUN_NAME]
                        --pipeline_file [COMPILED_PIPELINE_FILE]
@@ -49,7 +79,7 @@ python run_pipeline.py --host [HOST_URL]
 
 `--host`
 
-The URL to use to interface with Kubeflow Pipelines. 
+The URL to use to interface with Kubeflow Pipelines.
 
 `--experiment`
 
@@ -71,33 +101,7 @@ A dictionary literal with a pipeline's runtime arguments.
 
 Inspect `run_train.sh` and `run_batch_predict.sh` to see the examples of using `run_pipeline.py`. Note that the example argument values WILL NOT work in your environment.
 
-#### Installing Kubeflow Pipelines SDK
 
-To use `kfp.Client()` you need a Python 3.5+ environment with KFP SDK installed. It is highly recommended to install KFP SDK into a dedicated Python or Conda environment.
-
-The code in this tutorial was tested with KFP SDK version 0.1.20. 
-
-```
-SDK_VERSION=0.1.20
-pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
-```
-
-To use `run_pipeline.py` utility you also need [Python Fire package](https://google.github.io/python-fire/guide/). 
-```
-pip install fire
-```
-
-#### Configuring port forwarding to Kubeflow Pipelines services
-
-Currently, the lightweight deployment of Kubeflow Pipelines does not expose a public interface to the service. It will be addressed in future release. In the meantime, use Kubernetes port forwarding.
-
-```
-kubectl port-forward -n kubeflow svc/ml-pipeline 8082:8888
-```
-
-This command allows you to access the services by using a local URL: `http://localhost:8082`.
-
-Use this URL as a value of the `host` parameter of `run_pipeline.py`
 
 
 
