@@ -20,6 +20,13 @@ if [[ $# < 5 ]]; then
     exit 1
 fi
 
+if [[ ${2} =~ ^[a-z]+[-a-z0-9]{0,38}[a-z0-9]+$ ]]; then
+  echo "Cluster name: valid (matches '^[a-z]+[-a-z0-9]{0,38}[a-z0-9]+$')"
+else
+  echo "Cluster name invalid (does not match '^[a-z]+[-a-z0-9]{0,38}[a-z0-9]+$')"
+  exit 1
+fi
+
 # 1. Set variables. If you are stepping through the script manually set these directly from Bash prompt
 PROJECT_ID=${1}
 PROJECT_NUMBER=$(gcloud projects list --filter="$PROJECT_ID" --format="value(PROJECT_NUMBER)")
@@ -36,7 +43,7 @@ gcloud config set project $PROJECT_ID
 echo "Creating GKE:"${2}" in zone: "${3} ...
 CLUSTER_EXISTS=$(gcloud container clusters list|grep ${CLUSTERNAME})
 if [ -z "$CLUSTER_EXISTS" ]
-then 
+then
   gcloud beta container clusters create $CLUSTERNAME \
   --zone $ZONE \
   --scopes cloud-platform
@@ -50,12 +57,12 @@ NAMESPACE_EXISTS=$(kubectl get namespace kubeflow -o=name)
 if [ -n "$NAMESPACE_EXISTS" ]
 then
   echo "Namespace: kubeflow already exists. Deleting the existing namespace and re-installing KFP."
-  kubectl delete namespace kubeflow 
+  kubectl delete namespace kubeflow
 fi
 kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$KFP_VERSION/manifests/namespaced-install.yaml
 
 echo "Sleeping for 5 minutes to let services start"
-sleep 5m 
+sleep 5m
 
 # 5. Create a service account to be used by pipelines. If the account with that name exists, re-use it
 echo "Creating service account: "${SA_NAME}
@@ -66,7 +73,7 @@ then
   --description "Kubeflow Pipelines Service Account" \
   --display-name "Kubeflow Pipelines SA"
 else
-  echo "Service account: "${SA_NAME}" already exists. Re-using ..." 
+  echo "Service account: "${SA_NAME}" already exists. Re-using ..."
 fi
 
 # 6. Create a service account private key in the current folder
