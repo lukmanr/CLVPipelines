@@ -6,7 +6,7 @@ Building and deploying of the solution accelerator's pipelines and components ha
 1. Copy the solution's github repo into the Cloud Build runtime environment
 1. Create a docker image to support custom build steps
 1. Build the base image for the lightweigh Python helper components. The name of the image is provided as a build parameter.
-1. Build the image that hosts AutoML Tables components The name of the image is provided as a build parameter.
+1. Build the image that hosts AutoML Tables components. The name of the image is provided as a build parameter.
 1. Update the YAML specifications of the AutoML Tables components with the names of the created images in the previous step
 1. Update the settings that control the pipelines' compilation. The values for these settings are provided as build parameters.
 1. Compile the pipelines. 
