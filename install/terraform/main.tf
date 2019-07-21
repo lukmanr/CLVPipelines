@@ -59,6 +59,8 @@ resource "kubernetes_secret" "user-gcp-sa" {
    data = {
        "user-gcp-sa.json" = module.service_accounts.kfp_sa_private_key
    }
+
+   depends_on = [null_resource.configure_kubectl]
 }
 
 
