@@ -110,6 +110,8 @@ venv.bak/
 dev.env
 .vscode
 key.json
+*.tfstate
+*.tfstate.backup
 
 
 
