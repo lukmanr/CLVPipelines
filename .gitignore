@@ -112,6 +112,6 @@ dev.env
 key.json
 *.tfstate
 *.tfstate.backup
-
+.terraform/
 
 

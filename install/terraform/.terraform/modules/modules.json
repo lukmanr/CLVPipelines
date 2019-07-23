@@ -1,1 +1,0 @@
-{"Modules":[{"Key":"service_accounts","Source":"./modules/service_accounts","Dir":"modules/service_accounts"},{"Key":"kfp_service_account","Source":"./modules/service_accounts","Dir":"modules/service_accounts"},{"Key":"","Source":"","Dir":"."},{"Key":"kfp_cluster","Source":"./modules/kfp_cluster","Dir":"modules/kfp_cluster"}]}
