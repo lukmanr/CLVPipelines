@@ -6,25 +6,21 @@ resource "google_service_account" "kfp_sa" {
 }
 
 resource "google_project_iam_member" "service_account-storage_admin" {
-  project = google_service_account.kfp_sa.project
   role    = "roles/storage.admin"
   member  = "serviceAccount:${google_service_account.kfp_sa.email}"
 }
 
 resource "google_project_iam_member" "service_account-bigquery_admin" {
-  project = google_service_account.kfp_sa.project
   role    = "roles/bigquery.admin"
   member  = "serviceAccount:${google_service_account.kfp_sa.email}"
 }
 
 resource "google_project_iam_member" "service_account-automl_admin" {
-  project = google_service_account.kfp_sa.project
   role    = "roles/automl.admin"
   member  = "serviceAccount:${google_service_account.kfp_sa.email}"
 }
 
 resource "google_project_iam_member" "service_account-automl_predictor" {
-  project = google_service_account.kfp_sa.project
   role    = "roles/automl.predictor"
   member  = "serviceAccount:${google_service_account.kfp_sa.email}"
 }
@@ -41,25 +37,29 @@ resource "google_service_account" "lp_sa" {
 }
 
 resource "google_project_iam_member" "service_account-log_writer" {
-  project = google_service_account.lp_sa.project
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.lp_sa.email}"
 }
 
 resource "google_project_iam_member" "service_account-metric_writer" {
-  project = google_service_account.lp_sa.project
   role    = "roles/monitoring.metricWriter"
   member  = "serviceAccount:${google_service_account.lp_sa.email}"
 }
 
 resource "google_project_iam_member" "service_account-monitoring_viewer" {
-  project = google_service_account.lp_sa.project
   role    = "roles/monitoring.viewer"
   member  = "serviceAccount:${google_service_account.lp_sa.email}"
 }
 
 resource "google_project_iam_member" "service_account-resource-metadata-writer" {
-  project = google_service_account.lp_sa.project
   role    = "roles/stackdriver.resourceMetadata.writer"
   member  = "serviceAccount:${google_service_account.lp_sa.email}"
+}
+
+# Grant Cloud Build access to google_service_account_key
+data "google_project" "project" {}
+
+resource "google_project_iam_member" "cloud-build-container-developer" {
+    role    = "roles/container.developer"
+    member = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
 }

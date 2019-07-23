@@ -23,7 +23,3 @@ output "lp_sa_name" {
     value = module.service_accounts.lp_sa_name
 }
 
-output "client_key" {
-  description = "Private key used by clients to authenticate to the cluster endpoint."
-  value       = module.kfp_cluster.client_key
-}

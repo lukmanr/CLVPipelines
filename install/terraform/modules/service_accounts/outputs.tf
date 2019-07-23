@@ -15,6 +15,5 @@ output "lp_sa_name" {
 }
 
 output "kfp_sa_private_key" {
-    value =     "${base64decode(google_service_account_key.kfp_sa_key.private_key)}"
-    sensitive = true
+    value     = google_service_account_key.kfp_sa_key.private_key
 }
