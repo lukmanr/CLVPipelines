@@ -5,14 +5,13 @@ terraform {
 
 # Configure GCP provider
 provider "google" {
+    #credentials = "${file("terraform.json")}"
     project = var.project_id
     region = var.region
     zone = var.zone
 }
 
 # Configure service accounts: 
-#   The Least Priviledge GKE service account and 
-#   The KFP service account
 module "service_accounts" {
     source = "./modules/service_accounts"
     kfp_sa_id = var.kfp_sa_id
@@ -29,10 +28,9 @@ module "kfp_cluster" {
 
 # Configure kubectl and install KFP
 resource "null_resource" "configure_kubectl" {
-
   provisioner "local-exec" {
     command = <<EOT
-      gcloud beta container clusters get-credentials ${module.kfp_cluster.cluster_name} --zone ${var.zone};
+      gcloud container clusters get-credentials ${module.kfp_cluster.cluster_name} --zone ${var.zone} --project ${var.project_id};
       kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/master/manifests/namespaced-install.yaml
     EOT
   }

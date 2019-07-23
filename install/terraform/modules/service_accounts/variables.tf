@@ -5,4 +5,3 @@ variable "kfp_sa_id" {
 variable "lp_sa_id" {
     description = "Least Privilege GKE account ID"
 }
-
