@@ -1,5 +1,9 @@
 {
   "google": "82c83a1b90908105ad7d348e37df9fb058c56674ddab3caa4fb9f83c2f643334",
+<<<<<<< HEAD
   "kubernetes": "8b1bd3c41f41a8ef642849ca3d811ec6aa96c6b57a5a1d2f72e63d96fda04bd7",
   "null": "c56285e7bd25a806bf86fcd4893edbe46e621a46e20fe24ef209b6fd0b7cf5fc"
+=======
+  "kubernetes": "8b1bd3c41f41a8ef642849ca3d811ec6aa96c6b57a5a1d2f72e63d96fda04bd7"
+>>>>>>> sandbox
 }

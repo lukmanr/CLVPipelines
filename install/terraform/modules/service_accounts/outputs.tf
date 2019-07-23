@@ -14,6 +14,8 @@ output "lp_sa_name" {
     value = google_service_account.lp_sa.name
 }
 
-output "kfp_sa_private_key" {
-    value     = google_service_account_key.kfp_sa_key.private_key
+output "kfp_sa_key" {
+    value     = google_service_account_key.kfp_sa_key
+    sensitive = true
 }
+
