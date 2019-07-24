@@ -17,7 +17,9 @@ steps:
   dir: 'clv/deploy/kfp-helper'
 
 - name: 'kfp-helper'
-  args: 
+  args:
+  - '-c'
+  - |
   - which python
 
 
