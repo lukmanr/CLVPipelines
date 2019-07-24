@@ -1,6 +1,24 @@
 steps:
-- name: 'gcr.io/cloud-builders/kubectl'
-  args: ['get', 'pods']
-  env:
-  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=jkk8s-3'
+# Clone CLV repo
+- name: 'gcr.io/cloud-builders/git'
+  args:
+  - clone
+  - --branch
+  - deploy-kfp
+  - --depth
+  - '1'
+  - --verbose
+  - https://github.com/${_CLV_REPO}
+  - clv
+
+ # Create the image for custom build steps 
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'kfp-cli', '.']
+  dir: 'clv/deploy/kfp-cli-builder'
+
+- name: 'kfp-cli'
+  args: 
+  - which python
+
+
+

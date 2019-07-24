@@ -39,17 +39,26 @@ import kfp
 #  result = client.wait_for_run_completion(run.id, timeout=6000)
 
 class KFPClient(object):
+  """ CLI wrapper around kfp.Client() API """
+
   def __init__(self, host):
+    """Create a new instance of KFPClient
+
+    Args:
+      host: the host to talk to Kubeflow Pipelines
+    """
+
     self._client = kfp.Client(host)
 
-  def run_pipeline(experiment_name, run_name, pipeline_file, params={}):
+  def run_pipeline(self, experiment_name, run_name, pipeline_file, params={}):
     print("run_pipeline_from_package")
 
-  def run_pipeline(experiment_name, run_name, pipeline_id, params={}):
+  def run_pipeline(self, experiment_name, run_name, pipeline_id, params={}):
     print("run_pipeline_from_id")
 
-  def create_experiment(name):
+  def create_experiment(self, name):
     self._client.create_experiment(name)
+
     
 
 if __name__ == "__main__":
