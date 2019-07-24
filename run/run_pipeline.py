@@ -17,27 +17,40 @@ import fire
 import kfp
 
 
-def run(host, experiment, run_name, pipeline_file, arguments):
-  """Submits a KFP pipeline for execution."""
+#def run(host, experiment, run_name, pipeline_file, arguments):
+#  """Submits a KFP pipeline for execution."""
+#
+#  client = kfp.Client(host)
+#
+#  experiment_ref = client.create_experiment(experiment)
+#
+#  run = client.run_pipeline(experiment_ref.id, run_name, pipeline_file,
+#                            arguments)
+#  print("Run submitted:")
+#  print("    Run ID: {}".format(run.id))
+#  print("    Experiment: {}".format(experiment))
+#  print("    Pipeline: {}".format(pipeline_file))
+#  print("    Arguments:")
+#  for name, value in arguments.items():
+#    print("      {}:  {}".format(name, value))
+#  print("Waiting for completion ...")
+#
+#  # Wait for completion
+#  result = client.wait_for_run_completion(run.id, timeout=6000)
 
-  client = kfp.Client(host)
+class KFPClient(object):
+  def __init__(self, host):
+    self._client = kfp.Client(host)
 
-  experiment_ref = client.create_experiment(experiment)
+  def run_pipeline(experiment_name, run_name, pipeline_file, params={}):
+    print("run_pipeline_from_package")
 
-  run = client.run_pipeline(experiment_ref.id, run_name, pipeline_file,
-                            arguments)
-  print("Run submitted:")
-  print("    Run ID: {}".format(run.id))
-  print("    Experiment: {}".format(experiment))
-  print("    Pipeline: {}".format(pipeline_file))
-  print("    Arguments:")
-  for name, value in arguments.items():
-    print("      {}:  {}".format(name, value))
-  print("Waiting for completion ...")
+  def run_pipeline(experiment_name, run_name, pipeline_id, params={}):
+    print("run_pipeline_from_id")
 
-  # Wait for completion
-  result = client.wait_for_run_completion(run.id, timeout=6000)
-
+  def create_experiment(name):
+    self._client.create_experiment(name)
+    
 
 if __name__ == "__main__":
-  fire.Fire(run)
+  fire.Fire(KFPClient)
