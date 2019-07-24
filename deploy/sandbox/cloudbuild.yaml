@@ -13,10 +13,10 @@ steps:
 
  # Create the image for custom build steps 
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'kfp-cli', '.']
-  dir: 'clv/deploy/kfp-cli-builder'
+  args: ['build', '-t', 'kfp-helper', '.']
+  dir: 'clv/deploy/kfp-helper'
 
-- name: 'kfp-cli'
+- name: 'kfp-helper'
   args: 
   - which python
 
