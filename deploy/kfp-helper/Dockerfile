@@ -7,6 +7,6 @@ RUN pip3 install \
     fire \
     https://storage.googleapis.com/ml-pipeline/release/0.1.23/kfp.tar.gz 
 
-RUN gcloud -q components install kubectl
+RUN apt-get install kubectl
 
 ENTRYPOINT ["/bin/bash"]
