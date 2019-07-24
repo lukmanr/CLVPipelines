@@ -11,12 +11,12 @@ steps:
   - https://github.com/${_CLV_REPO}
   - clv
 
- # Create the image for custom build steps 
-# - name: 'gcr.io/cloud-builders/docker'
-#  args: ['build', '-t', 'kfp-helper', '.']
-#  dir: 'clv/deploy/kfp-helper'
+# Create the image for custom build steps 
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'kfp-helper', '.']
+  dir: 'clv/deploy/kfp-helper'
 
-- name: 'gcr.io/jktest4/kfp-helper'
+- name: 'kfp-helper'
   args:
   - '-c'
   - |

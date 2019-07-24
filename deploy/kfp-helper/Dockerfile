@@ -1,6 +1,6 @@
-FROM google/cloud-sdk:latest
+FROM google/cloud-sdk:slim
 
-RUN apt-get -y update  && apt-get -y install python3-pip 
+RUN apt-get -y update  && apt-get -y install python3-pip procps 
 
 RUN pip3 install \ 
     Jinja2 \
