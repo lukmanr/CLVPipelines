@@ -22,10 +22,7 @@ steps:
   - |
     echo "Hello"
     gcloud container clusters get-credentials ${_CLUSTER} --zone ${_ZONE}
-    ps -a
-    kubectl port-forward svc/ml-pipeline -n kubeflow 8082:8888 & 
     #python3 kfp-cli.py create_experiment exp3 --host http://localhost:8082
-    ps -a
   dir: 'clv/kfp-cli'
 
 

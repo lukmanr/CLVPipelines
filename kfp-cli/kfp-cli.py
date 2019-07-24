@@ -41,7 +41,7 @@ import kfp
 class KFPClient(object):
   """ CLI wrapper around kfp.Client() API """
 
-  def __init__(self, host):
+  def __init__(self, host=None):
     """Create a new instance of KFPClient
 
     Args:
