@@ -1,4 +1,4 @@
-FROM google/cloud-sdk:slim
+FROM google/cloud-sdk:latest
 
 RUN apt-get -y update  && apt-get -y install python3-pip 
 
