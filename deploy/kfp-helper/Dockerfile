@@ -1,7 +1,7 @@
 FROM gcr.io/cloud-builders/gcloud-slim
 
 RUN apt-get -y update && \
-    apt-get -y install python3.6
+    apt-get -y install python3
 
 RUN pip3 install \ 
     Jinja2 \
