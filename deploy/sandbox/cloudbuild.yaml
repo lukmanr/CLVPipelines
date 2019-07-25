@@ -39,7 +39,7 @@ steps:
     ls */component.yaml | xargs sed -i $$SED_SCRIPT 
   dir: 'clv/components/automl_tables/specs'
 
-# Updated pipeline settings
+# Update pipeline settings
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: '/bin/bash'
   args: 
@@ -51,8 +51,6 @@ steps:
     sed -i $$SED_SCRIPT settings.yaml
     cat settings.yaml
   dir: 'clv/pipelines'
-
-
 
 # Compile the pipelines 
 - name: 'kfp-builder'
@@ -72,7 +70,7 @@ steps:
 #    gsutil mb -p $PROJECT_ID gs://$_BUCKET_NAME || exit 0
 #
 
-## Deploy the compiled pipelines
+## Deploy the build artifacts
 - name: 'gcr.io/cloud-builders/gsutil'
   entrypoint: 'bash'
   args:
