@@ -15,6 +15,7 @@
 
 import fire
 import kfp
+import kfp_server_api
 
 
 #def run(host, experiment, run_name, pipeline_file, arguments):
@@ -50,15 +51,62 @@ class KFPClient(object):
 
     self._client = kfp.Client(host)
 
-  def run_pipeline(self, experiment_name, run_name, pipeline_file, params={}):
-    print("run_pipeline_from_package")
+  def _get_pipeline_id(self, pipeline_name):
+    page_token = ''
+    while True:
+      response = self._client.list_pipelines(page_token, page_size=4)
+      pipeline_ids = [pipeline.id for pipeline in response.pipelines if pipeline.name == pipeline_name]
+      page_token = response.next_page_token
+      if page_token is None or pipeline_ids:
+        break
 
-  def run_pipeline(self, experiment_name, run_name, pipeline_id, params={}):
-    print("run_pipeline_from_id")
+    pipeline_id = pipeline_ids[0] if pipeline_ids else None 
+
+    print(pipeline_id)
+
+    return pipeline_id
+ 
+  def run_pipeline(self, experiment_name, run_name, pipeline_package_path=None, params={}, pipeline_name=None):
+    assert  pipeline_package_path or pipeline_name 
+
+    pipeline_name = None if pipeline_package_path else pipeline_name
+
+    self._get_pipeline_id(pipeline_name)
+
+    return
+
+
+
+
+
+    experiment_ref = None
+    try:
+      experiment_ref = self._client.get_experiment(experiment_name = experiment_name)
+    except ValueError:
+      experiment_ref = self._client.create_experiment(experiment_name)
+
+    
+    run_ref = self._client.run_pipeline(
+      experiment_ref.id, 
+      run_name, 
+      pipeline_package_path=pipeline_package_path,
+      params=params,
+      pipeline_id=pipeline_id)
+    print("Run submitted: ", run_ref.id)
+
+  def upload_pipeline(self, pipeline_package_path, pipeline_name):
+    try:
+      pipeline_ref = self._client.upload_pipeline(pipeline_package_path, pipeline_name)
+      print("Pipeline ID: {}".format(pipeline_ref.id))
+    except kfp_server_api.rest.ApiException as ex:
+      print("Pipeline already exists")
 
   def create_experiment(self, name):
     self._client.create_experiment(name)
 
+  def list_pipelines(self):
+    response = self._client.list_pipelines()
+    print(dir(response))
     
 
 if __name__ == "__main__":
