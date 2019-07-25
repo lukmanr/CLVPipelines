@@ -1,0 +1,30 @@
+steps:
+# Clone CLV repo
+- name: 'gcr.io/cloud-builders/git'
+  args:
+  - clone
+  - --branch
+  - deploy-kfp
+  - --depth
+  - '1'
+  - --verbose
+  - https://github.com/${_CLV_REPO}
+  - clv
+
+# Create the image for custom build steps 
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'kfp-helper', '.']
+  dir: 'clv/deploy/kfp-helper'
+
+- name: 'kfp-helper'
+  args:
+  - '-c'
+  - |
+    echo "Hello"
+    gcloud container clusters get-credentials ${_CLUSTER} --zone ${_ZONE}
+    python3 kfp-cli.py create_experiment exp6 
+  dir: 'clv/kfp-cli'
+
+
+
+

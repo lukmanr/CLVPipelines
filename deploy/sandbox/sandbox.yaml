@@ -13,9 +13,9 @@ steps:
   - clv
 
 # Create the image for custom build steps 
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'kfp-compiler', '.']
-  dir: 'clv/deploy/kfp-compiler-builder'
+#- name: 'gcr.io/cloud-builders/docker'
+#  args: ['build', '-t', 'kfp-compiler', '.']
+#  dir: 'clv/deploy/kfp-compiler-builder'
 
 # Build a base image for lightweight components
 #- name: 'gcr.io/cloud-builders/docker' 
@@ -28,23 +28,23 @@ steps:
 #  dir: 'clv/components/automl_tables'
 
 # Update AutoML components specs with the container image name 
-- name: 'kfp-compiler'
-  entrypoint: 'python'
-  args: 
-  - update_image_name_in_specs.py
-  - ../../components/automl_tables/specs 
-  - gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE:$_TAG
-  dir: 'clv/deploy/helpers'
+#- name: 'kfp-compiler'
+#  entrypoint: 'python'
+#  args: 
+#  - update_image_name_in_specs.py
+#  - ../../components/automl_tables/specs 
+#  - gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE:$_TAG
+#  dir: 'clv/deploy/helpers'
 
 # Update pipeline settings 
-- name: 'kfp-compiler'
-  entrypoint: 'python'
-  args: 
-  - update_pipeline_settings.py 
-  - ../../pipelines/settings.yaml
-  - --compiler_settings.lightweight_components_base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE:$_TAG
-  - --argument_defaults.query_template_uri=gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja
-  dir: 'clv/deploy/helpers'
+#- name: 'kfp-compiler'
+#  entrypoint: 'python'
+#  args: 
+#  - update_pipeline_settings.py 
+#  - ../../pipelines/settings.yaml
+#  - --compiler_settings.lightweight_components_base_image=gcr.io/$PROJECT_ID/$_BASE_IMAGE:$_TAG
+#  - --argument_defaults.query_template_uri=gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja
+#  dir: 'clv/deploy/helpers'
 
 # Compile the pipelines 
 - name: 'kfp-compiler'
