@@ -60,14 +60,7 @@ steps:
     dsl-compile --py  batch_predict_pipeline.py --output ${_PREDICT_PIPELINE}.tar.gz --disable-type-check
   dir: 'clv/pipelines'
 
-## Deploy the build artifacts
-- name: 'gcr.io/cloud-builders/gsutil'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    gsutil mb -p $PROJECT_ID gs://$_BUCKET_NAME || exit 0
-
+# Copy build artifacts to GCS bucket
 - name: 'gcr.io/cloud-builders/gsutil'
   entrypoint: 'bash'
   args:
@@ -78,13 +71,17 @@ steps:
     gsutil cp gs://clv-datasets/transactions/* gs://$_BUCKET_NAME/$_SAMPLE_DATASET_FOLDER 
   dir: 'clv/pipelines'
 
+# Upload compiled pipelines to the KFP cluster
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['container', 'clusters', 'get-credentials', '$_CLUSTER_NAME', '--zone', '$_ZONE']
+
 - name: 'kfp-builder'
   args:
   - '-c'
   - |
-    gcloud container clusters get-credentials $_CLUSTER_NAME --zone $_ZONE
-
-  
+    python kfp-cli.py upload_pipeline --pipeline_package_path=../pipelines/${_TRAIN_PIPELINE}.tar.gz --pipeline_name=${_TRAIN_PIPELINE}
+    python kfp-cli.py upload_pipeline --pipeline_package_path=../pipelines/${_PREDICT_PIPELINE}.tar.gz --pipeline_name=${_PREDICT_PIPELINE}
+  dir: 'clv/kfp-cli'
 
 images: ['gcr.io/$PROJECT_ID/${_BASE_IMAGE}', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}']
 

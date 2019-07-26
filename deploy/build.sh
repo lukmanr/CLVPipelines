@@ -10,7 +10,9 @@ _PREDICT_PIPELINE=predict_pipeline,\
 _ARTIFACTS_FOLDER=artifacts,\
 _PIPELINES_FOLDER=pipelines,\
 _SAMPLE_DATASET_FOLDER=dataset,\
-_BUCKET_NAME=jkartifacts
+_BUCKET_NAME=jkclv-bucket1,\
+_CLUSTER_NAME=jkk8s-3,\
+_ZONE=us-central1-a
 
 gcloud builds submit --no-source --config cloudbuild.yaml \
 --substitutions $SUBSTITUTIONS
