@@ -1,16 +1,16 @@
 # Predicting Customer Lifetime Value with Kubeflow Pipelines
 
-## Solution Overview
+## Overview
 
-This repository maintains the source code for the **Predicting Customer Lifetime Value with Kubeflow Pipelines** solution.
+This repository maintains the source code for the **Predicting Customer Lifetime Value with Kubeflow Pipelines** technical guide.
 
-The **Predicting Customer Lifetime Value** solution  delivers automation of Customer Lifetime Value (CLV) modeling techniques described in the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series of articles.
+The **Predicting Customer Lifetime Value** technical guide  delivers automation of Customer Lifetime Value (CLV) modeling techniques described in the [Predicting Customer Lifetime Value with AI Platform](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-intro) series of articles.
 
-The primary goal of the solution is to orchestrate two Machine Learning workflows:
+The primary goal of the guide is to demonstrate how to orchestrate two Machine Learning workflows:
 - The training and deployment of the Customer Lifetime Value predictive model.
 - Batch inference using the deployed Customer Lifetime Value predictive model.
 
-The below diagram depicts the high level architecture of the solution:
+The below diagram depicts the high level architecture:
 
 ![KFP Runtime](/images/architecture.jpg)
 
