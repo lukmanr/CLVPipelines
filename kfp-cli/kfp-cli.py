@@ -99,7 +99,7 @@ class KFPClient(object):
   def list_pipelines(self):
     response = self._client.list_pipelines()
     print(dir(response))
-    
+
 
 if __name__ == "__main__":
   fire.Fire(KFPClient)

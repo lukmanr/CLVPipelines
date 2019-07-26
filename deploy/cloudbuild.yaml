@@ -29,9 +29,9 @@ steps:
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_AUTOML_TABLES_IMAGE:$_TAG', '.'] 
   dir: 'clv/components/automl_tables'
 
- # Update component specifications
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: '/bin/bash'
+# Update component specifications
+#- name: 'gcr.io/cloud-builders/gcloud'
+- name: 'kfp-builder'
   args: 
   - '-c'
   - |
@@ -40,8 +40,8 @@ steps:
   dir: 'clv/components/automl_tables/specs'
 
 # Update pipeline settings
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: '/bin/bash'
+#- name: 'gcr.io/cloud-builders/gcloud'
+- name: 'kfp-builder'
   args: 
   - '-c'
   - |
@@ -49,7 +49,6 @@ steps:
     sed -i $$SED_SCRIPT settings.yaml
     SED_SCRIPT='s/\([[:blank:]]*query_template_uri:[[:blank:]]*\).*/\1gs:\/\/$_BUCKET_NAME\/$_ARTIFACTS_FOLDER\/query_template.sql.jinja/'
     sed -i $$SED_SCRIPT settings.yaml
-    cat settings.yaml
   dir: 'clv/pipelines'
 
 # Compile the pipelines 
@@ -78,6 +77,14 @@ steps:
     gsutil cp artifacts/query_template.sql.jinja gs://$_BUCKET_NAME/$_ARTIFACTS_FOLDER/query_template.sql.jinja 
     gsutil cp gs://clv-datasets/transactions/* gs://$_BUCKET_NAME/$_SAMPLE_DATASET_FOLDER 
   dir: 'clv/pipelines'
+
+- name: 'kfp-builder'
+  args:
+  - '-c'
+  - |
+    gcloud container clusters get-credentials $_CLUSTER_NAME --zone $_ZONE
+
+  
 
 images: ['gcr.io/$PROJECT_ID/${_BASE_IMAGE}', 'gcr.io/$PROJECT_ID/${_AUTOML_TABLES_IMAGE}']
 
