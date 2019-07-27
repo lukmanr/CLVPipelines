@@ -2,25 +2,6 @@
 
 steps:
 
-# Clone CLV repo
-# - name: 'gcr.io/cloud-builders/git'
-#  args:
-#  - clone
-#  - --branch
-#  - deploy-kfp
-#  - --depth
-#  - '1'
-#  - --verbose
-#  - https://github.com/${_CLV_REPO}
-#  - clv
-
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: '/bin/bash'
-  args: 
-  - '-c'
-  - |
-    ls -la
-
 # Build the image for custom build steps 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'kfp-builder', '.']
