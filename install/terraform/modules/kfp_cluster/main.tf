@@ -19,7 +19,7 @@ resource "google_container_cluster" "kfp_cluster" {
       disable-legacy-endpoints = "true"
     }
 
-    # service_account = var.sa_email
+    service_account = var.sa_email
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/logging.write",
