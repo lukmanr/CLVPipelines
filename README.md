@@ -12,7 +12,7 @@ The primary goal of the guide is to demonstrate how to orchestrate two Machine L
 
 The below diagram depicts the high level architecture:
 
-![KFP Runtime](/images/arch-final.jpg)
+![KFP Runtime](/images/arch-final.png)
 
 
 The Kubeflow Pipelines services are hosted on **Google Kubernetes Engine** running on Google Cloud Platform. The training and inference pipelines access **BigQuery**,  **AutoML Tables** services through a set of Kubeflow Pipelines components that wrap the respective **Google Cloud APIs**. The container images for the components utilized by the pipelines are managed in **Container Registry**.
