@@ -22,4 +22,4 @@ Use the component to trigger training of an AutoML Tables model.
 |output_primary_metric_value|The value of the primary performance metric.|Float|
 
 ### Description
-The component is a wrapper around `AutoMlClient.create_model()` API. If the target colummn's type is Categorical, AutoML Tables trains a classification model. If the target column's type is Numeric, AutoML Tables trains a regression model. Make sure to set `optimization_objective` and `primary_metric` parameters to match [the machine learning problem](https://cloud.google.com/automl-tables/docs/problem-types).
+The component is a wrapper around `AutoMlClient.create_model()` API. If the target colummn's type is Categorical, AutoML Tables trains a classification model. If the target column's type is Numeric, AutoML Tables trains a regression model. Make sure to set `optimization_objective` to match [the machine learning problem](https://cloud.google.com/automl-tables/docs/problem-types).
