@@ -39,8 +39,10 @@ The installation script goes through the following steps.
 
 Alterantively, you can use the Terraform configuration to perform the same steps. The support for Terraform is experimental. The Terraform configuration is in `./terraform` folder. To provision the environment using Terraform:
 1. Clone this repo.
-1. Configure the Terraform backend by editing the `backend.tf' file.
+1. Configure the Terraform backend by substituting `bucket` and `state` parameters in the `backend.tf` file with your values.
 1. Subsitute the variables in the `terraform.tfvars` file with your values.
+  1. project
+  1. bucket
 1. In Cloud Shell:
 ```
 terraform init
