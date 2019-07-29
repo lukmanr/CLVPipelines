@@ -18,6 +18,8 @@ To provision the infrastructure:
    - BigQuery
    - AutoML 
    - Cloud Build
+   - Cloud Resource Manager
+1. You can enable the services using **GCP Console** or by executing the `enable_apis.sh` script in the `/install` folder.
 1. Open a new session in **Cloud Shell**
 1. Create a working directory and clone this repo.
 1. Start the installation process by executing the following commands:
