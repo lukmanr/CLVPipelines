@@ -22,19 +22,16 @@ To provision the infrastructure:
 1. You can enable the services using **GCP Console** or by executing the `enable_apis.sh` script in the `/install` folder.
 1. Open a new session in **Cloud Shell**
 1. Create a working directory and clone this repo.
-1. Start the installation process by executing the following commands:
-```
-chmod 755 install.sh
-./install.sh [PROJECT_ID] [CLUSTER_NAME] [ZONE] [KFP_SA] master
-```
+1. Edit the `terraform.tfvars` file to provide your values for the configuration's parameters:
 
 Parameter | Description
 ----------|------------
-PROJECT_ID|Project ID of the GCP project you selected for the solution
-CLUSTER_NAME| The name of the GKE cluster to create. If the cluster with that name already exists the script will skip the creation step. 
-ZONE | The zone for the cluster. Since AutoML only support` us-central1` it is recommended to create the cluster in one of the zones in the same region
-KFP_SA | The name of the service account to be used by Kubeflow Pipelines. If the service account with that name already exists the account is reused.
-KFP_VERSION | The version of Kubeflow Pipelines to install. It is recommended to use the latest version from the master branch in Kubeflow Pipelines GitHub repo.
+project_id|Project ID of the GCP project you selected for the solution
+cluster_name| The name of the GKE cluster to create. 
+zone | The zone for the cluster. Since AutoML only support` us-central1` it is recommended to create the cluster in one of the zones in the same region
+kfp_sa_id | The name of the service account to be used by Kubeflow Pipelines. 
+lp_sa_id | The name of the service account that will be used by the GKE nodes in the default node pool.
+bucket_name | The name of the GCS bucket that will be used as an artifact storage. Terraform will attempt to create the bucket so make sure that the bucket under this name does not exist.
 
 The installation script goes through the following steps.
 
