@@ -1,6 +1,7 @@
 project_id = "jktest6"
 cluster_name = "jkk8s-3"
 zone = "us-central1-a"
+region = "us-central1"
 kfp_sa_id = "kfp-sa"
 lp_sa_id = "gke-sa"
 bucket_name = "jkclv-bucket2"
