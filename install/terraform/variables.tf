@@ -1,11 +1,9 @@
 variable "region" {
     description = "The region to host the solution's components"
-    default = "us-central1"
 }
 
 variable "zone" {
     description = "The zone to host solutions's components"
-    default = "us-central1-a"
 }
 
 variable "project_id" {
