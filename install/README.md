@@ -35,3 +35,16 @@ The installation script goes through the following steps.
 1. Creates a private key for the service account.
 1. Stores the key as the user-gcp-sa Kubernetes secret in the kubeflow namespace.
 1. Assigns the service account permissions in for BigQuery, Cloud Storage and AutoML Tables.
+
+
+Alterantively, you can use the Terraform configuration to perform the same steps. The support for Terraform is experimental. The Terraform configuration is in `./terraform` folder. To provision the environment using Terraform:
+1. Clone this repo.
+1. Configure the Terraform backend by editing the `backend.tf' file.
+1. Subsitute the variables in the `terraform.tfvars` file with your values.
+1. In Cloud Shell:
+```
+terraform init
+terraform apply
+```
+
+
