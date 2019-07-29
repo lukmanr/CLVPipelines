@@ -31,27 +31,25 @@ Most of the parameters have reasonable default values that don't have to be modi
 ### Running the pipelines using KFP SDK
 
 
-This folder contains code samples demonstrating how to use `kfp.Client()` API from KFP SDK to configure experiments and submit pipeline runs programmatically.
+This folder contains a sample Python script demonstrating how to use `kfp.Client()` API from the KFP SDK to configure experiments, upload pipelines, and submit pipeline runs programmatically.
 
-The `run_pipeline.py` Python script implements a CLI wrapper around `kfp.Client()`. The `run_train.sh` and `run_batch_predict.sh` are example bash scripts that utilize `run_pipeline.py` to submit pipeline runs.
+The `kfp-cli.py` script implements a CLI wrapper around `kfp.Client()`. The `run_train.sh` and `run_batch_predict.sh` are example bash scripts that utilize `kpf-cli.py` to submit pipeline runs.
 
-To submit a run using `run_pipeline.py`
+To submit a run using `kfp-cli.py`
 
 ```
-python run_pipeline.py --host [HOST_URL] 
-                       --experiment [EXPERIMENT_NAME]
-                       --run_name [RUN_NAME]
-                       --pipeline_file [COMPILED_PIPELINE_FILE]
-                       --arguments [DICTIONARY_OF_PIPELINE_ARGUMENTS]
+python kfp-cli.py \
+run_pipeline \ 
+--experiment_name [EXPERIMENT_NAME] \
+--run_name [RUN_NAME] \
+--pipeline_name [PIPELINE_NAME] \
+--params [DICTIONARY_OF_PIPELINE_ARGUMENTS]
 ```
 
 **ARGUMENTS**
 
-`--host`
 
-The URL to use to interface with Kubeflow Pipelines. 
-
-`--experiment`
+`--experiment_name`
 
 The name of experiment. If the experiment under this name does not exist it is created.
 
@@ -59,45 +57,33 @@ The name of experiment. If the experiment under this name does not exist it is c
 
 The name of the run.
 
-`--pipeline_file`
+`--pipeline_name`
 
-The path to a compiled pipeline package. The package can be in one of the formats:
-`.tar.gz`, `.tgz`, `.zip`a, `.yaml`.
+The name of the pipeline to execute. The pipeline must have been uploaded to the KFP cluster.
 
-`--arguments`
+`--params`
 
-A dictionary literal with a pipeline's runtime arguments.
+A dictionary literal with the pipeline's runtime arguments.
 
 
-Inspect `run_train.sh` and `run_batch_predict.sh` to see the examples of using `run_pipeline.py`. Note that the example argument values WILL NOT work in your environment.
+Inspect `run_train.sh` and `run_batch_predict.sh` to see the examples of using `kfp-cli.py`. Note that the example argument values WILL NOT work in your environment.
 
 #### Installing Kubeflow Pipelines SDK
 
 To use `kfp.Client()` you need a Python 3.5+ environment with KFP SDK installed. It is highly recommended to install KFP SDK into a dedicated Python or Conda environment.
 
-The code in this tutorial was tested with KFP SDK version 0.1.20. 
+The code in this tutorial was tested with the latest version of KFP SDK. 
 
 ```
-SDK_VERSION=0.1.20
+SDK_VERSION=master
 pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
 ```
 
-To use `run_pipeline.py` utility you also need [Python Fire package](https://google.github.io/python-fire/guide/). 
+To use `kfp-cli.py` utility you also need [Python Fire package](https://google.github.io/python-fire/guide/). 
 ```
 pip install fire
 ```
 
-#### Configuring port forwarding to Kubeflow Pipelines services
-
-Currently, the lightweight deployment of Kubeflow Pipelines does not expose a public interface to the service. It will be addressed in future release. In the meantime, use Kubernetes port forwarding.
-
-```
-kubectl port-forward -n kubeflow svc/ml-pipeline 8082:8888
-```
-
-This command allows you to access the services by using a local URL: `http://localhost:8082`.
-
-Use this URL as a value of the `host` parameter of `run_pipeline.py`
 
 
 
