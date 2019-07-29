@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Submits a Cloud Build job that builds and deploys
+# the pipelines and pipelines components 
 
 SUBSTITUTIONS=\
 _AUTOML_TABLES_IMAGE=automl_tables,\
