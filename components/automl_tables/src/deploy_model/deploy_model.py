@@ -21,7 +21,12 @@ from google.cloud.automl_v1beta1 import enums
 
 
 def deploy(model_full_id, output_deployment):
-  """Deploys an AutoML Tables model."""
+  """Deploys an AutoML Tables model.
+
+  Args:
+    model_full_id: A full ID of a trained AutoML model.
+    output_deployment: Used by KFP.
+  """
 
   logging.basicConfig(level=logging.INFO)
   client = automl.AutoMlClient()

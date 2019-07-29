@@ -18,27 +18,6 @@ import kfp
 import kfp_server_api
 
 
-#def run(host, experiment, run_name, pipeline_file, arguments):
-#  """Submits a KFP pipeline for execution."""
-#
-#  client = kfp.Client(host)
-#
-#  experiment_ref = client.create_experiment(experiment)
-#
-#  run = client.run_pipeline(experiment_ref.id, run_name, pipeline_file,
-#                            arguments)
-#  print("Run submitted:")
-#  print("    Run ID: {}".format(run.id))
-#  print("    Experiment: {}".format(experiment))
-#  print("    Pipeline: {}".format(pipeline_file))
-#  print("    Arguments:")
-#  for name, value in arguments.items():
-#    print("      {}:  {}".format(name, value))
-#  print("Waiting for completion ...")
-#
-#  # Wait for completion
-#  result = client.wait_for_run_completion(run.id, timeout=6000)
-
 class KFPClient(object):
   """ CLI wrapper around kfp.Client() API """
 
