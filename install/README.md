@@ -41,8 +41,8 @@ Alterantively, you can use the Terraform configuration to perform the same steps
 1. Clone this repo.
 1. Configure the Terraform backend by substituting `bucket` and `state` parameters in the `backend.tf` file with your values.
 1. Subsitute the variables in the `terraform.tfvars` file with your values.
-  1.  project
-  1.  bucket
+    1. project
+    1. bucket
 1. In Cloud Shell:
 ```
 terraform init
