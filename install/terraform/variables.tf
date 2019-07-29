@@ -1,13 +1,9 @@
-variable "region" {
-    description = "The region to host the solution's components"
+variable "project_id" {
+    description = "The GCP project ID"
 }
 
 variable "zone" {
-    description = "The zone to host solutions's components"
-}
-
-variable "project_id" {
-    description = "The project ID to host the configuration's services"
+    description = "The zone of the GKE cluster"
 }
 
 variable "cluster_name" {
@@ -15,7 +11,7 @@ variable "cluster_name" {
 }
 
 variable "kfp_sa_id" {
-    description = "The ID of the KFP service account"
+    description = "The ID of the Kubeflow Pipelines service account"
 }
 
 variable "lp_sa_id" {
@@ -23,5 +19,5 @@ variable "lp_sa_id" {
 }
 
 variable "bucket_name" {
-    description = "The name of a GCS storage bucket to create in the configuration"
+    description = "The name of a GCS storage bucket that will be used as an artifact store"
 }
