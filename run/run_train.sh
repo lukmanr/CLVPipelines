@@ -1,13 +1,13 @@
 #!/bin/bash
 
-python run_pipeline.py \
---host http://localhost:8082 \
---experiment "CLV Training" \
+python kfp-cli.py \
+run_pipeline \
+--experiment_name "CLV Training" \
 --run-name "Training run" \
---pipeline_file clv_train.tar.gz \
---arguments '{\
-"project_id": "clv-prod", \
-"source_gcs_path": "gs://clv-accelerator/sample-dataset/transactions.csv", \
+--pipeline_name train_pipeline \
+--params '{\
+"project_id": "jktest6", \
+"source_gcs_path": "gs://jkclv-bucket2/dataset/transactions.csv", \
 "source_bq_table": "", \
 "bq_dataset_name": "", \
 "transactions_table_name": "transactions", \

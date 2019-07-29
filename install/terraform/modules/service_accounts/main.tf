@@ -56,6 +56,11 @@ resource "google_project_iam_member" "service_account-resource-metadata-writer" 
   member  = "serviceAccount:${google_service_account.lp_sa.email}"
 }
 
+resource "google_project_iam_member" "service_account-storage-viewer" {
+  role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${google_service_account.lp_sa.email}"
+}
+
 # Grant Cloud Build access to google_service_account_key
 data "google_project" "project" {}
 

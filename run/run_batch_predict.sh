@@ -1,18 +1,18 @@
 #!/bin/bash
 
-python run_pipeline.py \
---host http://localhost:8082 \
---experiment "CLV batch predit" \
+python kfp-cli.py \
+run_pipeline \
+--experiment_name "CLV Predict" \
 --run-name "Batch predict run" \
---pipeline_file clv_predict.tar.gz \
---arguments '{\
-"project_id": "clv-prod", \
-"source_gcs_path": "gs://clv-accelerator/sample-dataset/test_transactions.csv", \
+--pipeline_name predict_pipeline \
+--params '{\
+"project_id": "jktest6", \
+"source_gcs_path": "gs://jkclv-bucket2/dataset/test_transactions.csv", \
 "source_bq_table": "", \
 "bq_dataset_name": "", \
 "predict_end": "2011-12-12", \
 "threshold_date": "2011-08-08", \
 "max_monetary": 15000, \
-"aml_model_id": "TBL8408686697230893056", \
-"destination_prefix": "bq://clv-dev", \
+"aml_model_id": "TBL9153944474630488064", \
+"destination_prefix": "bq://jktest6", \
 }'

@@ -14,7 +14,7 @@ The pipeline uses BigQuery for data preprocessing and feature engineering and Au
 The below diagram depicts the workflow implemented by the pipeline:
 
 
-![Train and deploy](/images/train.jpg)
+![Train and deploy](/images/train.png)
 
 1. Load historical sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
 1. Prepare a BigQuery query. The query is generated from a query template and runtime arguments passed to the pipeline.
@@ -112,7 +112,7 @@ The below diagram depicts the workflow implemented by the pipeline:
 
 ### Pipeline design
 The below diagram depicts the workflow implemented by the batch predict pipeline.
-![Batch predict](/images/predict.jpg)
+![Batch predict](/images/predict.png)
 
 1. Load historical sales transactions from Cloud Storage to a  BigQuery staging table. If the data are already in BigQuery this step is skipped.
 1. Prepare a BigQuery query. The query is generated from a query template and runtime arguments passed to the pipeline.

@@ -9,7 +9,7 @@ variable "zone" {
 }
 
 variable "project_id" {
-    description = "The project ID to host the solution components"
+    description = "The project ID to host the configuration's services"
 }
 
 variable "cluster_name" {
@@ -22,4 +22,8 @@ variable "kfp_sa_id" {
 
 variable "lp_sa_id" {
     description = "The ID of the Least Priviledge GKE service account"
+}
+
+variable "bucket_name" {
+    description = "The name of a GCS storage bucket to create in the configuration"
 }
