@@ -75,8 +75,8 @@ To use `kfp.Client()` you need a Python 3.5+ environment with KFP SDK installed.
 The code in this tutorial was tested with the latest version of KFP SDK. 
 
 ```
-SDK_VERSION=master
-pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION/kfp.tar.gz --upgrade
+SDK_VERSION=0.1.23
+pip install https://storage.googleapis.com/ml-pipeline/release/$SDK_VERSION//kfp.tar.gz --upgrade
 ```
 
 To use `kfp-cli.py` utility you also need [Python Fire package](https://google.github.io/python-fire/guide/). 
