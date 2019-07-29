@@ -6,7 +6,7 @@ run_pipeline \
 --run-name "Training run" \
 --pipeline_name train_pipeline \
 --params '{\
-"project_id": "jktest5", \
+"project_id": "jktest6", \
 "source_gcs_path": "gs://jkclv-bucket2/dataset/transactions.csv", \
 "source_bq_table": "", \
 "bq_dataset_name": "", \
