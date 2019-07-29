@@ -6,8 +6,8 @@ run_pipeline \
 --run-name "Training run" \
 --pipeline_name train_pipeline \
 --params '{\
-"project_id": "jktest6", \
-"source_gcs_path": "gs://jkclv-bucket2/dataset/transactions.csv", \
+"project_id": "kfp-clv", \
+"source_gcs_path": "gs://kfp-clv-artifacts/dataset/transactions.csv", \
 "source_bq_table": "", \
 "bq_dataset_name": "", \
 "transactions_table_name": "transactions", \
