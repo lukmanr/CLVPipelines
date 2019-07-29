@@ -42,7 +42,8 @@ terraform apply
 
 To clean up, execute `terraform destroy` from the `/install/terraform` folder.
 
-To deploy the pipelines and the pipeline's artifacts follow the instructions in the deploy [README](../deploy/README.md).
+To deploy the pipelines and the pipeline's artifacts follow the instructions in the [README](../deploy/README.md) in the `/deploy` folder.
+
 
 
 
