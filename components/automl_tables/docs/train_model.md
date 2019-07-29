@@ -6,12 +6,10 @@ Use the component to trigger training of an AutoML Tables model.
 |----|-----------|----|--------|-------|
 |project_id|GCP Project ID|GCPProjectID|No||
 |region|AutoML Tables region. Currently, the only supported region is us=central1|String|No|us-central1|
-|description|AutoML Tables Dataset description|String|No||
 |dataset_id|The ID of an AutoML Tables dataset to use for training|String|No||
 |model_name|The name of an AutoML Tables model|String|No||
 |train_budget|AutoML Training [training budget](https://cloud.google.com/automl-tables/docs/models) in millihours|Integer|No||
 |optimization_objective|AutoML Tables [optimization objective](https://cloud.google.com/automl-tables/docs/models).|String|Yes||
-|primary_metric|The name of the primary [performance metric](https://cloud.google.com/automl-tables/docs/evaluate) to retrieve after the training completes and to return as an output|String|No|
 |target_name|The name of the column to be used as the training label. If set it overwrites the value set during dataset import|Yes||
 |features_to_exclude|The list of features to exclude from this training run. Should be passed as a list literal string. E.g. `"[feature1, feature2]"`|Yes|No|
 
