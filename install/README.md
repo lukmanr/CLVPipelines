@@ -41,8 +41,11 @@ Alterantively, you can use the Terraform configuration to perform the same steps
 1. Clone this repo.
 1. Configure the Terraform backend by substituting `bucket` and `state` parameters in the `backend.tf` file with your values.
 1. Subsitute the variables in the `terraform.tfvars` file with your values.
-    1. project
-    1. bucket
+    1. `project_id` - your project ID
+    1. `cluster_name` - the name of the GKE cluster
+    1. `kfp_sa_id` - the name of the Service Account to be used by Kubeflow Pipelines
+    1. `lp_sa_id` - the name of the Service Account with least privilages to be used by GKE
+    1. `bucket_name` - the GCS bucket to be used for storing artifacts
 1. In Cloud Shell:
 ```
 terraform init
