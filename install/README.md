@@ -1,6 +1,13 @@
-## Provisioning the lightweight Kubeflow Pipelines deployment
+## Provisioning the infrastructure
 
-To provision the lightweight Kubeflow Pipelines deployment:
+The provisioning of the insfrastructure required to run the guide's pipelines has been automated with Terraform. The Terraform configuration in the `/terraform/` folder includes the provisioning and configuration of the following infrastructure components:
+- GKE cluster
+- Kubeflow Pipelines
+- Service Accounts used by GKE and KFP
+- Container Registry
+- Cloud Storage for the pipelines artifacts and sample datasets
+
+To provision the infrastructure:
 
 1. Select or create a GCP project
 1. Make sure that the following Cloud APIs are enabled:
@@ -12,7 +19,7 @@ To provision the lightweight Kubeflow Pipelines deployment:
    - AutoML 
    - Cloud Build
 1. Open a new session in **Cloud Shell**
-1. Create a working directory and copy to it the `install.sh` script from the `/install` folder of this repo.
+1. Create a working directory and clone this repo.
 1. Start the installation process by executing the following commands:
 ```
 chmod 755 install.sh
