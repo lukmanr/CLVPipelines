@@ -2,10 +2,10 @@
 
 python kfp-cli.py \
 run_pipeline \
---experiment "CLV Predict" \
+--experiment_name "CLV Predict" \
 --run-name "Batch predict run" \
 --pipeline_name predict_pipeline \
---arguments '{\
+--params '{\
 "project_id": "jktest6", \
 "source_gcs_path": "gs://jkclv-bucket2/dataset/test_transactions.csv", \
 "source_bq_table": "", \
@@ -14,5 +14,5 @@ run_pipeline \
 "threshold_date": "2011-08-08", \
 "max_monetary": 15000, \
 "aml_model_id": "TBL9153944474630488064", \
-"destination_prefix": "bq://clv-dev", \
+"destination_prefix": "bq://jktest6", \
 }'
