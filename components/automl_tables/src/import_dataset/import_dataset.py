@@ -23,7 +23,23 @@ def import_dataset(project_id, region, dataset_name, description,
                    source_data_uri, target_column_name, weight_column_name,
                    ml_use_column_name, output_project_id, output_dataset_id,
                    output_location):
-  """Imports BQ table or GCS files into an AutoML dataset."""
+  """Imports BQ table or GCS files into an AutoML dataset.
+
+  Args:
+    project_id: The project ID for AutoML.
+    region: The region for AutoML processing.
+    dataset_name: An AutoML dataset name.
+    description: An AutoML dataset description.
+    source_data_uri: The location of source data. For GCS locations
+      it is a comma separated list of GCS URLs to CSV files.
+      For a BigQuery location it is a URI to a BigQuery table.
+    target_column_name: The name of a label/target column in source data
+    weight_column_name: The name of a weight column in source data
+    ml_use_column_name: The name of an ML column in source_data
+    output_project_id: KFP use.
+    output_dataset_id: KFP use.
+    output_location: KFP use.
+  """
 
   logging.basicConfig(level=logging.INFO)
 

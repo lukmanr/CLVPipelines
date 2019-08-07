@@ -1,19 +1,22 @@
 #!/bin/bash
+#
+# Submits a Cloud Build job that builds and deploys
+# the pipelines and pipelines components 
 
 SUBSTITUTIONS=\
-_CLV_REPO=[CLV_REPO_NAME],\
-_BASE_IMAGE=[LIGHTWEIGHT_COMPONENT_BASE_IMAGE_NAME],\
-_AUTOML_TABLES_IMAGE=[AUTOML_TABLES_IMAGE_NAME],\
+_AUTOML_TABLES_IMAGE=automl_tables,\
+_BASE_IMAGE=base_image,\
 _TAG=latest,\
-_TRAIN_PIPELINE=[TRAINING_PIPELINE_NAME],\
-_PREDICT_PIPELINE=[BATCH_PREDICT_PIPELINE_NAME],\
-_BUCKET_NAME=[DEPLOYMENT_BUCKET_NAME],\
-_PIPELINES_FOLDER=[COMPILED_PIPELINES_FOLDER],\
-_ARTIFACTS_FOLDER=[ARTIFACTS_FOLDER],\
-_SAMPLE_DATASET_FOLDER=[SAMPLE_DATASET_FOLDER]
+_TRAIN_PIPELINE=train_pipeline,\
+_PREDICT_PIPELINE=predict_pipeline,\
+_ARTIFACTS_FOLDER=artifacts,\
+_PIPELINES_FOLDER=pipelines,\
+_SAMPLE_DATASET_FOLDER=dataset,\
+_BUCKET_NAME=kfp-clv-artifacts,\
+_CLUSTER_NAME=kfp-clv-gke,\
+_ZONE=us-central1-a
 
-gcloud builds submit --no-source --config cloudbuild.yaml \
---substitutions $SUBSTITUTIONS
+gcloud builds submit ../ --config cloudbuild.yaml --substitutions $SUBSTITUTIONS
 
 
 

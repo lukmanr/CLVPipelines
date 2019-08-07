@@ -20,7 +20,7 @@ import launcher
 
 
 def main():
-
+  """Parses a module name and launches a corresponding module."""
   logging.basicConfig(level=logging.INFO)
   parser = argparse.ArgumentParser(
       prog='launcher', description='Launch a python module or file.')

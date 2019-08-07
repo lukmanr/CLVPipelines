@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Run Automl Tables Batch Predict."""
+"""Automl Tables Batch Predict wrapper."""
 
 import logging
 from pathlib import Path
@@ -20,7 +20,18 @@ from google.cloud import automl_v1beta1 as automl
 
 def predict(project_id, region, model_id, datasource, destination_prefix,
             output_destination):
-  """Runs batch predict on an AutoML tables model."""
+  """Runs batch predict on an AutoML tables model.
+
+  Args:
+    project_id: A project ID for AutoML.
+    region: A region for AutoML processing.
+    model_id: An ID of a trained AutoML model.
+    datasource: The URL of a dataset to score. Should start with
+     'bq://' for BigQuery and 'gs://' for Cloud storage.
+    destination_prefix: A destination prefix for the output.
+      'bq' for BigQuery, 'gs' for Cloud Storage.
+    output_destination: Used by KFP.
+  """
 
   logging.basicConfig(level=logging.INFO)
 

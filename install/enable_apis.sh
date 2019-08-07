@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,21 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""This module is a command line utility to update image name in automl component specs"""
 
-import pathlib
-import fire
-import yaml
+# This script enables the APIs required by the solution
 
+gcloud services enable cloudbuild.googleapis.com
+gcloud services enable container.googleapis.com
+gcloud services enable cloudresourcemanager.googleapis.com
+gcloud services enable iam.googleapis.com
+gcloud services enable containerregistry.googleapis.com
+gcloud services enable containeranalysis.googleapis.com
+gcloud services enable automl.googleapis.com
 
-def update_image_name(spec_folder, image_name):
-  """Updates component specifications with a new container image name."""
-
-  for spec_path in pathlib.Path(spec_folder).glob('*/component.yaml'):
-    spec = yaml.safe_load(pathlib.Path(spec_path).read_text())
-    spec['implementation']['container']['image'] = image_name
-    pathlib.Path(spec_path).write_text(yaml.dump(spec))
-
-
-if __name__ == '__main__':
-  fire.Fire(update_image_name)

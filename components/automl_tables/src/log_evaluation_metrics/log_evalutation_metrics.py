@@ -71,7 +71,14 @@ def log_metrics(model_full_id, primary_metric, output_primary_metric_value):
 
 
 def regression_evaluation_metrics_to_markdown_metadata(metrics):
-  """Converts regression evaluation metrics to KFP Viewer markdown metadata."""
+  """Converts regression evaluation metrics to KFP Viewer markdown metadata.
+
+  Args:
+    metrics: Regression metrics object.
+
+  Returns:
+    Regression metrics formatted in markdown.
+  """
 
   regression_markdown_template = (
       '**Evaluation Metrics:**  \n'

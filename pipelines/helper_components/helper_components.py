@@ -28,7 +28,15 @@ def load_sales_transactions(project_id: str, source_gcs_path: str,
     If source_bq_table is passed no load is executed and source table id is
     passed as
     an output. One and only one type of source must be specified.
-    """
+  
+  Args:
+    project_id: A project ID for BigQuery.
+    source_gcs_path: A URL to Cloud Storage location.
+    source_bq_table: A URL to BigQuery location.
+    dataset_location: The location of the destination BigQuery dataset.
+    dataset_name: The name of the destination BiqQuery dataset.
+    table_id: The ID of the destination table.
+  """
 
   import uuid
   import logging
@@ -91,9 +99,8 @@ def prepare_feature_engineering_query(
     This a lightweight Python KFP component that generates a query
     that processes an input BQ table with sales transactions into features
     that will be used for CLV model training. The component replaces
-    placeholders
-    in a query template with values passed as parameters.
-    """
+    placeholders in a query template with values passed as parameters.
+  """
 
   import uuid
   import logging

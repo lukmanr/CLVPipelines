@@ -23,7 +23,21 @@ from google.cloud import automl_v1beta1 as automl
 def train(project_id, region, dataset_id, model_name, train_budget,
           optimization_objective, target_name, features_to_exclude,
           output_model_full_id):
-  """Trains an AutoML Tables model."""
+  """Trains an AutoML Tables model.
+
+  Args:
+    project_id: The project ID for AutoML.
+    region: The region for AutoML processing.
+    dataset_id: The ID of an AutoML dataset.
+    model_name: The name of an AutoML model.
+    train_budget: AutoML training budget in millihours.
+    optimization_objective: AutoML Tables optimization objective.
+    target_name: The name of the column to be used as the training
+      label.
+    features_to_exclude: The list of features to exclude from a
+      training run.
+    output_model_full_id: KFP use.
+  """
 
   logging.basicConfig(level=logging.INFO)
 
