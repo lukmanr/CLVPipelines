@@ -23,3 +23,7 @@ variable "sa_email" {
 variable "kfp_sa_key" {
     description = "The KFP service account key"
 }
+
+variable "kfp_version" {
+    description = "The version of Kubeflow Pipelines to install"
+}

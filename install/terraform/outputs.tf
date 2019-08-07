@@ -16,10 +16,10 @@ output "kfp_sa_name" {
 }
 
 output "lp_sa_email" {
-    value = module.service_accounts.lp_sa_email
+    value = module.service_accounts.cluster_sa_email
 }
 
 output "lp_sa_name" {
-    value = module.service_accounts.lp_sa_name
+    value = module.service_accounts.cluster_sa_name
 }
 

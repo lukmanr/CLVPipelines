@@ -31,7 +31,8 @@ resource "google_container_cluster" "kfp_cluster" {
   provisioner "local-exec" {
     command = <<EOT
       gcloud container clusters get-credentials "${var.cluster_name}" --zone "${var.location}" --project "${data.google_project.project.project_id}"
-      kubectl   apply -f https://raw.githubusercontent.com/kubeflow/pipelines/master/manifests/namespaced-install.yaml
+      export PIPELINE_VERSION="${var.kfp_version}"
+      kubectl apply -f https://raw.githubusercontent.com/kubeflow/pipelines/$PIPELINE_VERSION/manifests/kustomize/namespaced-install.yaml
     EOT
   }
 }
